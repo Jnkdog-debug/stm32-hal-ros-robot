@@ -1,0 +1,923 @@
+ARM GAS  /tmp/ccsF3z8Y.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"encodermotor.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "EncoderMotor/encodermotor.c"
+  20              		.section	.text.Motor_Init,"ax",%progbits
+  21              		.align	1
+  22              		.global	Motor_Init
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	Motor_Init:
+  28              	.LVL0:
+  29              	.LFB134:
+   1:EncoderMotor/encodermotor.c **** #include "encodermotor.h"
+   2:EncoderMotor/encodermotor.c **** #include <stdint.h>
+   3:EncoderMotor/encodermotor.c **** 
+   4:EncoderMotor/encodermotor.c **** 
+   5:EncoderMotor/encodermotor.c **** 
+   6:EncoderMotor/encodermotor.c **** MotorControl_t Motor_A = {
+   7:EncoderMotor/encodermotor.c ****     .pwm_timo1 = &htim10,
+   8:EncoderMotor/encodermotor.c ****     .pwm_channel1 = TIM_CHANNEL_1,
+   9:EncoderMotor/encodermotor.c ****     .pwm_timo2 = &htim11,
+  10:EncoderMotor/encodermotor.c ****     .pwm_channel2 = TIM_CHANNEL_1,
+  11:EncoderMotor/encodermotor.c ****     .encoder_tim = &htim2,
+  12:EncoderMotor/encodermotor.c ****     .kp = 1.0f,
+  13:EncoderMotor/encodermotor.c ****     .ki = 0.2f,
+  14:EncoderMotor/encodermotor.c ****     .kd = 0.05f
+  15:EncoderMotor/encodermotor.c **** };
+  16:EncoderMotor/encodermotor.c **** 
+  17:EncoderMotor/encodermotor.c **** 
+  18:EncoderMotor/encodermotor.c **** void Motor_Init(MotorControl_t* motor)
+  19:EncoderMotor/encodermotor.c **** {
+  30              		.loc 1 19 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 19 1 is_stmt 0 view .LVU1
+  35 0000 10B5     		push	{r4, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 4, -8
+  39              		.cfi_offset 14, -4
+ARM GAS  /tmp/ccsF3z8Y.s 			page 2
+
+
+  40 0002 0446     		mov	r4, r0
+  20:EncoderMotor/encodermotor.c ****     
+  21:EncoderMotor/encodermotor.c ****     
+  22:EncoderMotor/encodermotor.c ****     HAL_TIM_PWM_Start(motor->pwm_timo1, motor->pwm_channel1);
+  41              		.loc 1 22 5 is_stmt 1 view .LVU2
+  42 0004 8168     		ldr	r1, [r0, #8]
+  43 0006 0068     		ldr	r0, [r0]
+  44              	.LVL1:
+  45              		.loc 1 22 5 is_stmt 0 view .LVU3
+  46 0008 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+  47              	.LVL2:
+  23:EncoderMotor/encodermotor.c ****     HAL_TIM_PWM_Start(motor->pwm_timo2, motor->pwm_channel2);
+  48              		.loc 1 23 5 is_stmt 1 view .LVU4
+  49 000c E168     		ldr	r1, [r4, #12]
+  50 000e 6068     		ldr	r0, [r4, #4]
+  51 0010 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+  52              	.LVL3:
+  24:EncoderMotor/encodermotor.c **** 
+  25:EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
+  53              		.loc 1 25 5 view .LVU5
+  54 0014 A368     		ldr	r3, [r4, #8]
+  55 0016 53B9     		cbnz	r3, .L2
+  56              		.loc 1 25 5 is_stmt 0 discriminator 1 view .LVU6
+  57 0018 2368     		ldr	r3, [r4]
+  58 001a 1B68     		ldr	r3, [r3]
+  59 001c 0022     		movs	r2, #0
+  60 001e 5A63     		str	r2, [r3, #52]
+  61              	.L3:
+  26:EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+  62              		.loc 1 26 5 is_stmt 1 view .LVU7
+  63 0020 E368     		ldr	r3, [r4, #12]
+  64 0022 BBB9     		cbnz	r3, .L6
+  65              		.loc 1 26 5 is_stmt 0 discriminator 1 view .LVU8
+  66 0024 6368     		ldr	r3, [r4, #4]
+  67 0026 1B68     		ldr	r3, [r3]
+  68 0028 0022     		movs	r2, #0
+  69 002a 5A63     		str	r2, [r3, #52]
+  70              	.L1:
+  27:EncoderMotor/encodermotor.c **** }
+  71              		.loc 1 27 1 view .LVU9
+  72 002c 10BD     		pop	{r4, pc}
+  73              	.LVL4:
+  74              	.L2:
+  25:EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+  75              		.loc 1 25 5 discriminator 2 view .LVU10
+  76 002e 042B     		cmp	r3, #4
+  77 0030 06D0     		beq	.L11
+  25:EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+  78              		.loc 1 25 5 discriminator 4 view .LVU11
+  79 0032 082B     		cmp	r3, #8
+  80 0034 09D0     		beq	.L12
+  25:EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+  81              		.loc 1 25 5 discriminator 7 view .LVU12
+  82 0036 2368     		ldr	r3, [r4]
+  83 0038 1B68     		ldr	r3, [r3]
+  84 003a 0022     		movs	r2, #0
+  85 003c 1A64     		str	r2, [r3, #64]
+ARM GAS  /tmp/ccsF3z8Y.s 			page 3
+
+
+  86 003e EFE7     		b	.L3
+  87              	.L11:
+  25:EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+  88              		.loc 1 25 5 discriminator 3 view .LVU13
+  89 0040 2368     		ldr	r3, [r4]
+  90 0042 1B68     		ldr	r3, [r3]
+  91 0044 0022     		movs	r2, #0
+  92 0046 9A63     		str	r2, [r3, #56]
+  93 0048 EAE7     		b	.L3
+  94              	.L12:
+  25:EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+  95              		.loc 1 25 5 discriminator 6 view .LVU14
+  96 004a 2368     		ldr	r3, [r4]
+  97 004c 1B68     		ldr	r3, [r3]
+  98 004e 0022     		movs	r2, #0
+  99 0050 DA63     		str	r2, [r3, #60]
+ 100 0052 E5E7     		b	.L3
+ 101              	.L6:
+  26:EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 102              		.loc 1 26 5 discriminator 2 view .LVU15
+ 103 0054 042B     		cmp	r3, #4
+ 104 0056 06D0     		beq	.L13
+  26:EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 105              		.loc 1 26 5 discriminator 4 view .LVU16
+ 106 0058 082B     		cmp	r3, #8
+ 107 005a 09D0     		beq	.L14
+  26:EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 108              		.loc 1 26 5 discriminator 7 view .LVU17
+ 109 005c 6368     		ldr	r3, [r4, #4]
+ 110 005e 1B68     		ldr	r3, [r3]
+ 111 0060 0022     		movs	r2, #0
+ 112 0062 1A64     		str	r2, [r3, #64]
+ 113              		.loc 1 27 1 view .LVU18
+ 114 0064 E2E7     		b	.L1
+ 115              	.L13:
+  26:EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 116              		.loc 1 26 5 discriminator 3 view .LVU19
+ 117 0066 6368     		ldr	r3, [r4, #4]
+ 118 0068 1B68     		ldr	r3, [r3]
+ 119 006a 0022     		movs	r2, #0
+ 120 006c 9A63     		str	r2, [r3, #56]
+ 121 006e DDE7     		b	.L1
+ 122              	.L14:
+  26:EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 123              		.loc 1 26 5 discriminator 6 view .LVU20
+ 124 0070 6368     		ldr	r3, [r4, #4]
+ 125 0072 1B68     		ldr	r3, [r3]
+ 126 0074 0022     		movs	r2, #0
+ 127 0076 DA63     		str	r2, [r3, #60]
+ 128 0078 D8E7     		b	.L1
+ 129              		.cfi_endproc
+ 130              	.LFE134:
+ 132              		.section	.text.Motor_SetPWM,"ax",%progbits
+ 133              		.align	1
+ 134              		.global	Motor_SetPWM
+ 135              		.syntax unified
+ 136              		.thumb
+ARM GAS  /tmp/ccsF3z8Y.s 			page 4
+
+
+ 137              		.thumb_func
+ 139              	Motor_SetPWM:
+ 140              	.LVL5:
+ 141              	.LFB135:
+  28:EncoderMotor/encodermotor.c **** 
+  29:EncoderMotor/encodermotor.c **** 
+  30:EncoderMotor/encodermotor.c **** void Motor_SetPWM(MotorControl_t* motor, int16_t duty) {
+ 142              		.loc 1 30 56 is_stmt 1 view -0
+ 143              		.cfi_startproc
+ 144              		@ args = 0, pretend = 0, frame = 0
+ 145              		@ frame_needed = 0, uses_anonymous_args = 0
+ 146              		@ link register save eliminated.
+  31:EncoderMotor/encodermotor.c ****     uint16_t pwm_val = (duty < 0) ? -duty : duty;
+ 147              		.loc 1 31 5 view .LVU22
+ 148              		.loc 1 31 14 is_stmt 0 view .LVU23
+ 149 0000 81EAE173 		eor	r3, r1, r1, asr #31
+ 150 0004 A3EBE173 		sub	r3, r3, r1, asr #31
+ 151 0008 9BB2     		uxth	r3, r3
+ 152              	.LVL6:
+  32:EncoderMotor/encodermotor.c **** 
+  33:EncoderMotor/encodermotor.c ****     if (duty < 0) {
+ 153              		.loc 1 33 5 is_stmt 1 view .LVU24
+ 154              		.loc 1 33 8 is_stmt 0 view .LVU25
+ 155 000a 0029     		cmp	r1, #0
+ 156 000c 0FDB     		blt	.L40
+  34:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
+  35:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+  36:EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 157              		.loc 1 36 12 is_stmt 1 view .LVU26
+ 158              		.loc 1 36 15 is_stmt 0 view .LVU27
+ 159 000e 0029     		cmp	r1, #0
+ 160 0010 5FDD     		ble	.L25
+  37:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, pwm_val);
+ 161              		.loc 1 37 9 is_stmt 1 view .LVU28
+ 162 0012 8268     		ldr	r2, [r0, #8]
+ 163 0014 002A     		cmp	r2, #0
+ 164 0016 39D1     		bne	.L26
+ 165              		.loc 1 37 9 is_stmt 0 discriminator 1 view .LVU29
+ 166 0018 0268     		ldr	r2, [r0]
+ 167 001a 1268     		ldr	r2, [r2]
+ 168 001c 5363     		str	r3, [r2, #52]
+ 169              	.L27:
+  38:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 170              		.loc 1 38 9 is_stmt 1 view .LVU30
+ 171 001e C368     		ldr	r3, [r0, #12]
+ 172              	.LVL7:
+ 173              		.loc 1 38 9 is_stmt 0 view .LVU31
+ 174 0020 002B     		cmp	r3, #0
+ 175 0022 43D1     		bne	.L30
+ 176              		.loc 1 38 9 discriminator 1 view .LVU32
+ 177 0024 4368     		ldr	r3, [r0, #4]
+ 178 0026 1B68     		ldr	r3, [r3]
+ 179 0028 0022     		movs	r2, #0
+ 180 002a 5A63     		str	r2, [r3, #52]
+ 181 002c 7047     		bx	lr
+ 182              	.LVL8:
+ 183              	.L40:
+ARM GAS  /tmp/ccsF3z8Y.s 			page 5
+
+
+  34:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
+ 184              		.loc 1 34 9 is_stmt 1 view .LVU33
+ 185 002e 8268     		ldr	r2, [r0, #8]
+ 186 0030 4AB9     		cbnz	r2, .L17
+  34:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
+ 187              		.loc 1 34 9 is_stmt 0 discriminator 1 view .LVU34
+ 188 0032 0268     		ldr	r2, [r0]
+ 189 0034 1268     		ldr	r2, [r2]
+ 190 0036 0021     		movs	r1, #0
+ 191              	.LVL9:
+  34:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
+ 192              		.loc 1 34 9 discriminator 1 view .LVU35
+ 193 0038 5163     		str	r1, [r2, #52]
+ 194              	.L18:
+  35:EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 195              		.loc 1 35 9 is_stmt 1 view .LVU36
+ 196 003a C268     		ldr	r2, [r0, #12]
+ 197 003c B2B9     		cbnz	r2, .L21
+  35:EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 198              		.loc 1 35 9 is_stmt 0 discriminator 1 view .LVU37
+ 199 003e 4268     		ldr	r2, [r0, #4]
+ 200 0040 1268     		ldr	r2, [r2]
+ 201 0042 5363     		str	r3, [r2, #52]
+ 202 0044 7047     		bx	lr
+ 203              	.LVL10:
+ 204              	.L17:
+  34:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 205              		.loc 1 34 9 discriminator 2 view .LVU38
+ 206 0046 042A     		cmp	r2, #4
+ 207 0048 06D0     		beq	.L41
+  34:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 208              		.loc 1 34 9 discriminator 4 view .LVU39
+ 209 004a 082A     		cmp	r2, #8
+ 210 004c 09D0     		beq	.L42
+  34:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 211              		.loc 1 34 9 discriminator 7 view .LVU40
+ 212 004e 0268     		ldr	r2, [r0]
+ 213 0050 1268     		ldr	r2, [r2]
+ 214 0052 0021     		movs	r1, #0
+ 215              	.LVL11:
+  34:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 216              		.loc 1 34 9 discriminator 7 view .LVU41
+ 217 0054 1164     		str	r1, [r2, #64]
+ 218 0056 F0E7     		b	.L18
+ 219              	.LVL12:
+ 220              	.L41:
+  34:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 221              		.loc 1 34 9 discriminator 3 view .LVU42
+ 222 0058 0268     		ldr	r2, [r0]
+ 223 005a 1268     		ldr	r2, [r2]
+ 224 005c 0021     		movs	r1, #0
+ 225              	.LVL13:
+  34:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 226              		.loc 1 34 9 discriminator 3 view .LVU43
+ 227 005e 9163     		str	r1, [r2, #56]
+ 228 0060 EBE7     		b	.L18
+ 229              	.LVL14:
+ARM GAS  /tmp/ccsF3z8Y.s 			page 6
+
+
+ 230              	.L42:
+  34:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 231              		.loc 1 34 9 discriminator 6 view .LVU44
+ 232 0062 0268     		ldr	r2, [r0]
+ 233 0064 1268     		ldr	r2, [r2]
+ 234 0066 0021     		movs	r1, #0
+ 235              	.LVL15:
+  34:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 236              		.loc 1 34 9 discriminator 6 view .LVU45
+ 237 0068 D163     		str	r1, [r2, #60]
+ 238 006a E6E7     		b	.L18
+ 239              	.L21:
+  35:EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 240              		.loc 1 35 9 discriminator 2 view .LVU46
+ 241 006c 042A     		cmp	r2, #4
+ 242 006e 05D0     		beq	.L43
+  35:EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 243              		.loc 1 35 9 discriminator 4 view .LVU47
+ 244 0070 082A     		cmp	r2, #8
+ 245 0072 07D0     		beq	.L44
+  35:EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 246              		.loc 1 35 9 discriminator 7 view .LVU48
+ 247 0074 4268     		ldr	r2, [r0, #4]
+ 248 0076 1268     		ldr	r2, [r2]
+ 249 0078 1364     		str	r3, [r2, #64]
+ 250 007a 7047     		bx	lr
+ 251              	.L43:
+  35:EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 252              		.loc 1 35 9 discriminator 3 view .LVU49
+ 253 007c 4268     		ldr	r2, [r0, #4]
+ 254 007e 1268     		ldr	r2, [r2]
+ 255 0080 9363     		str	r3, [r2, #56]
+ 256 0082 7047     		bx	lr
+ 257              	.L44:
+  35:EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 258              		.loc 1 35 9 discriminator 6 view .LVU50
+ 259 0084 4268     		ldr	r2, [r0, #4]
+ 260 0086 1268     		ldr	r2, [r2]
+ 261 0088 D363     		str	r3, [r2, #60]
+ 262 008a 7047     		bx	lr
+ 263              	.LVL16:
+ 264              	.L26:
+  37:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 265              		.loc 1 37 9 discriminator 2 view .LVU51
+ 266 008c 042A     		cmp	r2, #4
+ 267 008e 05D0     		beq	.L45
+  37:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 268              		.loc 1 37 9 discriminator 4 view .LVU52
+ 269 0090 082A     		cmp	r2, #8
+ 270 0092 07D0     		beq	.L46
+  37:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 271              		.loc 1 37 9 discriminator 7 view .LVU53
+ 272 0094 0268     		ldr	r2, [r0]
+ 273 0096 1268     		ldr	r2, [r2]
+ 274 0098 1364     		str	r3, [r2, #64]
+ 275 009a C0E7     		b	.L27
+ 276              	.L45:
+ARM GAS  /tmp/ccsF3z8Y.s 			page 7
+
+
+  37:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 277              		.loc 1 37 9 discriminator 3 view .LVU54
+ 278 009c 0268     		ldr	r2, [r0]
+ 279 009e 1268     		ldr	r2, [r2]
+ 280 00a0 9363     		str	r3, [r2, #56]
+ 281 00a2 BCE7     		b	.L27
+ 282              	.L46:
+  37:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 283              		.loc 1 37 9 discriminator 6 view .LVU55
+ 284 00a4 0268     		ldr	r2, [r0]
+ 285 00a6 1268     		ldr	r2, [r2]
+ 286 00a8 D363     		str	r3, [r2, #60]
+ 287 00aa B8E7     		b	.L27
+ 288              	.LVL17:
+ 289              	.L30:
+ 290              		.loc 1 38 9 discriminator 2 view .LVU56
+ 291 00ac 042B     		cmp	r3, #4
+ 292 00ae 06D0     		beq	.L47
+ 293              		.loc 1 38 9 discriminator 4 view .LVU57
+ 294 00b0 082B     		cmp	r3, #8
+ 295 00b2 09D0     		beq	.L48
+ 296              		.loc 1 38 9 discriminator 7 view .LVU58
+ 297 00b4 4368     		ldr	r3, [r0, #4]
+ 298 00b6 1B68     		ldr	r3, [r3]
+ 299 00b8 0022     		movs	r2, #0
+ 300 00ba 1A64     		str	r2, [r3, #64]
+ 301 00bc 7047     		bx	lr
+ 302              	.L47:
+ 303              		.loc 1 38 9 discriminator 3 view .LVU59
+ 304 00be 4368     		ldr	r3, [r0, #4]
+ 305 00c0 1B68     		ldr	r3, [r3]
+ 306 00c2 0022     		movs	r2, #0
+ 307 00c4 9A63     		str	r2, [r3, #56]
+ 308 00c6 7047     		bx	lr
+ 309              	.L48:
+ 310              		.loc 1 38 9 discriminator 6 view .LVU60
+ 311 00c8 4368     		ldr	r3, [r0, #4]
+ 312 00ca 1B68     		ldr	r3, [r3]
+ 313 00cc 0022     		movs	r2, #0
+ 314 00ce DA63     		str	r2, [r3, #60]
+ 315 00d0 7047     		bx	lr
+ 316              	.LVL18:
+ 317              	.L25:
+  39:EncoderMotor/encodermotor.c ****     } else {  // duty == 0
+  40:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
+ 318              		.loc 1 40 9 is_stmt 1 view .LVU61
+ 319 00d2 8368     		ldr	r3, [r0, #8]
+ 320              	.LVL19:
+ 321              		.loc 1 40 9 is_stmt 0 view .LVU62
+ 322 00d4 53B9     		cbnz	r3, .L33
+ 323              		.loc 1 40 9 discriminator 1 view .LVU63
+ 324 00d6 0368     		ldr	r3, [r0]
+ 325 00d8 1B68     		ldr	r3, [r3]
+ 326 00da 0022     		movs	r2, #0
+ 327 00dc 5A63     		str	r2, [r3, #52]
+ 328              	.L34:
+  41:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ARM GAS  /tmp/ccsF3z8Y.s 			page 8
+
+
+ 329              		.loc 1 41 9 is_stmt 1 view .LVU64
+ 330 00de C368     		ldr	r3, [r0, #12]
+ 331 00e0 BBB9     		cbnz	r3, .L37
+ 332              		.loc 1 41 9 is_stmt 0 discriminator 1 view .LVU65
+ 333 00e2 4368     		ldr	r3, [r0, #4]
+ 334 00e4 1B68     		ldr	r3, [r3]
+ 335 00e6 0022     		movs	r2, #0
+ 336 00e8 5A63     		str	r2, [r3, #52]
+ 337 00ea 7047     		bx	lr
+ 338              	.L33:
+  40:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 339              		.loc 1 40 9 discriminator 2 view .LVU66
+ 340 00ec 042B     		cmp	r3, #4
+ 341 00ee 06D0     		beq	.L49
+  40:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 342              		.loc 1 40 9 discriminator 4 view .LVU67
+ 343 00f0 082B     		cmp	r3, #8
+ 344 00f2 09D0     		beq	.L50
+  40:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 345              		.loc 1 40 9 discriminator 7 view .LVU68
+ 346 00f4 0368     		ldr	r3, [r0]
+ 347 00f6 1B68     		ldr	r3, [r3]
+ 348 00f8 0022     		movs	r2, #0
+ 349 00fa 1A64     		str	r2, [r3, #64]
+ 350 00fc EFE7     		b	.L34
+ 351              	.L49:
+  40:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 352              		.loc 1 40 9 discriminator 3 view .LVU69
+ 353 00fe 0368     		ldr	r3, [r0]
+ 354 0100 1B68     		ldr	r3, [r3]
+ 355 0102 0022     		movs	r2, #0
+ 356 0104 9A63     		str	r2, [r3, #56]
+ 357 0106 EAE7     		b	.L34
+ 358              	.L50:
+  40:EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 359              		.loc 1 40 9 discriminator 6 view .LVU70
+ 360 0108 0368     		ldr	r3, [r0]
+ 361 010a 1B68     		ldr	r3, [r3]
+ 362 010c 0022     		movs	r2, #0
+ 363 010e DA63     		str	r2, [r3, #60]
+ 364 0110 E5E7     		b	.L34
+ 365              	.L37:
+ 366              		.loc 1 41 9 discriminator 2 view .LVU71
+ 367 0112 042B     		cmp	r3, #4
+ 368 0114 06D0     		beq	.L51
+ 369              		.loc 1 41 9 discriminator 4 view .LVU72
+ 370 0116 082B     		cmp	r3, #8
+ 371 0118 09D0     		beq	.L52
+ 372              		.loc 1 41 9 discriminator 7 view .LVU73
+ 373 011a 4368     		ldr	r3, [r0, #4]
+ 374 011c 1B68     		ldr	r3, [r3]
+ 375 011e 0022     		movs	r2, #0
+ 376 0120 1A64     		str	r2, [r3, #64]
+  42:EncoderMotor/encodermotor.c ****     }
+  43:EncoderMotor/encodermotor.c **** }
+ 377              		.loc 1 43 1 view .LVU74
+ 378 0122 7047     		bx	lr
+ARM GAS  /tmp/ccsF3z8Y.s 			page 9
+
+
+ 379              	.L51:
+  41:EncoderMotor/encodermotor.c ****     }
+ 380              		.loc 1 41 9 discriminator 3 view .LVU75
+ 381 0124 4368     		ldr	r3, [r0, #4]
+ 382 0126 1B68     		ldr	r3, [r3]
+ 383 0128 0022     		movs	r2, #0
+ 384 012a 9A63     		str	r2, [r3, #56]
+ 385 012c 7047     		bx	lr
+ 386              	.L52:
+  41:EncoderMotor/encodermotor.c ****     }
+ 387              		.loc 1 41 9 discriminator 6 view .LVU76
+ 388 012e 4368     		ldr	r3, [r0, #4]
+ 389 0130 1B68     		ldr	r3, [r3]
+ 390 0132 0022     		movs	r2, #0
+ 391 0134 DA63     		str	r2, [r3, #60]
+ 392 0136 7047     		bx	lr
+ 393              		.cfi_endproc
+ 394              	.LFE135:
+ 396              		.section	.text.Motor_Encoder_Init,"ax",%progbits
+ 397              		.align	1
+ 398              		.global	Motor_Encoder_Init
+ 399              		.syntax unified
+ 400              		.thumb
+ 401              		.thumb_func
+ 403              	Motor_Encoder_Init:
+ 404              	.LVL20:
+ 405              	.LFB136:
+  44:EncoderMotor/encodermotor.c **** 
+  45:EncoderMotor/encodermotor.c **** 
+  46:EncoderMotor/encodermotor.c **** /*编码器实现*/
+  47:EncoderMotor/encodermotor.c **** 
+  48:EncoderMotor/encodermotor.c **** void Motor_Encoder_Init(MotorControl_t* motor) {
+ 406              		.loc 1 48 48 is_stmt 1 view -0
+ 407              		.cfi_startproc
+ 408              		@ args = 0, pretend = 0, frame = 0
+ 409              		@ frame_needed = 0, uses_anonymous_args = 0
+ 410              		.loc 1 48 48 is_stmt 0 view .LVU78
+ 411 0000 08B5     		push	{r3, lr}
+ 412              	.LCFI1:
+ 413              		.cfi_def_cfa_offset 8
+ 414              		.cfi_offset 3, -8
+ 415              		.cfi_offset 14, -4
+  49:EncoderMotor/encodermotor.c ****     motor->encoder_last = 0;
+ 416              		.loc 1 49 5 is_stmt 1 view .LVU79
+ 417              		.loc 1 49 25 is_stmt 0 view .LVU80
+ 418 0002 0023     		movs	r3, #0
+ 419 0004 4361     		str	r3, [r0, #20]
+  50:EncoderMotor/encodermotor.c ****     motor->duty_rpm = 0;
+ 420              		.loc 1 50 5 is_stmt 1 view .LVU81
+ 421              		.loc 1 50 21 is_stmt 0 view .LVU82
+ 422 0006 0023     		movs	r3, #0
+ 423 0008 8361     		str	r3, [r0, #24]	@ float
+  51:EncoderMotor/encodermotor.c ****     motor->target_rpm = 0;
+ 424              		.loc 1 51 5 is_stmt 1 view .LVU83
+ 425              		.loc 1 51 23 is_stmt 0 view .LVU84
+ 426 000a C361     		str	r3, [r0, #28]	@ float
+  52:EncoderMotor/encodermotor.c ****     motor->pid_integral = 0.0f;
+ARM GAS  /tmp/ccsF3z8Y.s 			page 10
+
+
+ 427              		.loc 1 52 5 is_stmt 1 view .LVU85
+ 428              		.loc 1 52 25 is_stmt 0 view .LVU86
+ 429 000c C362     		str	r3, [r0, #44]	@ float
+  53:EncoderMotor/encodermotor.c ****     motor->pid_last_error = 0.0f;
+ 430              		.loc 1 53 5 is_stmt 1 view .LVU87
+ 431              		.loc 1 53 27 is_stmt 0 view .LVU88
+ 432 000e 0363     		str	r3, [r0, #48]	@ float
+  54:EncoderMotor/encodermotor.c **** 
+  55:EncoderMotor/encodermotor.c ****     HAL_TIM_Encoder_Start(motor->encoder_tim, TIM_CHANNEL_ALL);
+ 433              		.loc 1 55 5 is_stmt 1 view .LVU89
+ 434 0010 3C21     		movs	r1, #60
+ 435 0012 0069     		ldr	r0, [r0, #16]
+ 436              	.LVL21:
+ 437              		.loc 1 55 5 is_stmt 0 view .LVU90
+ 438 0014 FFF7FEFF 		bl	HAL_TIM_Encoder_Start
+ 439              	.LVL22:
+  56:EncoderMotor/encodermotor.c ****     HAL_TIM_Base_Start_IT(&htim6);  // ⚠️ 必须调用，否则不会触发中断
+ 440              		.loc 1 56 5 is_stmt 1 view .LVU91
+ 441 0018 0148     		ldr	r0, .L55
+ 442 001a FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+ 443              	.LVL23:
+  57:EncoderMotor/encodermotor.c **** }
+ 444              		.loc 1 57 1 is_stmt 0 view .LVU92
+ 445 001e 08BD     		pop	{r3, pc}
+ 446              	.L56:
+ 447              		.align	2
+ 448              	.L55:
+ 449 0020 00000000 		.word	htim6
+ 450              		.cfi_endproc
+ 451              	.LFE136:
+ 453              		.section	.text.Motor_Encoder_Read,"ax",%progbits
+ 454              		.align	1
+ 455              		.global	Motor_Encoder_Read
+ 456              		.syntax unified
+ 457              		.thumb
+ 458              		.thumb_func
+ 460              	Motor_Encoder_Read:
+ 461              	.LVL24:
+ 462              	.LFB137:
+  58:EncoderMotor/encodermotor.c **** 
+  59:EncoderMotor/encodermotor.c **** /*读取编码器数值*/
+  60:EncoderMotor/encodermotor.c **** int32_t Motor_Encoder_Read(MotorControl_t* motor) {
+ 463              		.loc 1 60 51 is_stmt 1 view -0
+ 464              		.cfi_startproc
+ 465              		@ args = 0, pretend = 0, frame = 0
+ 466              		@ frame_needed = 0, uses_anonymous_args = 0
+ 467              		@ link register save eliminated.
+  61:EncoderMotor/encodermotor.c ****     int32_t encoder_value = __HAL_TIM_GET_COUNTER(motor->encoder_tim);
+ 468              		.loc 1 61 5 view .LVU94
+ 469              		.loc 1 61 29 is_stmt 0 view .LVU95
+ 470 0000 0369     		ldr	r3, [r0, #16]
+ 471 0002 1B68     		ldr	r3, [r3]
+ 472 0004 5A6A     		ldr	r2, [r3, #36]
+ 473              	.LVL25:
+  62:EncoderMotor/encodermotor.c ****     int32_t delta = encoder_value - motor->encoder_last;
+ 474              		.loc 1 62 5 is_stmt 1 view .LVU96
+ 475              		.loc 1 62 42 is_stmt 0 view .LVU97
+ARM GAS  /tmp/ccsF3z8Y.s 			page 11
+
+
+ 476 0006 4369     		ldr	r3, [r0, #20]
+ 477              		.loc 1 62 13 view .LVU98
+ 478 0008 D31A     		subs	r3, r2, r3
+ 479              	.LVL26:
+  63:EncoderMotor/encodermotor.c ****     motor->encoder_last = encoder_value;
+ 480              		.loc 1 63 5 is_stmt 1 view .LVU99
+ 481              		.loc 1 63 25 is_stmt 0 view .LVU100
+ 482 000a 4261     		str	r2, [r0, #20]
+  64:EncoderMotor/encodermotor.c **** 
+  65:EncoderMotor/encodermotor.c ****     // 计算当前速度（RPM）
+  66:EncoderMotor/encodermotor.c ****     motor->duty_rpm = delta;  // 根据编码器的计数值计算速度
+ 483              		.loc 1 66 5 is_stmt 1 view .LVU101
+ 484              		.loc 1 66 21 is_stmt 0 view .LVU102
+ 485 000c 07EE903A 		vmov	s15, r3	@ int
+ 486 0010 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 487 0014 C0ED067A 		vstr.32	s15, [r0, #24]
+  67:EncoderMotor/encodermotor.c ****     return motor->duty_rpm;
+ 488              		.loc 1 67 5 is_stmt 1 view .LVU103
+  68:EncoderMotor/encodermotor.c **** }
+ 489              		.loc 1 68 1 is_stmt 0 view .LVU104
+ 490 0018 FDEEE77A 		vcvt.s32.f32	s15, s15
+ 491 001c 17EE900A 		vmov	r0, s15	@ int
+ 492              	.LVL27:
+ 493              		.loc 1 68 1 view .LVU105
+ 494 0020 7047     		bx	lr
+ 495              		.cfi_endproc
+ 496              	.LFE137:
+ 498              		.section	.text.Motor_PID_Calculate,"ax",%progbits
+ 499              		.align	1
+ 500              		.global	Motor_PID_Calculate
+ 501              		.syntax unified
+ 502              		.thumb
+ 503              		.thumb_func
+ 505              	Motor_PID_Calculate:
+ 506              	.LVL28:
+ 507              	.LFB138:
+  69:EncoderMotor/encodermotor.c **** 
+  70:EncoderMotor/encodermotor.c **** 
+  71:EncoderMotor/encodermotor.c **** /*速度pid的实现*/
+  72:EncoderMotor/encodermotor.c **** float Motor_PID_Calculate(MotorControl_t* motor, int32_t target_rpm) {
+ 508              		.loc 1 72 70 is_stmt 1 view -0
+ 509              		.cfi_startproc
+ 510              		@ args = 0, pretend = 0, frame = 0
+ 511              		@ frame_needed = 0, uses_anonymous_args = 0
+ 512              		@ link register save eliminated.
+ 513              		.loc 1 72 70 is_stmt 0 view .LVU107
+ 514 0000 07EE901A 		vmov	s15, r1	@ int
+  73:EncoderMotor/encodermotor.c ****     // 计算误差
+  74:EncoderMotor/encodermotor.c ****     float error = target_rpm - motor->duty_rpm;
+ 515              		.loc 1 74 5 is_stmt 1 view .LVU108
+ 516              		.loc 1 74 30 is_stmt 0 view .LVU109
+ 517 0004 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 518              		.loc 1 74 37 view .LVU110
+ 519 0008 90ED067A 		vldr.32	s14, [r0, #24]
+ 520              		.loc 1 74 11 view .LVU111
+ 521 000c 77EEC77A 		vsub.f32	s15, s15, s14
+ 522              	.LVL29:
+ARM GAS  /tmp/ccsF3z8Y.s 			page 12
+
+
+  75:EncoderMotor/encodermotor.c **** 
+  76:EncoderMotor/encodermotor.c ****     // 积分
+  77:EncoderMotor/encodermotor.c ****     motor->pid_integral += error;
+ 523              		.loc 1 77 5 is_stmt 1 view .LVU112
+ 524              		.loc 1 77 10 is_stmt 0 view .LVU113
+ 525 0010 90ED0B7A 		vldr.32	s14, [r0, #44]
+ 526              		.loc 1 77 25 view .LVU114
+ 527 0014 37EE277A 		vadd.f32	s14, s14, s15
+ 528 0018 80ED0B7A 		vstr.32	s14, [r0, #44]
+  78:EncoderMotor/encodermotor.c **** 
+  79:EncoderMotor/encodermotor.c ****     // 微分
+  80:EncoderMotor/encodermotor.c ****     float derivative = error - motor->pid_last_error;
+ 529              		.loc 1 80 5 is_stmt 1 view .LVU115
+ 530              		.loc 1 80 37 is_stmt 0 view .LVU116
+ 531 001c D0ED0C6A 		vldr.32	s13, [r0, #48]
+ 532              		.loc 1 80 11 view .LVU117
+ 533 0020 77EEE66A 		vsub.f32	s13, s15, s13
+ 534              	.LVL30:
+  81:EncoderMotor/encodermotor.c ****     motor->pid_last_error = error;
+ 535              		.loc 1 81 5 is_stmt 1 view .LVU118
+ 536              		.loc 1 81 27 is_stmt 0 view .LVU119
+ 537 0024 C0ED0C7A 		vstr.32	s15, [r0, #48]
+  82:EncoderMotor/encodermotor.c **** 
+  83:EncoderMotor/encodermotor.c ****     // PID输出
+  84:EncoderMotor/encodermotor.c ****     float output = (motor->kp * error) + (motor->ki * motor->pid_integral) + (motor->kd * derivativ
+ 538              		.loc 1 84 5 is_stmt 1 view .LVU120
+ 539              		.loc 1 84 26 is_stmt 0 view .LVU121
+ 540 0028 90ED080A 		vldr.32	s0, [r0, #32]
+ 541              		.loc 1 84 31 view .LVU122
+ 542 002c 60EE277A 		vmul.f32	s15, s0, s15
+ 543              	.LVL31:
+ 544              		.loc 1 84 48 view .LVU123
+ 545 0030 90ED096A 		vldr.32	s12, [r0, #36]
+ 546              		.loc 1 84 53 view .LVU124
+ 547 0034 27EE067A 		vmul.f32	s14, s14, s12
+ 548              		.loc 1 84 40 view .LVU125
+ 549 0038 77EE877A 		vadd.f32	s15, s15, s14
+ 550              		.loc 1 84 84 view .LVU126
+ 551 003c 90ED0A0A 		vldr.32	s0, [r0, #40]
+ 552              		.loc 1 84 89 view .LVU127
+ 553 0040 20EE260A 		vmul.f32	s0, s0, s13
+ 554              	.LVL32:
+  85:EncoderMotor/encodermotor.c **** 
+  86:EncoderMotor/encodermotor.c ****     return output;
+ 555              		.loc 1 86 5 is_stmt 1 view .LVU128
+  87:EncoderMotor/encodermotor.c **** }
+ 556              		.loc 1 87 1 is_stmt 0 view .LVU129
+ 557 0044 37EE800A 		vadd.f32	s0, s15, s0
+ 558              	.LVL33:
+ 559              		.loc 1 87 1 view .LVU130
+ 560 0048 7047     		bx	lr
+ 561              		.cfi_endproc
+ 562              	.LFE138:
+ 564              		.section	.rodata.Motor_Encoder_SpeedUpdate.str1.4,"aMS",%progbits,1
+ 565              		.align	2
+ 566              	.LC0:
+ 567 0000 64656C74 		.ascii	"delta: %d\015\012\000"
+ARM GAS  /tmp/ccsF3z8Y.s 			page 13
+
+
+ 567      613A2025 
+ 567      640D0A00 
+ 568              		.global	__aeabi_f2d
+ 569              		.align	2
+ 570              	.LC1:
+ 571 000c 52504D3A 		.ascii	"RPM: %.5f\015\012\000"
+ 571      20252E35 
+ 571      660D0A00 
+ 572              		.section	.text.Motor_Encoder_SpeedUpdate,"ax",%progbits
+ 573              		.align	1
+ 574              		.global	Motor_Encoder_SpeedUpdate
+ 575              		.syntax unified
+ 576              		.thumb
+ 577              		.thumb_func
+ 579              	Motor_Encoder_SpeedUpdate:
+ 580              	.LVL34:
+ 581              	.LFB139:
+  88:EncoderMotor/encodermotor.c **** 
+  89:EncoderMotor/encodermotor.c **** 
+  90:EncoderMotor/encodermotor.c **** void Motor_Encoder_SpeedUpdate(MotorControl_t* motor)
+  91:EncoderMotor/encodermotor.c **** {
+ 582              		.loc 1 91 1 is_stmt 1 view -0
+ 583              		.cfi_startproc
+ 584              		@ args = 0, pretend = 0, frame = 0
+ 585              		@ frame_needed = 0, uses_anonymous_args = 0
+ 586              		.loc 1 91 1 is_stmt 0 view .LVU132
+ 587 0000 10B5     		push	{r4, lr}
+ 588              	.LCFI2:
+ 589              		.cfi_def_cfa_offset 8
+ 590              		.cfi_offset 4, -8
+ 591              		.cfi_offset 14, -4
+ 592 0002 0446     		mov	r4, r0
+  92:EncoderMotor/encodermotor.c ****     int32_t encoder_value = __HAL_TIM_GET_COUNTER(motor->encoder_tim);
+ 593              		.loc 1 92 5 is_stmt 1 view .LVU133
+ 594              		.loc 1 92 29 is_stmt 0 view .LVU134
+ 595 0004 0369     		ldr	r3, [r0, #16]
+ 596 0006 1B68     		ldr	r3, [r3]
+ 597 0008 5B6A     		ldr	r3, [r3, #36]
+ 598              	.LVL35:
+  93:EncoderMotor/encodermotor.c ****     int32_t delta = encoder_value - motor->encoder_last;
+ 599              		.loc 1 93 5 is_stmt 1 view .LVU135
+ 600              		.loc 1 93 42 is_stmt 0 view .LVU136
+ 601 000a 4169     		ldr	r1, [r0, #20]
+ 602              		.loc 1 93 13 view .LVU137
+ 603 000c 591A     		subs	r1, r3, r1
+ 604              	.LVL36:
+  94:EncoderMotor/encodermotor.c ****     
+  95:EncoderMotor/encodermotor.c ****     // 处理溢出（编码器模式通常是 16 位）
+  96:EncoderMotor/encodermotor.c ****     if (delta > 32768) delta -= 65536;
+ 605              		.loc 1 96 5 is_stmt 1 view .LVU138
+ 606              		.loc 1 96 8 is_stmt 0 view .LVU139
+ 607 000e B1F5004F 		cmp	r1, #32768
+ 608 0012 20DD     		ble	.L60
+ 609              		.loc 1 96 24 is_stmt 1 discriminator 1 view .LVU140
+ 610              		.loc 1 96 30 is_stmt 0 discriminator 1 view .LVU141
+ 611 0014 A1F58031 		sub	r1, r1, #65536
+ 612              	.LVL37:
+ARM GAS  /tmp/ccsF3z8Y.s 			page 14
+
+
+ 613              	.L61:
+  97:EncoderMotor/encodermotor.c ****     else if (delta < -32768) delta += 65536;
+  98:EncoderMotor/encodermotor.c **** 
+  99:EncoderMotor/encodermotor.c ****     motor->encoder_last = encoder_value;
+ 614              		.loc 1 99 5 is_stmt 1 view .LVU142
+ 615              		.loc 1 99 25 is_stmt 0 view .LVU143
+ 616 0018 6361     		str	r3, [r4, #20]
+ 100:EncoderMotor/encodermotor.c **** 
+ 101:EncoderMotor/encodermotor.c ****     // 计算转速（假设编码器 PPR = 1000，减速比 ratio = 1）
+ 102:EncoderMotor/encodermotor.c ****     float ppr = 1000.0f;
+ 617              		.loc 1 102 5 is_stmt 1 view .LVU144
+ 618              	.LVL38:
+ 103:EncoderMotor/encodermotor.c ****     float sample_time = 0.1f;  // 100ms
+ 619              		.loc 1 103 5 view .LVU145
+ 104:EncoderMotor/encodermotor.c ****     motor->duty_rpm = delta / ppr * 60.0f / sample_time;
+ 620              		.loc 1 104 5 view .LVU146
+ 621              		.loc 1 104 29 is_stmt 0 view .LVU147
+ 622 001a 07EE901A 		vmov	s15, r1	@ int
+ 623 001e F8EEE76A 		vcvt.f32.s32	s13, s15
+ 624 0022 9FED107A 		vldr.32	s14, .L63
+ 625 0026 C6EE877A 		vdiv.f32	s15, s13, s14
+ 626              		.loc 1 104 35 view .LVU148
+ 627 002a 9FED0F7A 		vldr.32	s14, .L63+4
+ 628 002e 67EE877A 		vmul.f32	s15, s15, s14
+ 629              		.loc 1 104 43 view .LVU149
+ 630 0032 DFED0E6A 		vldr.32	s13, .L63+8
+ 631 0036 87EEA67A 		vdiv.f32	s14, s15, s13
+ 632              		.loc 1 104 21 view .LVU150
+ 633 003a 84ED067A 		vstr.32	s14, [r4, #24]
+ 105:EncoderMotor/encodermotor.c ****     printf("delta: %d\r\n", delta);
+ 634              		.loc 1 105 5 is_stmt 1 view .LVU151
+ 635 003e 0C48     		ldr	r0, .L63+12
+ 636              	.LVL39:
+ 637              		.loc 1 105 5 is_stmt 0 view .LVU152
+ 638 0040 FFF7FEFF 		bl	printf
+ 639              	.LVL40:
+ 106:EncoderMotor/encodermotor.c ****     // 打印结果
+ 107:EncoderMotor/encodermotor.c ****     printf("RPM: %.5f\r\n", motor->duty_rpm);
+ 640              		.loc 1 107 5 is_stmt 1 view .LVU153
+ 641 0044 A069     		ldr	r0, [r4, #24]	@ float
+ 642 0046 FFF7FEFF 		bl	__aeabi_f2d
+ 643              	.LVL41:
+ 644 004a 0246     		mov	r2, r0
+ 645 004c 0B46     		mov	r3, r1
+ 646 004e 0948     		ldr	r0, .L63+16
+ 647 0050 FFF7FEFF 		bl	printf
+ 648              	.LVL42:
+ 108:EncoderMotor/encodermotor.c **** }
+ 649              		.loc 1 108 1 is_stmt 0 view .LVU154
+ 650 0054 10BD     		pop	{r4, pc}
+ 651              	.LVL43:
+ 652              	.L60:
+  97:EncoderMotor/encodermotor.c **** 
+ 653              		.loc 1 97 10 is_stmt 1 view .LVU155
+  97:EncoderMotor/encodermotor.c **** 
+ 654              		.loc 1 97 13 is_stmt 0 view .LVU156
+ 655 0056 11F5004F 		cmn	r1, #32768
+ARM GAS  /tmp/ccsF3z8Y.s 			page 15
+
+
+ 656 005a DDDA     		bge	.L61
+  97:EncoderMotor/encodermotor.c **** 
+ 657              		.loc 1 97 30 is_stmt 1 discriminator 1 view .LVU157
+  97:EncoderMotor/encodermotor.c **** 
+ 658              		.loc 1 97 36 is_stmt 0 discriminator 1 view .LVU158
+ 659 005c 01F58031 		add	r1, r1, #65536
+ 660              	.LVL44:
+  97:EncoderMotor/encodermotor.c **** 
+ 661              		.loc 1 97 36 discriminator 1 view .LVU159
+ 662 0060 DAE7     		b	.L61
+ 663              	.L64:
+ 664 0062 00BF     		.align	2
+ 665              	.L63:
+ 666 0064 00007A44 		.word	1148846080
+ 667 0068 00007042 		.word	1114636288
+ 668 006c CDCCCC3D 		.word	1036831949
+ 669 0070 00000000 		.word	.LC0
+ 670 0074 0C000000 		.word	.LC1
+ 671              		.cfi_endproc
+ 672              	.LFE139:
+ 674              		.global	Motor_A
+ 675              		.section	.data.Motor_A,"aw"
+ 676              		.align	2
+ 679              	Motor_A:
+ 680 0000 00000000 		.word	htim10
+ 681 0004 00000000 		.word	htim11
+ 682 0008 00000000 		.word	0
+ 683 000c 00000000 		.word	0
+ 684 0010 00000000 		.word	htim2
+ 685 0014 00000000 		.space	12
+ 685      00000000 
+ 685      00000000 
+ 686 0020 0000803F 		.word	1065353216
+ 687 0024 CDCC4C3E 		.word	1045220557
+ 688 0028 CDCC4C3D 		.word	1028443341
+ 689 002c 00000000 		.space	8
+ 689      00000000 
+ 690              		.text
+ 691              	.Letext0:
+ 692              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 693              		.file 3 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 694              		.file 4 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 695              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 696              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 697              		.file 7 "Core/Inc/tim.h"
+ 698              		.file 8 "EncoderMotor/encodermotor.h"
+ 699              		.file 9 "<built-in>"
+ARM GAS  /tmp/ccsF3z8Y.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 encodermotor.c
+     /tmp/ccsF3z8Y.s:21     .text.Motor_Init:00000000 $t
+     /tmp/ccsF3z8Y.s:27     .text.Motor_Init:00000000 Motor_Init
+     /tmp/ccsF3z8Y.s:133    .text.Motor_SetPWM:00000000 $t
+     /tmp/ccsF3z8Y.s:139    .text.Motor_SetPWM:00000000 Motor_SetPWM
+     /tmp/ccsF3z8Y.s:397    .text.Motor_Encoder_Init:00000000 $t
+     /tmp/ccsF3z8Y.s:403    .text.Motor_Encoder_Init:00000000 Motor_Encoder_Init
+     /tmp/ccsF3z8Y.s:449    .text.Motor_Encoder_Init:00000020 $d
+     /tmp/ccsF3z8Y.s:454    .text.Motor_Encoder_Read:00000000 $t
+     /tmp/ccsF3z8Y.s:460    .text.Motor_Encoder_Read:00000000 Motor_Encoder_Read
+     /tmp/ccsF3z8Y.s:499    .text.Motor_PID_Calculate:00000000 $t
+     /tmp/ccsF3z8Y.s:505    .text.Motor_PID_Calculate:00000000 Motor_PID_Calculate
+     /tmp/ccsF3z8Y.s:565    .rodata.Motor_Encoder_SpeedUpdate.str1.4:00000000 $d
+     /tmp/ccsF3z8Y.s:573    .text.Motor_Encoder_SpeedUpdate:00000000 $t
+     /tmp/ccsF3z8Y.s:579    .text.Motor_Encoder_SpeedUpdate:00000000 Motor_Encoder_SpeedUpdate
+     /tmp/ccsF3z8Y.s:666    .text.Motor_Encoder_SpeedUpdate:00000064 $d
+     /tmp/ccsF3z8Y.s:679    .data.Motor_A:00000000 Motor_A
+     /tmp/ccsF3z8Y.s:676    .data.Motor_A:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_TIM_PWM_Start
+HAL_TIM_Encoder_Start
+HAL_TIM_Base_Start_IT
+htim6
+__aeabi_f2d
+printf
+htim10
+htim11
+htim2
