@@ -32,6 +32,6 @@ void Motor_SetPWM(MotorControl_t* motor, int16_t duty);
 void Motor_Encoder_Init(MotorControl_t* motor);
 int32_t Motor_Encoder_Read(MotorControl_t* motor);
 void Motor_Encoder_SpeedUpdate(MotorControl_t* motor);
-
+void Motor_PID_Control(MotorControl_t* motor);
 
 #endif

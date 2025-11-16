@@ -1,0 +1,954 @@
+ARM GAS  /tmp/ccr4doJ9.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"freertos.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/freertos.c"
+  20              		.section	.text.StartProcessingTask,"ax",%progbits
+  21              		.align	1
+  22              		.global	StartProcessingTask
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	StartProcessingTask:
+  28              	.LFB143:
+   1:Core/Src/freertos.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/freertos.c **** /**
+   3:Core/Src/freertos.c ****   ******************************************************************************
+   4:Core/Src/freertos.c ****   * File Name          : freertos.c
+   5:Core/Src/freertos.c ****   * Description        : Code for freertos applications
+   6:Core/Src/freertos.c ****   ******************************************************************************
+   7:Core/Src/freertos.c ****   * @attention
+   8:Core/Src/freertos.c ****   *
+   9:Core/Src/freertos.c ****   * Copyright (c) 2025 STMicroelectronics.
+  10:Core/Src/freertos.c ****   * All rights reserved.
+  11:Core/Src/freertos.c ****   *
+  12:Core/Src/freertos.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/freertos.c ****   * in the root directory of this software component.
+  14:Core/Src/freertos.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/freertos.c ****   *
+  16:Core/Src/freertos.c ****   ******************************************************************************
+  17:Core/Src/freertos.c ****   */
+  18:Core/Src/freertos.c **** /* USER CODE END Header */
+  19:Core/Src/freertos.c **** 
+  20:Core/Src/freertos.c **** /* Includes ------------------------------------------------------------------*/
+  21:Core/Src/freertos.c **** #include "FreeRTOS.h"
+  22:Core/Src/freertos.c **** #include "task.h"
+  23:Core/Src/freertos.c **** #include "main.h"
+  24:Core/Src/freertos.c **** #include "cmsis_os.h"
+  25:Core/Src/freertos.c **** #include "queue.h"
+  26:Core/Src/freertos.c **** /* Private includes ----------------------------------------------------------*/
+  27:Core/Src/freertos.c **** /* USER CODE BEGIN Includes */
+  28:Core/Src/freertos.c **** #include "mpu6050.h"
+  29:Core/Src/freertos.c **** #include "usart.h"
+  30:Core/Src/freertos.c **** #include "i2c.h"
+ARM GAS  /tmp/ccr4doJ9.s 			page 2
+
+
+  31:Core/Src/freertos.c **** #include <stdio.h>
+  32:Core/Src/freertos.c **** /* USER CODE END Includes */
+  33:Core/Src/freertos.c **** 
+  34:Core/Src/freertos.c **** /* Private typedef -----------------------------------------------------------*/
+  35:Core/Src/freertos.c **** /* USER CODE BEGIN PTD */
+  36:Core/Src/freertos.c **** int _write(int file, char *data, int len)
+  37:Core/Src/freertos.c **** {
+  38:Core/Src/freertos.c ****     HAL_UART_Transmit(&huart1, (uint8_t*)data, len, HAL_MAX_DELAY);
+  39:Core/Src/freertos.c ****     return len;
+  40:Core/Src/freertos.c **** }
+  41:Core/Src/freertos.c **** /* USER CODE END PTD */
+  42:Core/Src/freertos.c **** 
+  43:Core/Src/freertos.c **** /* Private define ------------------------------------------------------------*/
+  44:Core/Src/freertos.c **** /* USER CODE BEGIN PD */
+  45:Core/Src/freertos.c **** 
+  46:Core/Src/freertos.c **** /* USER CODE END PD */
+  47:Core/Src/freertos.c **** 
+  48:Core/Src/freertos.c **** /* Private macro -------------------------------------------------------------*/
+  49:Core/Src/freertos.c **** /* USER CODE BEGIN PM */
+  50:Core/Src/freertos.c **** 
+  51:Core/Src/freertos.c **** /* USER CODE END PM */
+  52:Core/Src/freertos.c **** 
+  53:Core/Src/freertos.c **** /* Private variables ---------------------------------------------------------*/
+  54:Core/Src/freertos.c **** /* USER CODE BEGIN Variables */
+  55:Core/Src/freertos.c **** 
+  56:Core/Src/freertos.c **** /* USER CODE END Variables */
+  57:Core/Src/freertos.c **** /* Definitions for ProcessingTask */
+  58:Core/Src/freertos.c **** osThreadId_t ProcessingTaskHandle;
+  59:Core/Src/freertos.c **** const osThreadAttr_t ProcessingTask_attributes = {
+  60:Core/Src/freertos.c ****   .name = "ProcessingTask",
+  61:Core/Src/freertos.c ****   .stack_size = 1024 * 4,
+  62:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityNormal,
+  63:Core/Src/freertos.c **** };
+  64:Core/Src/freertos.c **** /* Definitions for SensorTask */
+  65:Core/Src/freertos.c **** osThreadId_t SensorTaskHandle;
+  66:Core/Src/freertos.c **** const osThreadAttr_t SensorTask_attributes = {
+  67:Core/Src/freertos.c ****   .name = "SensorTask",
+  68:Core/Src/freertos.c ****   .stack_size = 1024 * 4,
+  69:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityLow,
+  70:Core/Src/freertos.c **** };
+  71:Core/Src/freertos.c **** /* Definitions for UartTask */
+  72:Core/Src/freertos.c **** osThreadId_t UartTaskHandle;
+  73:Core/Src/freertos.c **** const osThreadAttr_t UartTask_attributes = {
+  74:Core/Src/freertos.c ****   .name = "UartTask",
+  75:Core/Src/freertos.c ****   .stack_size = 1024 * 4,
+  76:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityLow,
+  77:Core/Src/freertos.c **** };
+  78:Core/Src/freertos.c **** /* Definitions for dataQueue01 */
+  79:Core/Src/freertos.c **** osMessageQueueId_t dataQueue01Handle;
+  80:Core/Src/freertos.c **** const osMessageQueueAttr_t dataQueue01_attributes = {
+  81:Core/Src/freertos.c ****   .name = "dataQueue01"
+  82:Core/Src/freertos.c **** };
+  83:Core/Src/freertos.c **** 
+  84:Core/Src/freertos.c **** /* Private function prototypes -----------------------------------------------*/
+  85:Core/Src/freertos.c **** /* USER CODE BEGIN FunctionPrototypes */
+  86:Core/Src/freertos.c **** 
+  87:Core/Src/freertos.c **** /* USER CODE END FunctionPrototypes */
+ARM GAS  /tmp/ccr4doJ9.s 			page 3
+
+
+  88:Core/Src/freertos.c **** 
+  89:Core/Src/freertos.c **** void StartProcessingTask(void *argument);
+  90:Core/Src/freertos.c **** void StartSensorTask(void *argument);
+  91:Core/Src/freertos.c **** void StartUartTask(void *argument);
+  92:Core/Src/freertos.c **** 
+  93:Core/Src/freertos.c **** void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
+  94:Core/Src/freertos.c **** 
+  95:Core/Src/freertos.c **** /**
+  96:Core/Src/freertos.c ****   * @brief  FreeRTOS initialization
+  97:Core/Src/freertos.c ****   * @param  None
+  98:Core/Src/freertos.c ****   * @retval None
+  99:Core/Src/freertos.c ****   */
+ 100:Core/Src/freertos.c **** void MX_FREERTOS_Init(void) {
+ 101:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
+ 102:Core/Src/freertos.c **** 
+ 103:Core/Src/freertos.c ****   /* USER CODE END Init */
+ 104:Core/Src/freertos.c **** 
+ 105:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_MUTEX */
+ 106:Core/Src/freertos.c ****   /* add mutexes, ... */
+ 107:Core/Src/freertos.c ****   /* USER CODE END RTOS_MUTEX */
+ 108:Core/Src/freertos.c **** 
+ 109:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_SEMAPHORES */
+ 110:Core/Src/freertos.c ****   /* add semaphores, ... */
+ 111:Core/Src/freertos.c ****   /* USER CODE END RTOS_SEMAPHORES */
+ 112:Core/Src/freertos.c **** 
+ 113:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_TIMERS */
+ 114:Core/Src/freertos.c ****   /* start timers, add new ones, ... */
+ 115:Core/Src/freertos.c ****   /* USER CODE END RTOS_TIMERS */
+ 116:Core/Src/freertos.c **** 
+ 117:Core/Src/freertos.c ****   /* Create the queue(s) */
+ 118:Core/Src/freertos.c ****   /* creation of dataQueue01 */
+ 119:Core/Src/freertos.c ****   dataQueue01Handle = osMessageQueueNew (100, sizeof(MPU6050DATATYPE*), &dataQueue01_attributes);
+ 120:Core/Src/freertos.c **** 
+ 121:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_QUEUES */
+ 122:Core/Src/freertos.c ****   /* add queues, ... */
+ 123:Core/Src/freertos.c ****   /* USER CODE END RTOS_QUEUES */
+ 124:Core/Src/freertos.c **** 
+ 125:Core/Src/freertos.c ****   /* Create the thread(s) */
+ 126:Core/Src/freertos.c ****   /* creation of ProcessingTask */
+ 127:Core/Src/freertos.c ****   ProcessingTaskHandle = osThreadNew(StartProcessingTask, NULL, &ProcessingTask_attributes);
+ 128:Core/Src/freertos.c **** 
+ 129:Core/Src/freertos.c ****   /* creation of SensorTask */
+ 130:Core/Src/freertos.c ****   SensorTaskHandle = osThreadNew(StartSensorTask, NULL, &SensorTask_attributes);
+ 131:Core/Src/freertos.c **** 
+ 132:Core/Src/freertos.c ****   /* creation of UartTask */
+ 133:Core/Src/freertos.c ****   UartTaskHandle = osThreadNew(StartUartTask, NULL, &UartTask_attributes);
+ 134:Core/Src/freertos.c **** 
+ 135:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_THREADS */
+ 136:Core/Src/freertos.c ****   /* add threads, ... */
+ 137:Core/Src/freertos.c ****   /* USER CODE END RTOS_THREADS */
+ 138:Core/Src/freertos.c **** 
+ 139:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_EVENTS */
+ 140:Core/Src/freertos.c ****   /* add events, ... */
+ 141:Core/Src/freertos.c ****   /* USER CODE END RTOS_EVENTS */
+ 142:Core/Src/freertos.c **** 
+ 143:Core/Src/freertos.c **** }
+ 144:Core/Src/freertos.c **** 
+ARM GAS  /tmp/ccr4doJ9.s 			page 4
+
+
+ 145:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartProcessingTask */
+ 146:Core/Src/freertos.c **** /**
+ 147:Core/Src/freertos.c ****   * @brief  Function implementing the ProcessingTask thread.
+ 148:Core/Src/freertos.c ****   * @param  argument: Not used
+ 149:Core/Src/freertos.c ****   * @retval None
+ 150:Core/Src/freertos.c ****   */
+ 151:Core/Src/freertos.c **** /* USER CODE END Header_StartProcessingTask */
+ 152:Core/Src/freertos.c **** void StartProcessingTask(void *argument)
+ 153:Core/Src/freertos.c **** {
+  29              		.loc 1 153 1 view -0
+  30              		.cfi_startproc
+  31              		@ Volatile: function does not return.
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              	.LVL0:
+  35              		.loc 1 153 1 is_stmt 0 view .LVU1
+  36 0000 08B5     		push	{r3, lr}
+  37              	.LCFI0:
+  38              		.cfi_def_cfa_offset 8
+  39              		.cfi_offset 3, -8
+  40              		.cfi_offset 14, -4
+  41              	.LVL1:
+  42              	.L2:
+ 154:Core/Src/freertos.c ****   /* USER CODE BEGIN StartProcessingTask */
+ 155:Core/Src/freertos.c ****   /* Infinite loop */
+ 156:Core/Src/freertos.c ****   for(;;)
+  43              		.loc 1 156 3 is_stmt 1 view .LVU2
+ 157:Core/Src/freertos.c ****   {
+ 158:Core/Src/freertos.c ****     osDelay(1);
+  44              		.loc 1 158 5 discriminator 1 view .LVU3
+  45 0002 0120     		movs	r0, #1
+  46 0004 FFF7FEFF 		bl	osDelay
+  47              	.LVL2:
+ 156:Core/Src/freertos.c ****   {
+  48              		.loc 1 156 3 view .LVU4
+  49 0008 FBE7     		b	.L2
+  50              		.cfi_endproc
+  51              	.LFE143:
+  53              		.section	.text.StartSensorTask,"ax",%progbits
+  54              		.align	1
+  55              		.global	StartSensorTask
+  56              		.syntax unified
+  57              		.thumb
+  58              		.thumb_func
+  60              	StartSensorTask:
+  61              	.LVL3:
+  62              	.LFB144:
+ 159:Core/Src/freertos.c ****   }
+ 160:Core/Src/freertos.c ****   /* USER CODE END StartProcessingTask */
+ 161:Core/Src/freertos.c **** }
+ 162:Core/Src/freertos.c **** 
+ 163:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartSensorTask */
+ 164:Core/Src/freertos.c **** /**
+ 165:Core/Src/freertos.c **** * @brief Function implementing the SensorTask thread.
+ 166:Core/Src/freertos.c **** * @param argument: Not used
+ 167:Core/Src/freertos.c **** * @retval None
+ 168:Core/Src/freertos.c **** */
+ARM GAS  /tmp/ccr4doJ9.s 			page 5
+
+
+ 169:Core/Src/freertos.c **** /* USER CODE END Header_StartSensorTask */
+ 170:Core/Src/freertos.c **** void StartSensorTask(void *argument)
+ 171:Core/Src/freertos.c **** {
+  63              		.loc 1 171 1 view -0
+  64              		.cfi_startproc
+  65              		@ Volatile: function does not return.
+  66              		@ args = 0, pretend = 0, frame = 8
+  67              		@ frame_needed = 0, uses_anonymous_args = 0
+  68              		.loc 1 171 1 is_stmt 0 view .LVU6
+  69 0000 00B5     		push	{lr}
+  70              	.LCFI1:
+  71              		.cfi_def_cfa_offset 4
+  72              		.cfi_offset 14, -4
+  73 0002 83B0     		sub	sp, sp, #12
+  74              	.LCFI2:
+  75              		.cfi_def_cfa_offset 16
+ 172:Core/Src/freertos.c ****   /* USER CODE BEGIN StartSensorTask */
+ 173:Core/Src/freertos.c ****   MPU6050_Init(Sensor_I2C2_Serch());
+  76              		.loc 1 173 3 is_stmt 1 view .LVU7
+  77 0004 FFF7FEFF 		bl	Sensor_I2C2_Serch
+  78              	.LVL4:
+  79              		.loc 1 173 3 is_stmt 0 discriminator 1 view .LVU8
+  80 0008 FFF7FEFF 		bl	MPU6050_Init
+  81              	.LVL5:
+  82 000c 06E0     		b	.L5
+  83              	.L10:
+  84              	.LBB2:
+ 174:Core/Src/freertos.c **** 
+ 175:Core/Src/freertos.c **** 
+ 176:Core/Src/freertos.c ****   /* Infinite loop */
+ 177:Core/Src/freertos.c ****   for(;;)
+ 178:Core/Src/freertos.c ****   {
+ 179:Core/Src/freertos.c **** MPU6050DATATYPE* p_mpu_data = (MPU6050DATATYPE*) pvPortMalloc(sizeof(Mpu6050_Data));
+ 180:Core/Src/freertos.c ****       
+ 181:Core/Src/freertos.c **** 
+ 182:Core/Src/freertos.c **** //1 检查内存是否充足
+ 183:Core/Src/freertos.c ****       if (p_mpu_data == NULL) {
+ 184:Core/Src/freertos.c ****             // 内存不足，处理错误，例如延时后重试
+ 185:Core/Src/freertos.c ****             osDelay(100);
+  85              		.loc 1 185 13 is_stmt 1 view .LVU9
+  86 000e 6420     		movs	r0, #100
+  87 0010 FFF7FEFF 		bl	osDelay
+  88              	.LVL6:
+ 186:Core/Src/freertos.c ****             continue;
+  89              		.loc 1 186 13 view .LVU10
+  90 0014 02E0     		b	.L5
+  91              	.L8:
+ 187:Core/Src/freertos.c ****         }
+ 188:Core/Src/freertos.c **** 
+ 189:Core/Src/freertos.c **** 
+ 190:Core/Src/freertos.c ****       MPU6050_Read_Accel();
+ 191:Core/Src/freertos.c ****       MPU6050_Read_Gyro();
+ 192:Core/Src/freertos.c ****       MPU6050_Read_Temp();
+ 193:Core/Src/freertos.c **** 
+ 194:Core/Src/freertos.c **** 
+ 195:Core/Src/freertos.c ****         *p_mpu_data = Mpu6050_Data; // 结构体整体赋值，将全局数据复制到堆内存
+ 196:Core/Src/freertos.c **** 
+ARM GAS  /tmp/ccr4doJ9.s 			page 6
+
+
+ 197:Core/Src/freertos.c ****  if (xQueueSend(dataQueue01Handle, &p_mpu_data, portMAX_DELAY) != pdPASS) {
+ 198:Core/Src/freertos.c ****         // 如果发送失败（例如队列已满），则需要释放已分配的内存，否则�
+ 199:Core/Src/freertos.c ****         vPortFree(p_mpu_data);
+ 200:Core/Src/freertos.c ****         p_mpu_data = NULL; // 最佳实践：将指针置空
+ 201:Core/Src/freertos.c ****         // 可以添加错误日志或告警
+ 202:Core/Src/freertos.c ****     }
+ 203:Core/Src/freertos.c **** 
+ 204:Core/Src/freertos.c **** 
+ 205:Core/Src/freertos.c ****      osDelay(100);
+  92              		.loc 1 205 6 view .LVU11
+  93 0016 6420     		movs	r0, #100
+  94 0018 FFF7FEFF 		bl	osDelay
+  95              	.LVL7:
+  96              	.L5:
+  97              	.LBE2:
+ 177:Core/Src/freertos.c ****   {
+  98              		.loc 1 177 3 view .LVU12
+  99              	.LBB3:
+ 179:Core/Src/freertos.c ****       
+ 100              		.loc 1 179 1 view .LVU13
+ 179:Core/Src/freertos.c ****       
+ 101              		.loc 1 179 50 is_stmt 0 view .LVU14
+ 102 001c 1C20     		movs	r0, #28
+ 103 001e FFF7FEFF 		bl	pvPortMalloc
+ 104              	.LVL8:
+ 179:Core/Src/freertos.c ****       
+ 105              		.loc 1 179 18 discriminator 1 view .LVU15
+ 106 0022 0190     		str	r0, [sp, #4]
+ 183:Core/Src/freertos.c ****             // 内存不足，处理错误，例如延时后重试
+ 107              		.loc 1 183 7 is_stmt 1 view .LVU16
+ 183:Core/Src/freertos.c ****             // 内存不足，处理错误，例如延时后重试
+ 108              		.loc 1 183 10 is_stmt 0 view .LVU17
+ 109 0024 0028     		cmp	r0, #0
+ 110 0026 F2D0     		beq	.L10
+ 190:Core/Src/freertos.c ****       MPU6050_Read_Gyro();
+ 111              		.loc 1 190 7 is_stmt 1 view .LVU18
+ 112 0028 FFF7FEFF 		bl	MPU6050_Read_Accel
+ 113              	.LVL9:
+ 191:Core/Src/freertos.c ****       MPU6050_Read_Temp();
+ 114              		.loc 1 191 7 view .LVU19
+ 115 002c FFF7FEFF 		bl	MPU6050_Read_Gyro
+ 116              	.LVL10:
+ 192:Core/Src/freertos.c **** 
+ 117              		.loc 1 192 7 view .LVU20
+ 118 0030 FFF7FEFF 		bl	MPU6050_Read_Temp
+ 119              	.LVL11:
+ 195:Core/Src/freertos.c **** 
+ 120              		.loc 1 195 9 view .LVU21
+ 195:Core/Src/freertos.c **** 
+ 121              		.loc 1 195 21 is_stmt 0 view .LVU22
+ 122 0034 019C     		ldr	r4, [sp, #4]
+ 123 0036 0B4D     		ldr	r5, .L11
+ 124 0038 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 125 003a 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 126 003c 95E80700 		ldm	r5, {r0, r1, r2}
+ 127 0040 84E80700 		stm	r4, {r0, r1, r2}
+ 197:Core/Src/freertos.c ****         // 如果发送失败（例如队列已满），则需要释放已分配的内存，否则�
+ARM GAS  /tmp/ccr4doJ9.s 			page 7
+
+
+ 128              		.loc 1 197 2 is_stmt 1 view .LVU23
+ 197:Core/Src/freertos.c ****         // 如果发送失败（例如队列已满），则需要释放已分配的内存，否则�
+ 129              		.loc 1 197 6 is_stmt 0 view .LVU24
+ 130 0044 0023     		movs	r3, #0
+ 131 0046 4FF0FF32 		mov	r2, #-1
+ 132 004a 01A9     		add	r1, sp, #4
+ 133 004c 0648     		ldr	r0, .L11+4
+ 134 004e 0068     		ldr	r0, [r0]
+ 135 0050 FFF7FEFF 		bl	xQueueGenericSend
+ 136              	.LVL12:
+ 197:Core/Src/freertos.c ****         // 如果发送失败（例如队列已满），则需要释放已分配的内存，否则�
+ 137              		.loc 1 197 5 discriminator 1 view .LVU25
+ 138 0054 0128     		cmp	r0, #1
+ 139 0056 DED0     		beq	.L8
+ 199:Core/Src/freertos.c ****         p_mpu_data = NULL; // 最佳实践：将指针置空
+ 140              		.loc 1 199 9 is_stmt 1 view .LVU26
+ 141 0058 0198     		ldr	r0, [sp, #4]
+ 142 005a FFF7FEFF 		bl	vPortFree
+ 143              	.LVL13:
+ 200:Core/Src/freertos.c ****         // 可以添加错误日志或告警
+ 144              		.loc 1 200 9 view .LVU27
+ 200:Core/Src/freertos.c ****         // 可以添加错误日志或告警
+ 145              		.loc 1 200 20 is_stmt 0 view .LVU28
+ 146 005e 0023     		movs	r3, #0
+ 147 0060 0193     		str	r3, [sp, #4]
+ 148 0062 D8E7     		b	.L8
+ 149              	.L12:
+ 150              		.align	2
+ 151              	.L11:
+ 152 0064 00000000 		.word	Mpu6050_Data
+ 153 0068 00000000 		.word	dataQueue01Handle
+ 154              	.LBE3:
+ 155              		.cfi_endproc
+ 156              	.LFE144:
+ 158              		.section	.rodata.StartUartTask.str1.4,"aMS",%progbits,1
+ 159              		.align	2
+ 160              	.LC0:
+ 161 0000 2D2D2D20 		.ascii	"--- MPU6050 Data ---\015\000"
+ 161      4D505536 
+ 161      30353020 
+ 161      44617461 
+ 161      202D2D2D 
+ 162              		.global	__aeabi_f2d
+ 163 0016 0000     		.align	2
+ 164              	.LC1:
+ 165 0018 54656D70 		.ascii	"Temperature: %.2f C\015\012\000"
+ 165      65726174 
+ 165      7572653A 
+ 165      20252E32 
+ 165      6620430D 
+ 166 002e 0000     		.align	2
+ 167              	.LC2:
+ 168 0030 41636365 		.ascii	"Accel (X, Y, Z): %.2f, %.2f, %.2f\015\012\000"
+ 168      6C202858 
+ 168      2C20592C 
+ 168      205A293A 
+ 168      20252E32 
+ARM GAS  /tmp/ccr4doJ9.s 			page 8
+
+
+ 169              		.align	2
+ 170              	.LC3:
+ 171 0054 4779726F 		.ascii	"Gyro (X, Y, Z): %.2f, %.2f, %.2f\015\012\000"
+ 171      2028582C 
+ 171      20592C20 
+ 171      5A293A20 
+ 171      252E3266 
+ 172 0077 00       		.align	2
+ 173              	.LC4:
+ 174 0078 2D2D2D2D 		.ascii	"--------------------\015\012\015\000"
+ 174      2D2D2D2D 
+ 174      2D2D2D2D 
+ 174      2D2D2D2D 
+ 174      2D2D2D2D 
+ 175              		.section	.text.StartUartTask,"ax",%progbits
+ 176              		.align	1
+ 177              		.global	StartUartTask
+ 178              		.syntax unified
+ 179              		.thumb
+ 180              		.thumb_func
+ 182              	StartUartTask:
+ 183              	.LFB145:
+ 206:Core/Src/freertos.c ****   } 
+ 207:Core/Src/freertos.c **** 
+ 208:Core/Src/freertos.c ****   /* USER CODE END StartSensorTask */
+ 209:Core/Src/freertos.c **** }
+ 210:Core/Src/freertos.c **** 
+ 211:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartUartTask */
+ 212:Core/Src/freertos.c **** /**
+ 213:Core/Src/freertos.c **** * @brief Function implementing the UartTask thread.
+ 214:Core/Src/freertos.c **** * @param argument: Not used
+ 215:Core/Src/freertos.c **** * @retval None
+ 216:Core/Src/freertos.c **** */
+ 217:Core/Src/freertos.c **** /* USER CODE END Header_StartUartTask */
+ 218:Core/Src/freertos.c **** void StartUartTask(void *argument)
+ 219:Core/Src/freertos.c **** {
+ 184              		.loc 1 219 1 is_stmt 1 view -0
+ 185              		.cfi_startproc
+ 186              		@ Volatile: function does not return.
+ 187              		@ args = 0, pretend = 0, frame = 8
+ 188              		@ frame_needed = 0, uses_anonymous_args = 0
+ 189              	.LVL14:
+ 190              		.loc 1 219 1 is_stmt 0 view .LVU30
+ 191 0000 80B5     		push	{r7, lr}
+ 192              	.LCFI3:
+ 193              		.cfi_def_cfa_offset 8
+ 194              		.cfi_offset 7, -8
+ 195              		.cfi_offset 14, -4
+ 196 0002 86B0     		sub	sp, sp, #24
+ 197              	.LCFI4:
+ 198              		.cfi_def_cfa_offset 32
+ 199 0004 44E0     		b	.L15
+ 200              	.LVL15:
+ 201              	.L17:
+ 220:Core/Src/freertos.c ****   /* USER CODE BEGIN StartUartTask */
+ 221:Core/Src/freertos.c ****    MPU6050DATATYPE* p_received_mpu_data; // 定义一个指针变量，用于接收从队列中取�
+ 222:Core/Src/freertos.c **** 
+ARM GAS  /tmp/ccr4doJ9.s 			page 9
+
+
+ 223:Core/Src/freertos.c ****   /* Infinite loop */
+ 224:Core/Src/freertos.c ****   for(;;)
+ 225:Core/Src/freertos.c ****   {
+ 226:Core/Src/freertos.c ****     // 1. 从队列接收指向 MPU6050_Data_t 结构体的指针
+ 227:Core/Src/freertos.c ****     // xQueueReceive 的第二个参数是一个指向指针的指针，因为队列会将接收到
+ 228:Core/Src/freertos.c ****     if (xQueueReceive(dataQueue01Handle, &p_received_mpu_data, portMAX_DELAY) == pdPASS) {
+ 229:Core/Src/freertos.c ****       // 成功从队列中接收到了数据指针
+ 230:Core/Src/freertos.c **** 
+ 231:Core/Src/freertos.c ****       // 2. 通过接收到的指针 p_received_mpu_data 访问 MPU6050_Data_t 结构体中的各�
+ 232:Core/Src/freertos.c ****       // 并使用 printf 将数据格式化输出到串口
+ 233:Core/Src/freertos.c ****       printf("--- MPU6050 Data ---\r\n"); // \r\n 用于新行和回车，确保在串口终端显�
+ 202              		.loc 1 233 7 is_stmt 1 view .LVU31
+ 203 0006 2748     		ldr	r0, .L18
+ 204 0008 FFF7FEFF 		bl	puts
+ 205              	.LVL16:
+ 234:Core/Src/freertos.c ****       printf("Temperature: %.2f C\r\n", p_received_mpu_data->Temp);
+ 206              		.loc 1 234 7 view .LVU32
+ 207 000c 059B     		ldr	r3, [sp, #20]
+ 208 000e 9869     		ldr	r0, [r3, #24]	@ float
+ 209 0010 FFF7FEFF 		bl	__aeabi_f2d
+ 210              	.LVL17:
+ 211 0014 0246     		mov	r2, r0
+ 212 0016 0B46     		mov	r3, r1
+ 213 0018 2348     		ldr	r0, .L18+4
+ 214 001a FFF7FEFF 		bl	printf
+ 215              	.LVL18:
+ 235:Core/Src/freertos.c ****       printf("Accel (X, Y, Z): %.2f, %.2f, %.2f\r\n",
+ 216              		.loc 1 235 7 view .LVU33
+ 236:Core/Src/freertos.c ****              p_received_mpu_data->Accel_X,
+ 217              		.loc 1 236 33 is_stmt 0 view .LVU34
+ 218 001e 059B     		ldr	r3, [sp, #20]
+ 237:Core/Src/freertos.c ****              p_received_mpu_data->Accel_Y,
+ 219              		.loc 1 237 33 view .LVU35
+ 220 0020 5E68     		ldr	r6, [r3, #4]	@ float
+ 238:Core/Src/freertos.c ****              p_received_mpu_data->Accel_Z);
+ 221              		.loc 1 238 33 view .LVU36
+ 222 0022 9F68     		ldr	r7, [r3, #8]	@ float
+ 235:Core/Src/freertos.c ****              p_received_mpu_data->Accel_X,
+ 223              		.loc 1 235 7 view .LVU37
+ 224 0024 1868     		ldr	r0, [r3]	@ float
+ 225 0026 FFF7FEFF 		bl	__aeabi_f2d
+ 226              	.LVL19:
+ 227 002a 0446     		mov	r4, r0
+ 228 002c 0D46     		mov	r5, r1
+ 229 002e 3846     		mov	r0, r7	@ float
+ 230 0030 FFF7FEFF 		bl	__aeabi_f2d
+ 231              	.LVL20:
+ 232 0034 CDE90201 		strd	r0, [sp, #8]
+ 233 0038 3046     		mov	r0, r6	@ float
+ 234 003a FFF7FEFF 		bl	__aeabi_f2d
+ 235              	.LVL21:
+ 236 003e CDE90001 		strd	r0, [sp]
+ 237 0042 2246     		mov	r2, r4
+ 238 0044 2B46     		mov	r3, r5
+ 239 0046 1948     		ldr	r0, .L18+8
+ 240 0048 FFF7FEFF 		bl	printf
+ 241              	.LVL22:
+ARM GAS  /tmp/ccr4doJ9.s 			page 10
+
+
+ 239:Core/Src/freertos.c ****       printf("Gyro (X, Y, Z): %.2f, %.2f, %.2f\r\n",
+ 242              		.loc 1 239 7 is_stmt 1 view .LVU38
+ 240:Core/Src/freertos.c ****              p_received_mpu_data->Gyro_X,
+ 243              		.loc 1 240 33 is_stmt 0 view .LVU39
+ 244 004c 059B     		ldr	r3, [sp, #20]
+ 241:Core/Src/freertos.c ****              p_received_mpu_data->Gyro_Y,
+ 245              		.loc 1 241 33 view .LVU40
+ 246 004e 1E69     		ldr	r6, [r3, #16]	@ float
+ 242:Core/Src/freertos.c ****              p_received_mpu_data->Gyro_Z);
+ 247              		.loc 1 242 33 view .LVU41
+ 248 0050 5F69     		ldr	r7, [r3, #20]	@ float
+ 239:Core/Src/freertos.c ****              p_received_mpu_data->Gyro_X,
+ 249              		.loc 1 239 7 view .LVU42
+ 250 0052 D868     		ldr	r0, [r3, #12]	@ float
+ 251 0054 FFF7FEFF 		bl	__aeabi_f2d
+ 252              	.LVL23:
+ 253 0058 0446     		mov	r4, r0
+ 254 005a 0D46     		mov	r5, r1
+ 255 005c 3846     		mov	r0, r7	@ float
+ 256 005e FFF7FEFF 		bl	__aeabi_f2d
+ 257              	.LVL24:
+ 258 0062 CDE90201 		strd	r0, [sp, #8]
+ 259 0066 3046     		mov	r0, r6	@ float
+ 260 0068 FFF7FEFF 		bl	__aeabi_f2d
+ 261              	.LVL25:
+ 262 006c CDE90001 		strd	r0, [sp]
+ 263 0070 2246     		mov	r2, r4
+ 264 0072 2B46     		mov	r3, r5
+ 265 0074 0E48     		ldr	r0, .L18+12
+ 266 0076 FFF7FEFF 		bl	printf
+ 267              	.LVL26:
+ 243:Core/Src/freertos.c ****       printf("--------------------\r\n\r\n");
+ 268              		.loc 1 243 7 is_stmt 1 view .LVU43
+ 269 007a 0E48     		ldr	r0, .L18+16
+ 270 007c FFF7FEFF 		bl	puts
+ 271              	.LVL27:
+ 244:Core/Src/freertos.c **** 
+ 245:Core/Src/freertos.c ****       // 3. **重要：** 使用完毕后，**释放**动态分配的内存
+ 246:Core/Src/freertos.c ****       // 这块内存是 SensorTask 中通过 pvPortMalloc 分配的，必须由接收方释放，�
+ 247:Core/Src/freertos.c ****       vPortFree(p_received_mpu_data);
+ 272              		.loc 1 247 7 view .LVU44
+ 273 0080 0598     		ldr	r0, [sp, #20]
+ 274 0082 FFF7FEFF 		bl	vPortFree
+ 275              	.LVL28:
+ 248:Core/Src/freertos.c ****       p_received_mpu_data = NULL; // 将指针置空，避免后续意外使用已释放的内存�
+ 276              		.loc 1 248 7 view .LVU45
+ 277              		.loc 1 248 27 is_stmt 0 view .LVU46
+ 278 0086 0023     		movs	r3, #0
+ 279 0088 0593     		str	r3, [sp, #20]
+ 280              	.L14:
+ 249:Core/Src/freertos.c ****     }
+ 250:Core/Src/freertos.c **** 
+ 251:Core/Src/freertos.c ****     osDelay(50); // 短暂延时，避免任务空转占用过多CPU，让其他任务有机会运�
+ 281              		.loc 1 251 5 is_stmt 1 view .LVU47
+ 282 008a 3220     		movs	r0, #50
+ 283 008c FFF7FEFF 		bl	osDelay
+ 284              	.LVL29:
+ARM GAS  /tmp/ccr4doJ9.s 			page 11
+
+
+ 224:Core/Src/freertos.c ****   {
+ 285              		.loc 1 224 3 view .LVU48
+ 286              	.L15:
+ 221:Core/Src/freertos.c **** 
+ 287              		.loc 1 221 4 view .LVU49
+ 224:Core/Src/freertos.c ****   {
+ 288              		.loc 1 224 3 view .LVU50
+ 228:Core/Src/freertos.c ****       // 成功从队列中接收到了数据指针
+ 289              		.loc 1 228 5 view .LVU51
+ 228:Core/Src/freertos.c ****       // 成功从队列中接收到了数据指针
+ 290              		.loc 1 228 9 is_stmt 0 view .LVU52
+ 291 0090 4FF0FF32 		mov	r2, #-1
+ 292 0094 05A9     		add	r1, sp, #20
+ 293 0096 084B     		ldr	r3, .L18+20
+ 294 0098 1868     		ldr	r0, [r3]
+ 295 009a FFF7FEFF 		bl	xQueueReceive
+ 296              	.LVL30:
+ 228:Core/Src/freertos.c ****       // 成功从队列中接收到了数据指针
+ 297              		.loc 1 228 8 discriminator 1 view .LVU53
+ 298 009e 0128     		cmp	r0, #1
+ 299 00a0 B1D0     		beq	.L17
+ 300 00a2 F2E7     		b	.L14
+ 301              	.L19:
+ 302              		.align	2
+ 303              	.L18:
+ 304 00a4 00000000 		.word	.LC0
+ 305 00a8 18000000 		.word	.LC1
+ 306 00ac 30000000 		.word	.LC2
+ 307 00b0 54000000 		.word	.LC3
+ 308 00b4 78000000 		.word	.LC4
+ 309 00b8 00000000 		.word	dataQueue01Handle
+ 310              		.cfi_endproc
+ 311              	.LFE145:
+ 313              		.section	.text._write,"ax",%progbits
+ 314              		.align	1
+ 315              		.global	_write
+ 316              		.syntax unified
+ 317              		.thumb
+ 318              		.thumb_func
+ 320              	_write:
+ 321              	.LVL31:
+ 322              	.LFB141:
+  37:Core/Src/freertos.c ****     HAL_UART_Transmit(&huart1, (uint8_t*)data, len, HAL_MAX_DELAY);
+ 323              		.loc 1 37 1 is_stmt 1 view -0
+ 324              		.cfi_startproc
+ 325              		@ args = 0, pretend = 0, frame = 0
+ 326              		@ frame_needed = 0, uses_anonymous_args = 0
+  37:Core/Src/freertos.c ****     HAL_UART_Transmit(&huart1, (uint8_t*)data, len, HAL_MAX_DELAY);
+ 327              		.loc 1 37 1 is_stmt 0 view .LVU55
+ 328 0000 10B5     		push	{r4, lr}
+ 329              	.LCFI5:
+ 330              		.cfi_def_cfa_offset 8
+ 331              		.cfi_offset 4, -8
+ 332              		.cfi_offset 14, -4
+ 333 0002 1446     		mov	r4, r2
+  38:Core/Src/freertos.c ****     return len;
+ 334              		.loc 1 38 5 is_stmt 1 view .LVU56
+ARM GAS  /tmp/ccr4doJ9.s 			page 12
+
+
+ 335 0004 4FF0FF33 		mov	r3, #-1
+ 336 0008 92B2     		uxth	r2, r2
+ 337              	.LVL32:
+  38:Core/Src/freertos.c ****     return len;
+ 338              		.loc 1 38 5 is_stmt 0 view .LVU57
+ 339 000a 0248     		ldr	r0, .L22
+ 340              	.LVL33:
+  38:Core/Src/freertos.c ****     return len;
+ 341              		.loc 1 38 5 view .LVU58
+ 342 000c FFF7FEFF 		bl	HAL_UART_Transmit
+ 343              	.LVL34:
+  39:Core/Src/freertos.c **** }
+ 344              		.loc 1 39 5 is_stmt 1 view .LVU59
+  40:Core/Src/freertos.c **** /* USER CODE END PTD */
+ 345              		.loc 1 40 1 is_stmt 0 view .LVU60
+ 346 0010 2046     		mov	r0, r4
+ 347 0012 10BD     		pop	{r4, pc}
+ 348              	.LVL35:
+ 349              	.L23:
+  40:Core/Src/freertos.c **** /* USER CODE END PTD */
+ 350              		.loc 1 40 1 view .LVU61
+ 351              		.align	2
+ 352              	.L22:
+ 353 0014 00000000 		.word	huart1
+ 354              		.cfi_endproc
+ 355              	.LFE141:
+ 357              		.section	.text.MX_FREERTOS_Init,"ax",%progbits
+ 358              		.align	1
+ 359              		.global	MX_FREERTOS_Init
+ 360              		.syntax unified
+ 361              		.thumb
+ 362              		.thumb_func
+ 364              	MX_FREERTOS_Init:
+ 365              	.LFB142:
+ 100:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
+ 366              		.loc 1 100 29 is_stmt 1 view -0
+ 367              		.cfi_startproc
+ 368              		@ args = 0, pretend = 0, frame = 0
+ 369              		@ frame_needed = 0, uses_anonymous_args = 0
+ 370 0000 08B5     		push	{r3, lr}
+ 371              	.LCFI6:
+ 372              		.cfi_def_cfa_offset 8
+ 373              		.cfi_offset 3, -8
+ 374              		.cfi_offset 14, -4
+ 119:Core/Src/freertos.c **** 
+ 375              		.loc 1 119 3 view .LVU63
+ 119:Core/Src/freertos.c **** 
+ 376              		.loc 1 119 23 is_stmt 0 view .LVU64
+ 377 0002 0E4A     		ldr	r2, .L26
+ 378 0004 0421     		movs	r1, #4
+ 379 0006 6420     		movs	r0, #100
+ 380 0008 FFF7FEFF 		bl	osMessageQueueNew
+ 381              	.LVL36:
+ 119:Core/Src/freertos.c **** 
+ 382              		.loc 1 119 21 discriminator 1 view .LVU65
+ 383 000c 0C4B     		ldr	r3, .L26+4
+ 384 000e 1860     		str	r0, [r3]
+ARM GAS  /tmp/ccr4doJ9.s 			page 13
+
+
+ 127:Core/Src/freertos.c **** 
+ 385              		.loc 1 127 3 is_stmt 1 view .LVU66
+ 127:Core/Src/freertos.c **** 
+ 386              		.loc 1 127 26 is_stmt 0 view .LVU67
+ 387 0010 0C4A     		ldr	r2, .L26+8
+ 388 0012 0021     		movs	r1, #0
+ 389 0014 0C48     		ldr	r0, .L26+12
+ 390 0016 FFF7FEFF 		bl	osThreadNew
+ 391              	.LVL37:
+ 127:Core/Src/freertos.c **** 
+ 392              		.loc 1 127 24 discriminator 1 view .LVU68
+ 393 001a 0C4B     		ldr	r3, .L26+16
+ 394 001c 1860     		str	r0, [r3]
+ 130:Core/Src/freertos.c **** 
+ 395              		.loc 1 130 3 is_stmt 1 view .LVU69
+ 130:Core/Src/freertos.c **** 
+ 396              		.loc 1 130 22 is_stmt 0 view .LVU70
+ 397 001e 0C4A     		ldr	r2, .L26+20
+ 398 0020 0021     		movs	r1, #0
+ 399 0022 0C48     		ldr	r0, .L26+24
+ 400 0024 FFF7FEFF 		bl	osThreadNew
+ 401              	.LVL38:
+ 130:Core/Src/freertos.c **** 
+ 402              		.loc 1 130 20 discriminator 1 view .LVU71
+ 403 0028 0B4B     		ldr	r3, .L26+28
+ 404 002a 1860     		str	r0, [r3]
+ 133:Core/Src/freertos.c **** 
+ 405              		.loc 1 133 3 is_stmt 1 view .LVU72
+ 133:Core/Src/freertos.c **** 
+ 406              		.loc 1 133 20 is_stmt 0 view .LVU73
+ 407 002c 0B4A     		ldr	r2, .L26+32
+ 408 002e 0021     		movs	r1, #0
+ 409 0030 0B48     		ldr	r0, .L26+36
+ 410 0032 FFF7FEFF 		bl	osThreadNew
+ 411              	.LVL39:
+ 133:Core/Src/freertos.c **** 
+ 412              		.loc 1 133 18 discriminator 1 view .LVU74
+ 413 0036 0B4B     		ldr	r3, .L26+40
+ 414 0038 1860     		str	r0, [r3]
+ 143:Core/Src/freertos.c **** 
+ 415              		.loc 1 143 1 view .LVU75
+ 416 003a 08BD     		pop	{r3, pc}
+ 417              	.L27:
+ 418              		.align	2
+ 419              	.L26:
+ 420 003c 00000000 		.word	dataQueue01_attributes
+ 421 0040 00000000 		.word	dataQueue01Handle
+ 422 0044 00000000 		.word	ProcessingTask_attributes
+ 423 0048 00000000 		.word	StartProcessingTask
+ 424 004c 00000000 		.word	ProcessingTaskHandle
+ 425 0050 00000000 		.word	SensorTask_attributes
+ 426 0054 00000000 		.word	StartSensorTask
+ 427 0058 00000000 		.word	SensorTaskHandle
+ 428 005c 00000000 		.word	UartTask_attributes
+ 429 0060 00000000 		.word	StartUartTask
+ 430 0064 00000000 		.word	UartTaskHandle
+ 431              		.cfi_endproc
+ARM GAS  /tmp/ccr4doJ9.s 			page 14
+
+
+ 432              	.LFE142:
+ 434              		.global	dataQueue01_attributes
+ 435              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 436              		.align	2
+ 437              	.LC5:
+ 438 0000 64617461 		.ascii	"dataQueue01\000"
+ 438      51756575 
+ 438      65303100 
+ 439              		.section	.rodata.dataQueue01_attributes,"a"
+ 440              		.align	2
+ 443              	dataQueue01_attributes:
+ 444 0000 00000000 		.word	.LC5
+ 445 0004 00000000 		.space	20
+ 445      00000000 
+ 445      00000000 
+ 445      00000000 
+ 445      00000000 
+ 446              		.global	dataQueue01Handle
+ 447              		.section	.bss.dataQueue01Handle,"aw",%nobits
+ 448              		.align	2
+ 451              	dataQueue01Handle:
+ 452 0000 00000000 		.space	4
+ 453              		.global	UartTask_attributes
+ 454              		.section	.rodata.str1.4
+ 455              		.align	2
+ 456              	.LC6:
+ 457 000c 55617274 		.ascii	"UartTask\000"
+ 457      5461736B 
+ 457      00
+ 458              		.section	.rodata.UartTask_attributes,"a"
+ 459              		.align	2
+ 462              	UartTask_attributes:
+ 463 0000 0C000000 		.word	.LC6
+ 464 0004 00000000 		.space	16
+ 464      00000000 
+ 464      00000000 
+ 464      00000000 
+ 465 0014 00100000 		.word	4096
+ 466 0018 08000000 		.word	8
+ 467 001c 00000000 		.space	8
+ 467      00000000 
+ 468              		.global	UartTaskHandle
+ 469              		.section	.bss.UartTaskHandle,"aw",%nobits
+ 470              		.align	2
+ 473              	UartTaskHandle:
+ 474 0000 00000000 		.space	4
+ 475              		.global	SensorTask_attributes
+ 476              		.section	.rodata.str1.4
+ 477 0015 000000   		.align	2
+ 478              	.LC7:
+ 479 0018 53656E73 		.ascii	"SensorTask\000"
+ 479      6F725461 
+ 479      736B00
+ 480              		.section	.rodata.SensorTask_attributes,"a"
+ 481              		.align	2
+ 484              	SensorTask_attributes:
+ 485 0000 18000000 		.word	.LC7
+ARM GAS  /tmp/ccr4doJ9.s 			page 15
+
+
+ 486 0004 00000000 		.space	16
+ 486      00000000 
+ 486      00000000 
+ 486      00000000 
+ 487 0014 00100000 		.word	4096
+ 488 0018 08000000 		.word	8
+ 489 001c 00000000 		.space	8
+ 489      00000000 
+ 490              		.global	SensorTaskHandle
+ 491              		.section	.bss.SensorTaskHandle,"aw",%nobits
+ 492              		.align	2
+ 495              	SensorTaskHandle:
+ 496 0000 00000000 		.space	4
+ 497              		.global	ProcessingTask_attributes
+ 498              		.section	.rodata.str1.4
+ 499 0023 00       		.align	2
+ 500              	.LC8:
+ 501 0024 50726F63 		.ascii	"ProcessingTask\000"
+ 501      65737369 
+ 501      6E675461 
+ 501      736B00
+ 502              		.section	.rodata.ProcessingTask_attributes,"a"
+ 503              		.align	2
+ 506              	ProcessingTask_attributes:
+ 507 0000 24000000 		.word	.LC8
+ 508 0004 00000000 		.space	16
+ 508      00000000 
+ 508      00000000 
+ 508      00000000 
+ 509 0014 00100000 		.word	4096
+ 510 0018 18000000 		.word	24
+ 511 001c 00000000 		.space	8
+ 511      00000000 
+ 512              		.global	ProcessingTaskHandle
+ 513              		.section	.bss.ProcessingTaskHandle,"aw",%nobits
+ 514              		.align	2
+ 517              	ProcessingTaskHandle:
+ 518 0000 00000000 		.space	4
+ 519              		.text
+ 520              	.Letext0:
+ 521              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stddef.h"
+ 522              		.file 3 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 523              		.file 4 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 524              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 525              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 526              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 527              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 528              		.file 9 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 529              		.file 10 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 530              		.file 11 "mpu6050/mpu6050.h"
+ 531              		.file 12 "Core/Inc/usart.h"
+ 532              		.file 13 "/usr/include/newlib/stdio.h"
+ 533              		.file 14 "Middlewares/Third_Party/FreeRTOS/Source/include/portable.h"
+ 534              		.file 15 "<built-in>"
+ARM GAS  /tmp/ccr4doJ9.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 freertos.c
+     /tmp/ccr4doJ9.s:21     .text.StartProcessingTask:00000000 $t
+     /tmp/ccr4doJ9.s:27     .text.StartProcessingTask:00000000 StartProcessingTask
+     /tmp/ccr4doJ9.s:54     .text.StartSensorTask:00000000 $t
+     /tmp/ccr4doJ9.s:60     .text.StartSensorTask:00000000 StartSensorTask
+     /tmp/ccr4doJ9.s:152    .text.StartSensorTask:00000064 $d
+     /tmp/ccr4doJ9.s:451    .bss.dataQueue01Handle:00000000 dataQueue01Handle
+     /tmp/ccr4doJ9.s:159    .rodata.StartUartTask.str1.4:00000000 $d
+     /tmp/ccr4doJ9.s:176    .text.StartUartTask:00000000 $t
+     /tmp/ccr4doJ9.s:182    .text.StartUartTask:00000000 StartUartTask
+     /tmp/ccr4doJ9.s:304    .text.StartUartTask:000000a4 $d
+     /tmp/ccr4doJ9.s:314    .text._write:00000000 $t
+     /tmp/ccr4doJ9.s:320    .text._write:00000000 _write
+     /tmp/ccr4doJ9.s:353    .text._write:00000014 $d
+     /tmp/ccr4doJ9.s:358    .text.MX_FREERTOS_Init:00000000 $t
+     /tmp/ccr4doJ9.s:364    .text.MX_FREERTOS_Init:00000000 MX_FREERTOS_Init
+     /tmp/ccr4doJ9.s:420    .text.MX_FREERTOS_Init:0000003c $d
+     /tmp/ccr4doJ9.s:443    .rodata.dataQueue01_attributes:00000000 dataQueue01_attributes
+     /tmp/ccr4doJ9.s:506    .rodata.ProcessingTask_attributes:00000000 ProcessingTask_attributes
+     /tmp/ccr4doJ9.s:517    .bss.ProcessingTaskHandle:00000000 ProcessingTaskHandle
+     /tmp/ccr4doJ9.s:484    .rodata.SensorTask_attributes:00000000 SensorTask_attributes
+     /tmp/ccr4doJ9.s:495    .bss.SensorTaskHandle:00000000 SensorTaskHandle
+     /tmp/ccr4doJ9.s:462    .rodata.UartTask_attributes:00000000 UartTask_attributes
+     /tmp/ccr4doJ9.s:473    .bss.UartTaskHandle:00000000 UartTaskHandle
+     /tmp/ccr4doJ9.s:436    .rodata.str1.4:00000000 $d
+     /tmp/ccr4doJ9.s:440    .rodata.dataQueue01_attributes:00000000 $d
+     /tmp/ccr4doJ9.s:448    .bss.dataQueue01Handle:00000000 $d
+     /tmp/ccr4doJ9.s:459    .rodata.UartTask_attributes:00000000 $d
+     /tmp/ccr4doJ9.s:470    .bss.UartTaskHandle:00000000 $d
+     /tmp/ccr4doJ9.s:481    .rodata.SensorTask_attributes:00000000 $d
+     /tmp/ccr4doJ9.s:492    .bss.SensorTaskHandle:00000000 $d
+     /tmp/ccr4doJ9.s:503    .rodata.ProcessingTask_attributes:00000000 $d
+     /tmp/ccr4doJ9.s:514    .bss.ProcessingTaskHandle:00000000 $d
+
+UNDEFINED SYMBOLS
+osDelay
+Sensor_I2C2_Serch
+MPU6050_Init
+pvPortMalloc
+MPU6050_Read_Accel
+MPU6050_Read_Gyro
+MPU6050_Read_Temp
+xQueueGenericSend
+vPortFree
+Mpu6050_Data
+__aeabi_f2d
+puts
+printf
+xQueueReceive
+HAL_UART_Transmit
+huart1
+osMessageQueueNew
+osThreadNew

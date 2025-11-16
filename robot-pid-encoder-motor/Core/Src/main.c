@@ -105,6 +105,7 @@ int main(void)
 
   int16_t encoder= 0;
 int last_cnt = 0;
+    Motor_A.target_rpm = 20.0f;  // 假设目标速度为 100 RPM
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -114,25 +115,32 @@ int last_cnt = 0;
 
 
   /*正反转测试*/
-  Motor_SetPWM(&Motor_A, 0);
-  HAL_Delay(2000);
-  Motor_SetPWM(&Motor_A, -0);
-  HAL_Delay(2000);
+   Motor_SetPWM(&Motor_A, 100);
+   HAL_Delay(2000);
+   Motor_SetPWM(&Motor_A, -10);
+   HAL_Delay(2000);
 
   /*编码器数值读取测试*/
 
+  // int curr_cnt = __HAL_TIM_GET_COUNTER(&htim2);  // 假设你用的是 TIM3
+  //    if (curr_cnt != last_cnt) {
+  //        printf("CNT = %d\r\n", curr_cnt);
+  //        last_cnt = curr_cnt;
+  //    }
+  /*串口测试和重定向串口测试*/
+    // printf("hello world\r\n");
+    // HAL_UART_Transmit(&huart3, (uint8_t *)"Hello World\r\n", strlen("Hello World\r\n"), HAL_MAX_DELAY);
+
+    /*编码器电机的pid速度测试*/
+
+    // 设置目标速度
 
 
-    // int curr_cnt = __HAL_TIM_GET_COUNTER(&htim2);  // 假设你用的是 TIM3
-    // if (curr_cnt != last_cnt) {
-    //     printf("CNT = %d\r\n", curr_cnt);
-    //     last_cnt = curr_cnt;
-    // }
+    // 调用 PID 控制
+    // Motor_PID_Control(&Motor_A);
 
-
-    //printf("hello world\r\n");
-    //HAL_UART_Transmit(&huart3, (uint8_t *)"Hello World\r\n", strlen("Hello World\r\n"), HAL_MAX_DELAY);
-
+    // 延时，模拟采样时间
+    //HAL_Delay(100);  // 采样时间与 SAMPLE_TIME_S 对应
 
 
 
