@@ -1,0 +1,295 @@
+ARM GAS  /tmp/ccxFmBaA.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"uart_driver.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/uart_driver.c"
+  20              		.section	.text.UART_Start_DMA_Receive,"ax",%progbits
+  21              		.align	1
+  22              		.global	UART_Start_DMA_Receive
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	UART_Start_DMA_Receive:
+  28              	.LVL0:
+  29              	.LFB138:
+   1:Core/Src/uart_driver.c **** #include "uart_driver.h"
+   2:Core/Src/uart_driver.c **** #include "usart.h" // 包含 CubeMX 生成的 huart 句柄
+   3:Core/Src/uart_driver.c **** 
+   4:Core/Src/uart_driver.c **** // 定义 DMA 缓冲区
+   5:Core/Src/uart_driver.c **** uint8_t uart_rx_dma_buffer[UART_RX_BUFFER_SIZE];
+   6:Core/Src/uart_driver.c **** 
+   7:Core/Src/uart_driver.c **** extern TaskHandle_t UartRxTaskHandle; // 声明外部任务句柄
+   8:Core/Src/uart_driver.c **** /**
+   9:Core/Src/uart_driver.c ****  * @brief  启动 UART 的 DMA 循环接收
+  10:Core/Src/uart_driver.c ****  * @param  huart: 指向 UART 句柄的指针
+  11:Core/Src/uart_driver.c ****  */
+  12:Core/Src/uart_driver.c **** void UART_Start_DMA_Receive(UART_HandleTypeDef* huart) {
+  30              		.loc 1 12 56 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 12 56 is_stmt 0 view .LVU1
+  35 0000 08B5     		push	{r3, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 3, -8
+  39              		.cfi_offset 14, -4
+  13:Core/Src/uart_driver.c ****     // 确保 huart3 是您的目标 UART 句柄
+  14:Core/Src/uart_driver.c ****     HAL_UART_Receive_DMA(huart, uart_rx_dma_buffer, UART_RX_BUFFER_SIZE);
+  40              		.loc 1 14 5 is_stmt 1 view .LVU2
+  41 0002 4FF40072 		mov	r2, #512
+  42 0006 0249     		ldr	r1, .L3
+  43 0008 FFF7FEFF 		bl	HAL_UART_Receive_DMA
+  44              	.LVL1:
+ARM GAS  /tmp/ccxFmBaA.s 			page 2
+
+
+  15:Core/Src/uart_driver.c **** }
+  45              		.loc 1 15 1 is_stmt 0 view .LVU3
+  46 000c 08BD     		pop	{r3, pc}
+  47              	.L4:
+  48 000e 00BF     		.align	2
+  49              	.L3:
+  50 0010 00000000 		.word	uart_rx_dma_buffer
+  51              		.cfi_endproc
+  52              	.LFE138:
+  54              		.section	.text.UART_IDLE_Process,"ax",%progbits
+  55              		.align	1
+  56              		.global	UART_IDLE_Process
+  57              		.syntax unified
+  58              		.thumb
+  59              		.thumb_func
+  61              	UART_IDLE_Process:
+  62              	.LVL2:
+  63              	.LFB139:
+  16:Core/Src/uart_driver.c **** 
+  17:Core/Src/uart_driver.c **** /**
+  18:Core/Src/uart_driver.c ****  * @brief  IDLE 中断处理逻辑
+  19:Core/Src/uart_driver.c ****  * @param  huart: 指向 UART 句柄的指针
+  20:Core/Src/uart_driver.c ****  * @note   该函数应在 UART 中断服务程序中被调用。
+  21:Core/Src/uart_driver.c ****  */
+  22:Core/Src/uart_driver.c **** void UART_IDLE_Process(UART_HandleTypeDef *huart) {
+  64              		.loc 1 22 51 is_stmt 1 view -0
+  65              		.cfi_startproc
+  66              		@ args = 0, pretend = 0, frame = 8
+  67              		@ frame_needed = 0, uses_anonymous_args = 0
+  23:Core/Src/uart_driver.c ****     // 确保是 IDLE 标志触发
+  24:Core/Src/uart_driver.c ****     if (__HAL_UART_GET_FLAG(huart, UART_FLAG_IDLE) != RESET) {
+  68              		.loc 1 24 5 view .LVU5
+  69              		.loc 1 24 9 is_stmt 0 view .LVU6
+  70 0000 0368     		ldr	r3, [r0]
+  71 0002 1A68     		ldr	r2, [r3]
+  72              		.loc 1 24 8 view .LVU7
+  73 0004 12F0100F 		tst	r2, #16
+  74 0008 00D1     		bne	.L13
+  75 000a 7047     		bx	lr
+  76              	.L13:
+  22:Core/Src/uart_driver.c ****     // 确保是 IDLE 标志触发
+  77              		.loc 1 22 51 view .LVU8
+  78 000c 10B5     		push	{r4, lr}
+  79              	.LCFI1:
+  80              		.cfi_def_cfa_offset 8
+  81              		.cfi_offset 4, -8
+  82              		.cfi_offset 14, -4
+  83 000e 84B0     		sub	sp, sp, #16
+  84              	.LCFI2:
+  85              		.cfi_def_cfa_offset 24
+  86 0010 0446     		mov	r4, r0
+  87              	.LBB2:
+  25:Core/Src/uart_driver.c ****         
+  26:Core/Src/uart_driver.c ****         // 1. 清除 IDLE 标志 (读 SR 寄存器，写 DR 寄存器或直接清除)
+  27:Core/Src/uart_driver.c ****         __HAL_UART_CLEAR_IDLEFLAG(huart);
+  88              		.loc 1 27 9 is_stmt 1 view .LVU9
+  89              	.LBB3:
+ARM GAS  /tmp/ccxFmBaA.s 			page 3
+
+
+  90              		.loc 1 27 9 view .LVU10
+  91 0012 0022     		movs	r2, #0
+  92 0014 0292     		str	r2, [sp, #8]
+  93              		.loc 1 27 9 view .LVU11
+  94 0016 1A68     		ldr	r2, [r3]
+  95 0018 0292     		str	r2, [sp, #8]
+  96              		.loc 1 27 9 view .LVU12
+  97 001a 5B68     		ldr	r3, [r3, #4]
+  98 001c 0293     		str	r3, [sp, #8]
+  99              		.loc 1 27 9 view .LVU13
+ 100 001e 029B     		ldr	r3, [sp, #8]
+ 101              	.LBE3:
+ 102              		.loc 1 27 9 view .LVU14
+  28:Core/Src/uart_driver.c ****         
+  29:Core/Src/uart_driver.c ****         // 2. 停止 DMA 传输
+  30:Core/Src/uart_driver.c ****         HAL_UART_DMAStop(huart);
+ 103              		.loc 1 30 9 view .LVU15
+ 104 0020 FFF7FEFF 		bl	HAL_UART_DMAStop
+ 105              	.LVL3:
+  31:Core/Src/uart_driver.c ****         
+  32:Core/Src/uart_driver.c ****         // 3. 计算接收到的数据长度
+  33:Core/Src/uart_driver.c ****         // NDC: Number of Data remaining in the DMA buffer
+  34:Core/Src/uart_driver.c ****         uint16_t current_dma_count = __HAL_DMA_GET_COUNTER(huart->hdmarx);
+ 106              		.loc 1 34 9 view .LVU16
+ 107              		.loc 1 34 38 is_stmt 0 view .LVU17
+ 108 0024 E36B     		ldr	r3, [r4, #60]
+ 109 0026 1B68     		ldr	r3, [r3]
+ 110 0028 5968     		ldr	r1, [r3, #4]
+ 111              		.loc 1 34 18 view .LVU18
+ 112 002a 89B2     		uxth	r1, r1
+ 113              	.LVL4:
+  35:Core/Src/uart_driver.c ****         uint16_t received_length = UART_RX_BUFFER_SIZE - current_dma_count;
+ 114              		.loc 1 35 9 is_stmt 1 view .LVU19
+ 115              		.loc 1 35 18 is_stmt 0 view .LVU20
+ 116 002c C1F50071 		rsb	r1, r1, #512
+ 117              	.LVL5:
+ 118              		.loc 1 35 18 view .LVU21
+ 119 0030 89B2     		uxth	r1, r1
+ 120              	.LVL6:
+  36:Core/Src/uart_driver.c **** 
+  37:Core/Src/uart_driver.c ****         // 4. 通知接收任务
+  38:Core/Src/uart_driver.c ****         if (UartRxTaskHandle != NULL && received_length > 0) {
+ 121              		.loc 1 38 9 is_stmt 1 view .LVU22
+ 122              		.loc 1 38 30 is_stmt 0 view .LVU23
+ 123 0032 0F4B     		ldr	r3, .L15
+ 124 0034 1868     		ldr	r0, [r3]
+ 125              		.loc 1 38 12 view .LVU24
+ 126 0036 00B1     		cbz	r0, .L7
+ 127              		.loc 1 38 38 discriminator 1 view .LVU25
+ 128 0038 21B9     		cbnz	r1, .L14
+ 129              	.LVL7:
+ 130              	.L7:
+  39:Core/Src/uart_driver.c ****             BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+  40:Core/Src/uart_driver.c ****             // 使用 Task Notification 传递长度信息
+  41:Core/Src/uart_driver.c ****             xTaskNotifyFromISR(UartRxTaskHandle, received_length, eSetValueWithOverwrite, &xHigherP
+  42:Core/Src/uart_driver.c ****             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+  43:Core/Src/uart_driver.c ****         }
+ARM GAS  /tmp/ccxFmBaA.s 			page 4
+
+
+  44:Core/Src/uart_driver.c **** 
+  45:Core/Src/uart_driver.c ****         // 5. 重新启动 DMA 循环接收，为下一帧做准备
+  46:Core/Src/uart_driver.c ****         UART_Start_DMA_Receive(huart);
+ 131              		.loc 1 46 9 is_stmt 1 view .LVU26
+ 132 003a 2046     		mov	r0, r4
+ 133 003c FFF7FEFF 		bl	UART_Start_DMA_Receive
+ 134              	.LVL8:
+ 135              	.LBE2:
+  47:Core/Src/uart_driver.c ****     }
+  48:Core/Src/uart_driver.c **** }...
+ 136              		.loc 1 48 1 is_stmt 0 view .LVU27
+ 137 0040 04B0     		add	sp, sp, #16
+ 138              	.LCFI3:
+ 139              		.cfi_remember_state
+ 140              		.cfi_def_cfa_offset 8
+ 141              		@ sp needed
+ 142 0042 10BD     		pop	{r4, pc}
+ 143              	.LVL9:
+ 144              	.L14:
+ 145              	.LCFI4:
+ 146              		.cfi_restore_state
+ 147              	.LBB5:
+ 148              	.LBB4:
+  39:Core/Src/uart_driver.c ****             BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+ 149              		.loc 1 39 13 is_stmt 1 view .LVU28
+  39:Core/Src/uart_driver.c ****             BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+ 150              		.loc 1 39 24 is_stmt 0 view .LVU29
+ 151 0044 0023     		movs	r3, #0
+ 152 0046 0393     		str	r3, [sp, #12]
+  41:Core/Src/uart_driver.c ****             xTaskNotifyFromISR(UartRxTaskHandle, received_length, eSetValueWithOverwrite, &xHigherP
+ 153              		.loc 1 41 13 is_stmt 1 view .LVU30
+ 154 0048 03AA     		add	r2, sp, #12
+ 155 004a 0092     		str	r2, [sp]
+ 156 004c 0322     		movs	r2, #3
+ 157 004e FFF7FEFF 		bl	xTaskGenericNotifyFromISR
+ 158              	.LVL10:
+  42:Core/Src/uart_driver.c ****             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+ 159              		.loc 1 42 13 view .LVU31
+ 160 0052 039B     		ldr	r3, [sp, #12]
+ 161 0054 002B     		cmp	r3, #0
+ 162 0056 F0D0     		beq	.L7
+  42:Core/Src/uart_driver.c ****             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+ 163              		.loc 1 42 13 discriminator 1 view .LVU32
+ 164 0058 4FF0E023 		mov	r3, #-536813568
+ 165 005c 4FF08052 		mov	r2, #268435456
+ 166 0060 C3F8042D 		str	r2, [r3, #3332]
+  42:Core/Src/uart_driver.c ****             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+ 167              		.loc 1 42 13 discriminator 1 view .LVU33
+ 168              		.syntax unified
+ 169              	@ 42 "Core/Src/uart_driver.c" 1
+ 170 0064 BFF34F8F 		dsb
+ 171              	@ 0 "" 2
+  42:Core/Src/uart_driver.c ****             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+ 172              		.loc 1 42 13 discriminator 1 view .LVU34
+ 173              	@ 42 "Core/Src/uart_driver.c" 1
+ 174 0068 BFF36F8F 		isb
+ 175              	@ 0 "" 2
+ARM GAS  /tmp/ccxFmBaA.s 			page 5
+
+
+  42:Core/Src/uart_driver.c ****             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+ 176              		.loc 1 42 57 discriminator 3 view .LVU35
+ 177              		.thumb
+ 178              		.syntax unified
+ 179 006c E5E7     		b	.L7
+ 180              	.L16:
+ 181 006e 00BF     		.align	2
+ 182              	.L15:
+ 183 0070 00000000 		.word	UartRxTaskHandle
+ 184              	.LBE4:
+ 185              	.LBE5:
+ 186              		.cfi_endproc
+ 187              	.LFE139:
+ 189              		.global	uart_rx_dma_buffer
+ 190              		.section	.bss.uart_rx_dma_buffer,"aw",%nobits
+ 191              		.align	2
+ 194              	uart_rx_dma_buffer:
+ 195 0000 00000000 		.space	512
+ 195      00000000 
+ 195      00000000 
+ 195      00000000 
+ 195      00000000 
+ 196              		.text
+ 197              	.Letext0:
+ 198              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 199              		.file 3 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 200              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h"
+ 201              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 202              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 203              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 204              		.file 8 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 205              		.file 9 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 206              		.file 10 "Core/Inc/uart_driver.h"
+ARM GAS  /tmp/ccxFmBaA.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 uart_driver.c
+     /tmp/ccxFmBaA.s:21     .text.UART_Start_DMA_Receive:00000000 $t
+     /tmp/ccxFmBaA.s:27     .text.UART_Start_DMA_Receive:00000000 UART_Start_DMA_Receive
+     /tmp/ccxFmBaA.s:50     .text.UART_Start_DMA_Receive:00000010 $d
+     /tmp/ccxFmBaA.s:194    .bss.uart_rx_dma_buffer:00000000 uart_rx_dma_buffer
+     /tmp/ccxFmBaA.s:55     .text.UART_IDLE_Process:00000000 $t
+     /tmp/ccxFmBaA.s:61     .text.UART_IDLE_Process:00000000 UART_IDLE_Process
+     /tmp/ccxFmBaA.s:183    .text.UART_IDLE_Process:00000070 $d
+     /tmp/ccxFmBaA.s:191    .bss.uart_rx_dma_buffer:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_UART_Receive_DMA
+HAL_UART_DMAStop
+xTaskGenericNotifyFromISR
+UartRxTaskHandle

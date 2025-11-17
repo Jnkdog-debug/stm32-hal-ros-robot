@@ -1,0 +1,328 @@
+ARM GAS  /tmp/ccKdGo3j.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"motor_task.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/motor_task.c"
+  20              		.section	.text.ENCODER_Read_Value_Simulate,"ax",%progbits
+  21              		.align	1
+  22              		.global	ENCODER_Read_Value_Simulate
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	ENCODER_Read_Value_Simulate:
+  28              	.LFB138:
+   1:Core/Src/motor_task.c **** #include "motor_task.h"
+   2:Core/Src/motor_task.c **** #include "cmsis_os.h"
+   3:Core/Src/motor_task.c **** #include "protocol.h"
+   4:Core/Src/motor_task.c **** #include "uart_tasks.h" // 引用发送队列句柄
+   5:Core/Src/motor_task.c **** #include "encodermotor.h" // 假设包含您的编码器和电机驱动
+   6:Core/Src/motor_task.c **** 
+   7:Core/Src/motor_task.c **** // 引用 CubeMX 自动生成的发送队列句柄
+   8:Core/Src/motor_task.c **** extern osMessageQueueId_t UartTxQueueHandle;
+   9:Core/Src/motor_task.c **** 
+  10:Core/Src/motor_task.c **** // 引用 CubeMX 自动生成的任务句柄（在 freertos.c 中定义）
+  11:Core/Src/motor_task.c **** extern osThreadId_t MotorTaskHandle; 
+  12:Core/Src/motor_task.c **** 
+  13:Core/Src/motor_task.c **** // 模拟编码器读取函数
+  14:Core/Src/motor_task.c **** // 在实际项目中，这会读取 Timer/Encoder 寄存器
+  15:Core/Src/motor_task.c **** uint32_t ENCODER_Read_Value_Simulate(void) {
+  29              		.loc 1 15 44 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  16:Core/Src/motor_task.c ****     // 假设每 100ms 计数值增加 1000
+  17:Core/Src/motor_task.c ****     static uint32_t counter = 0;
+  34              		.loc 1 17 5 view .LVU1
+  18:Core/Src/motor_task.c ****     counter += 1000;
+  35              		.loc 1 18 5 view .LVU2
+  36              		.loc 1 18 13 is_stmt 0 view .LVU3
+  37 0000 024B     		ldr	r3, .L2
+  38 0002 1868     		ldr	r0, [r3]
+  39 0004 00F57A70 		add	r0, r0, #1000
+  40 0008 1860     		str	r0, [r3]
+ARM GAS  /tmp/ccKdGo3j.s 			page 2
+
+
+  19:Core/Src/motor_task.c ****     return counter;
+  41              		.loc 1 19 5 is_stmt 1 view .LVU4
+  20:Core/Src/motor_task.c **** }
+  42              		.loc 1 20 1 is_stmt 0 view .LVU5
+  43 000a 7047     		bx	lr
+  44              	.L3:
+  45              		.align	2
+  46              	.L2:
+  47 000c 00000000 		.word	counter.0
+  48              		.cfi_endproc
+  49              	.LFE138:
+  51              		.section	.text.MotorTask_SendReport,"ax",%progbits
+  52              		.align	1
+  53              		.syntax unified
+  54              		.thumb
+  55              		.thumb_func
+  57              	MotorTask_SendReport:
+  58              	.LFB139:
+  21:Core/Src/motor_task.c **** 
+  22:Core/Src/motor_task.c **** static void MotorTask_SendReport(void) {
+  59              		.loc 1 22 40 is_stmt 1 view -0
+  60              		.cfi_startproc
+  61              		@ args = 0, pretend = 0, frame = 80
+  62              		@ frame_needed = 0, uses_anonymous_args = 0
+  63 0000 00B5     		push	{lr}
+  64              	.LCFI0:
+  65              		.cfi_def_cfa_offset 4
+  66              		.cfi_offset 14, -4
+  67 0002 95B0     		sub	sp, sp, #84
+  68              	.LCFI1:
+  69              		.cfi_def_cfa_offset 88
+  23:Core/Src/motor_task.c ****     uint32_t count = ENCODER_Read_Value_Simulate();
+  70              		.loc 1 23 5 view .LVU7
+  71              		.loc 1 23 22 is_stmt 0 view .LVU8
+  72 0004 FFF7FEFF 		bl	ENCODER_Read_Value_Simulate
+  73              	.LVL0:
+  74              		.loc 1 23 14 discriminator 1 view .LVU9
+  75 0008 1390     		str	r0, [sp, #76]
+  24:Core/Src/motor_task.c ****     protocol_frame_t tx_frame;
+  76              		.loc 1 24 5 is_stmt 1 view .LVU10
+  25:Core/Src/motor_task.c ****     
+  26:Core/Src/motor_task.c ****     if (Protocol_PackFrame(&tx_frame, CMD_ID_ENCODER_REPORT, (uint8_t*)&count, sizeof(count)) == PR
+  77              		.loc 1 26 5 view .LVU11
+  78              		.loc 1 26 9 is_stmt 0 view .LVU12
+  79 000a 0423     		movs	r3, #4
+  80 000c 13AA     		add	r2, sp, #76
+  81 000e 0121     		movs	r1, #1
+  82 0010 0DEB0300 		add	r0, sp, r3
+  83 0014 FFF7FEFF 		bl	Protocol_PackFrame
+  84              	.LVL1:
+  85              		.loc 1 26 8 discriminator 1 view .LVU13
+  86 0018 10B1     		cbz	r0, .L7
+  87              	.L4:
+  27:Core/Src/motor_task.c ****         // 使用 osWaitForever 确保关键数据能进入队列
+  28:Core/Src/motor_task.c ****         osMessageQueuePut(UartTxQueueHandle, &tx_frame, 0, osWaitForever); 
+  29:Core/Src/motor_task.c ****     }
+  30:Core/Src/motor_task.c **** }
+ARM GAS  /tmp/ccKdGo3j.s 			page 3
+
+
+  88              		.loc 1 30 1 view .LVU14
+  89 001a 15B0     		add	sp, sp, #84
+  90              	.LCFI2:
+  91              		.cfi_remember_state
+  92              		.cfi_def_cfa_offset 4
+  93              		@ sp needed
+  94 001c 5DF804FB 		ldr	pc, [sp], #4
+  95              	.L7:
+  96              	.LCFI3:
+  97              		.cfi_restore_state
+  28:Core/Src/motor_task.c ****     }
+  98              		.loc 1 28 9 is_stmt 1 view .LVU15
+  99 0020 4FF0FF33 		mov	r3, #-1
+ 100 0024 0022     		movs	r2, #0
+ 101 0026 01A9     		add	r1, sp, #4
+ 102 0028 0248     		ldr	r0, .L8
+ 103 002a 0068     		ldr	r0, [r0]
+ 104 002c FFF7FEFF 		bl	osMessageQueuePut
+ 105              	.LVL2:
+ 106              		.loc 1 30 1 is_stmt 0 view .LVU16
+ 107 0030 F3E7     		b	.L4
+ 108              	.L9:
+ 109 0032 00BF     		.align	2
+ 110              	.L8:
+ 111 0034 00000000 		.word	UartTxQueueHandle
+ 112              		.cfi_endproc
+ 113              	.LFE139:
+ 115              		.section	.text.StartMotorTask,"ax",%progbits
+ 116              		.align	1
+ 117              		.global	StartMotorTask
+ 118              		.syntax unified
+ 119              		.thumb
+ 120              		.thumb_func
+ 122              	StartMotorTask:
+ 123              	.LVL3:
+ 124              	.LFB140:
+  31:Core/Src/motor_task.c **** 
+  32:Core/Src/motor_task.c **** 
+  33:Core/Src/motor_task.c **** void StartMotorTask(void *argument)
+  34:Core/Src/motor_task.c **** {
+ 125              		.loc 1 34 1 is_stmt 1 view -0
+ 126              		.cfi_startproc
+ 127              		@ args = 0, pretend = 0, frame = 8
+ 128              		@ frame_needed = 0, uses_anonymous_args = 0
+ 129              		.loc 1 34 1 is_stmt 0 view .LVU18
+ 130 0000 10B5     		push	{r4, lr}
+ 131              	.LCFI4:
+ 132              		.cfi_def_cfa_offset 8
+ 133              		.cfi_offset 4, -8
+ 134              		.cfi_offset 14, -4
+ 135 0002 82B0     		sub	sp, sp, #8
+ 136              	.LCFI5:
+ 137              		.cfi_def_cfa_offset 16
+  35:Core/Src/motor_task.c ****     const TickType_t xDelay = pdMS_TO_TICKS(100); 
+ 138              		.loc 1 35 5 is_stmt 1 view .LVU19
+ 139              	.LVL4:
+  36:Core/Src/motor_task.c ****     TickType_t xLastWakeTime;
+ARM GAS  /tmp/ccKdGo3j.s 			page 4
+
+
+ 140              		.loc 1 36 5 view .LVU20
+  37:Core/Src/motor_task.c ****     uint32_t ulNotificationValue;
+ 141              		.loc 1 37 5 view .LVU21
+  38:Core/Src/motor_task.c **** 
+  39:Core/Src/motor_task.c ****     xLastWakeTime = xTaskGetTickCount();
+ 142              		.loc 1 39 5 view .LVU22
+ 143              		.loc 1 39 21 is_stmt 0 view .LVU23
+ 144 0004 FFF7FEFF 		bl	xTaskGetTickCount
+ 145              	.LVL5:
+ 146              		.loc 1 39 21 view .LVU24
+ 147 0008 0446     		mov	r4, r0
+ 148              	.LVL6:
+  40:Core/Src/motor_task.c ****     MotorTaskHandle = xTaskGetCurrentTaskHandle(); // 设置句柄
+ 149              		.loc 1 40 5 is_stmt 1 view .LVU25
+ 150              		.loc 1 40 23 is_stmt 0 view .LVU26
+ 151 000a FFF7FEFF 		bl	xTaskGetCurrentTaskHandle
+ 152              	.LVL7:
+ 153              		.loc 1 40 21 discriminator 1 view .LVU27
+ 154 000e 0E4B     		ldr	r3, .L16
+ 155 0010 1860     		str	r0, [r3]
+ 156 0012 04E0     		b	.L12
+ 157              	.L11:
+  41:Core/Src/motor_task.c **** 
+  42:Core/Src/motor_task.c ****     /* Infinite loop */
+  43:Core/Src/motor_task.c ****     for(;;)
+  44:Core/Src/motor_task.c ****     {
+  45:Core/Src/motor_task.c ****         // 阻塞等待：可以被周期定时唤醒 (xDelay) 或被 Task Notification 唤醒
+  46:Core/Src/motor_task.c ****         
+  47:Core/Src/motor_task.c ****         // xTaskNotifyWait 默认是阻塞的，超时时间为 xDelay
+  48:Core/Src/motor_task.c ****         if (xTaskNotifyWait(0,                      // ulBitsToClearOnEntry: 不清除
+  49:Core/Src/motor_task.c ****                             0,                      // ulBitsToClearOnExit: 不清除
+  50:Core/Src/motor_task.c ****                             &ulNotificationValue,   // pulNotificationValue: 接收通知值
+  51:Core/Src/motor_task.c ****                             xDelay) == pdPASS) 
+  52:Core/Src/motor_task.c ****         {
+  53:Core/Src/motor_task.c ****             // **被通知唤醒 (如 CMD_ID_REQUEST_ALL_STATUS)**
+  54:Core/Src/motor_task.c ****             if (ulNotificationValue == CMD_ID_REQUEST_ALL_STATUS) {
+  55:Core/Src/motor_task.c ****                 // 立即执行采集和发送
+  56:Core/Src/motor_task.c ****                 MotorTask_SendReport();
+  57:Core/Src/motor_task.c ****             }
+  58:Core/Src/motor_task.c ****         }
+  59:Core/Src/motor_task.c ****         
+  60:Core/Src/motor_task.c ****         // 周期时间到或被通知后，检查是否需要执行周期性发送
+  61:Core/Src/motor_task.c ****         if (xTaskGetTickCount() - xLastWakeTime >= xDelay) {
+ 158              		.loc 1 61 9 is_stmt 1 view .LVU28
+ 159              		.loc 1 61 13 is_stmt 0 view .LVU29
+ 160 0014 FFF7FEFF 		bl	xTaskGetTickCount
+ 161              	.LVL8:
+ 162              		.loc 1 61 33 discriminator 1 view .LVU30
+ 163 0018 031B     		subs	r3, r0, r4
+ 164              		.loc 1 61 12 discriminator 1 view .LVU31
+ 165 001a 632B     		cmp	r3, #99
+ 166 001c 0DD8     		bhi	.L15
+ 167              	.L12:
+  43:Core/Src/motor_task.c ****     {
+ 168              		.loc 1 43 5 is_stmt 1 view .LVU32
+  48:Core/Src/motor_task.c ****                             0,                      // ulBitsToClearOnExit: 不清除
+ 169              		.loc 1 48 9 view .LVU33
+ARM GAS  /tmp/ccKdGo3j.s 			page 5
+
+
+  48:Core/Src/motor_task.c ****                             0,                      // ulBitsToClearOnExit: 不清除
+ 170              		.loc 1 48 13 is_stmt 0 view .LVU34
+ 171 001e 6423     		movs	r3, #100
+ 172 0020 01AA     		add	r2, sp, #4
+ 173 0022 0021     		movs	r1, #0
+ 174 0024 0846     		mov	r0, r1
+ 175 0026 FFF7FEFF 		bl	xTaskNotifyWait
+ 176              	.LVL9:
+  48:Core/Src/motor_task.c ****                             0,                      // ulBitsToClearOnExit: 不清除
+ 177              		.loc 1 48 12 discriminator 1 view .LVU35
+ 178 002a 0128     		cmp	r0, #1
+ 179 002c F2D1     		bne	.L11
+  54:Core/Src/motor_task.c ****                 // 立即执行采集和发送
+ 180              		.loc 1 54 13 is_stmt 1 view .LVU36
+  54:Core/Src/motor_task.c ****                 // 立即执行采集和发送
+ 181              		.loc 1 54 37 is_stmt 0 view .LVU37
+ 182 002e 019B     		ldr	r3, [sp, #4]
+  54:Core/Src/motor_task.c ****                 // 立即执行采集和发送
+ 183              		.loc 1 54 16 view .LVU38
+ 184 0030 102B     		cmp	r3, #16
+ 185 0032 EFD1     		bne	.L11
+  56:Core/Src/motor_task.c ****             }
+ 186              		.loc 1 56 17 is_stmt 1 view .LVU39
+ 187 0034 FFF7FEFF 		bl	MotorTask_SendReport
+ 188              	.LVL10:
+ 189 0038 ECE7     		b	.L11
+ 190              	.L15:
+  62:Core/Src/motor_task.c ****             MotorTask_SendReport();
+ 191              		.loc 1 62 13 view .LVU40
+ 192 003a FFF7FEFF 		bl	MotorTask_SendReport
+ 193              	.LVL11:
+  63:Core/Src/motor_task.c ****             xLastWakeTime = xTaskGetTickCount();
+ 194              		.loc 1 63 13 view .LVU41
+ 195              		.loc 1 63 29 is_stmt 0 view .LVU42
+ 196 003e FFF7FEFF 		bl	xTaskGetTickCount
+ 197              	.LVL12:
+ 198 0042 0446     		mov	r4, r0
+ 199              	.LVL13:
+ 200              		.loc 1 63 29 view .LVU43
+ 201 0044 EBE7     		b	.L12
+ 202              	.L17:
+ 203 0046 00BF     		.align	2
+ 204              	.L16:
+ 205 0048 00000000 		.word	MotorTaskHandle
+ 206              		.cfi_endproc
+ 207              	.LFE140:
+ 209              		.section	.bss.counter.0,"aw",%nobits
+ 210              		.align	2
+ 213              	counter.0:
+ 214 0000 00000000 		.space	4
+ 215              		.text
+ 216              	.Letext0:
+ 217              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 218              		.file 3 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 219              		.file 4 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 220              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 221              		.file 6 "Core/Inc/protocol.h"
+ARM GAS  /tmp/ccKdGo3j.s 			page 6
+
+
+ARM GAS  /tmp/ccKdGo3j.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 motor_task.c
+     /tmp/ccKdGo3j.s:21     .text.ENCODER_Read_Value_Simulate:00000000 $t
+     /tmp/ccKdGo3j.s:27     .text.ENCODER_Read_Value_Simulate:00000000 ENCODER_Read_Value_Simulate
+     /tmp/ccKdGo3j.s:47     .text.ENCODER_Read_Value_Simulate:0000000c $d
+     /tmp/ccKdGo3j.s:213    .bss.counter.0:00000000 counter.0
+     /tmp/ccKdGo3j.s:52     .text.MotorTask_SendReport:00000000 $t
+     /tmp/ccKdGo3j.s:57     .text.MotorTask_SendReport:00000000 MotorTask_SendReport
+     /tmp/ccKdGo3j.s:111    .text.MotorTask_SendReport:00000034 $d
+     /tmp/ccKdGo3j.s:116    .text.StartMotorTask:00000000 $t
+     /tmp/ccKdGo3j.s:122    .text.StartMotorTask:00000000 StartMotorTask
+     /tmp/ccKdGo3j.s:205    .text.StartMotorTask:00000048 $d
+     /tmp/ccKdGo3j.s:210    .bss.counter.0:00000000 $d
+
+UNDEFINED SYMBOLS
+Protocol_PackFrame
+osMessageQueuePut
+UartTxQueueHandle
+xTaskGetTickCount
+xTaskGetCurrentTaskHandle
+xTaskNotifyWait
+MotorTaskHandle

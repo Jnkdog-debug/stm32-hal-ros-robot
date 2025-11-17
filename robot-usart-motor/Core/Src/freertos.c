@@ -55,6 +55,44 @@ const osThreadAttr_t defaultTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for UartRxTask */
+osThreadId_t UartRxTaskHandle;
+const osThreadAttr_t UartRxTask_attributes = {
+  .name = "UartRxTask",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for UartTxTask */
+osThreadId_t UartTxTaskHandle;
+const osThreadAttr_t UartTxTask_attributes = {
+  .name = "UartTxTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for MPU6050Task */
+osThreadId_t MPU6050TaskHandle;
+const osThreadAttr_t MPU6050Task_attributes = {
+  .name = "MPU6050Task",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for MotorTask */
+osThreadId_t MotorTaskHandle;
+const osThreadAttr_t MotorTask_attributes = {
+  .name = "MotorTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for UartTxQueue */
+osMessageQueueId_t UartTxQueueHandle;
+const osMessageQueueAttr_t UartTxQueue_attributes = {
+  .name = "UartTxQueue"
+};
+/* Definitions for UartTxDoneSemaphore */
+osSemaphoreId_t UartTxDoneSemaphoreHandle;
+const osSemaphoreAttr_t UartTxDoneSemaphore_attributes = {
+  .name = "UartTxDoneSemaphore"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -62,6 +100,10 @@ const osThreadAttr_t defaultTask_attributes = {
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
+extern void StartUartRxTask(void *argument);
+extern void StartUartTxTask(void *argument);
+extern void StartMPU6050Task(void *argument);
+extern void StartMotorTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -79,6 +121,10 @@ void MX_FREERTOS_Init(void) {
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
+  /* Create the semaphores(s) */
+  /* creation of UartTxDoneSemaphore */
+  UartTxDoneSemaphoreHandle = osSemaphoreNew(1, 1, &UartTxDoneSemaphore_attributes);
+
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -87,6 +133,10 @@ void MX_FREERTOS_Init(void) {
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
+  /* Create the queue(s) */
+  /* creation of UartTxQueue */
+  UartTxQueueHandle = osMessageQueueNew (10, sizeof(uint16_t), &UartTxQueue_attributes);
+
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
@@ -94,6 +144,18 @@ void MX_FREERTOS_Init(void) {
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+
+  /* creation of UartRxTask */
+  UartRxTaskHandle = osThreadNew(StartUartRxTask, NULL, &UartRxTask_attributes);
+
+  /* creation of UartTxTask */
+  UartTxTaskHandle = osThreadNew(StartUartTxTask, NULL, &UartTxTask_attributes);
+
+  /* creation of MPU6050Task */
+  MPU6050TaskHandle = osThreadNew(StartMPU6050Task, NULL, &MPU6050Task_attributes);
+
+  /* creation of MotorTask */
+  MotorTaskHandle = osThreadNew(StartMotorTask, NULL, &MotorTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

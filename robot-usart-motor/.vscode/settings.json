@@ -2,5 +2,5 @@
     "files.associations": {
         "tim.h": "c"
     },
-    "cmake.sourceDirectory": "/home/xyz/stm32project/stm32-hal-ros-robot/robot-pid-encoder-motor/Drivers/CMSIS/NN"
+    "cmake.sourceDirectory": "/home/xyz/stm32-hal-ros-robot/robot-usart-motor/Drivers/CMSIS/NN"
 }
