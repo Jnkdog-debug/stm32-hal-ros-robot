@@ -183,17 +183,17 @@ void StartDefaultTask(void *argument)
      /*正反转测试*/
 
 
-   Motor_SetPWM(&Motor_A, 100);
-   Motor_SetPWM(&Motor_B, 100);
-   Motor_SetPWM(&Motor_C, 100);
-   Motor_SetPWM(&Motor_D, 100);
-   HAL_Delay(2000);
-   Motor_SetPWM(&Motor_A, -100);
-   Motor_SetPWM(&Motor_B, -100);
-   Motor_SetPWM(&Motor_C, -100);
-   Motor_SetPWM(&Motor_D, -100);
+  //  Motor_SetPWM(&Motor_A, 100);
+  //  Motor_SetPWM(&Motor_B, 100);
+  //  Motor_SetPWM(&Motor_C, 100);
+  //  Motor_SetPWM(&Motor_D, 100);
+  //  HAL_Delay(2000);
+  //  Motor_SetPWM(&Motor_A, -100);
+  //  Motor_SetPWM(&Motor_B, -100);
+  //  Motor_SetPWM(&Motor_C, -100);
+  //  Motor_SetPWM(&Motor_D, -100);
  
-   HAL_Delay(2000);
+  //  HAL_Delay(2000);
 
 
     osDelay(1);

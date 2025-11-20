@@ -59,6 +59,7 @@ uint16_t Protocol_CalculateCRC16(const uint8_t *data, uint16_t len) {
         crc = crc << 8;
 
         // 3. 将 CRC 值与查表结果异或
+
         crc ^= crc16_table[index];
     }
     

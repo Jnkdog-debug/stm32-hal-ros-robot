@@ -141,15 +141,3 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 }
 
 
-/**
- * @brief Function implementing the MPU6050Task thread.
- */
-void StartMPU6050Task(void *argument)
-{
-    /* Infinite loop */
-    for(;;)
-    {
-        // MPU6050 传感器读取逻辑
-        osDelay(100);
-    }
-}
