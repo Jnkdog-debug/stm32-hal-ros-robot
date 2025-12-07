@@ -2,7 +2,7 @@
 #include "cmsis_os.h"
 #include "protocol.h"
 #include "uart_tasks.h" // 引用发送队列句柄
-#include "Mpu6050.h" // 假设包含您的编码器和电机驱动
+#include "MPU6050_task.h" // 假设包含您的编码器和电机驱动
 
 
 

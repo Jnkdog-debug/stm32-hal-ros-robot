@@ -1,6 +1,3 @@
 {
-    "files.associations": {
-        "mpu6050.h": "c",
-        "queue.h": "c"
-    }
+    "cmake.sourceDirectory": "/home/xyz/stm32project/stm32-hal-ros-robot/robot-mpu6050/Drivers/CMSIS/NN"
 }

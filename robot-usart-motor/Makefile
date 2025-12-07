@@ -77,7 +77,8 @@ Core/Src/dma.c \
 Core/Src/sysmem.c \
 Core/Src/uart_tasks.c \
 Core/Src/motor_task.c \
-Core/Src/protocal.c \
+Core/Src/MPU6050_task.c \
+Core/Src/protocol.c \
 Core/Src/syscalls.c \
 Core/Src/i2c.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c \

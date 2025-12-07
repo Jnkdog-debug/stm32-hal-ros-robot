@@ -1,0 +1,631 @@
+ARM GAS  /tmp/ccboiZvu.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"freertos.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/freertos.c"
+  20              		.section	.text.StartDefaultTask,"ax",%progbits
+  21              		.align	1
+  22              		.global	StartDefaultTask
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	StartDefaultTask:
+  28              	.LFB142:
+   1:Core/Src/freertos.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/freertos.c **** /**
+   3:Core/Src/freertos.c ****   ******************************************************************************
+   4:Core/Src/freertos.c ****   * File Name          : freertos.c
+   5:Core/Src/freertos.c ****   * Description        : Code for freertos applications
+   6:Core/Src/freertos.c ****   ******************************************************************************
+   7:Core/Src/freertos.c ****   * @attention
+   8:Core/Src/freertos.c ****   *
+   9:Core/Src/freertos.c ****   * Copyright (c) 2025 STMicroelectronics.
+  10:Core/Src/freertos.c ****   * All rights reserved.
+  11:Core/Src/freertos.c ****   *
+  12:Core/Src/freertos.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/freertos.c ****   * in the root directory of this software component.
+  14:Core/Src/freertos.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/freertos.c ****   *
+  16:Core/Src/freertos.c ****   ******************************************************************************
+  17:Core/Src/freertos.c ****   */
+  18:Core/Src/freertos.c **** /* USER CODE END Header */
+  19:Core/Src/freertos.c **** 
+  20:Core/Src/freertos.c **** /* Includes ------------------------------------------------------------------*/
+  21:Core/Src/freertos.c **** #include "FreeRTOS.h"
+  22:Core/Src/freertos.c **** #include "task.h"
+  23:Core/Src/freertos.c **** #include "main.h"
+  24:Core/Src/freertos.c **** #include "cmsis_os.h"
+  25:Core/Src/freertos.c **** 
+  26:Core/Src/freertos.c **** /* Private includes ----------------------------------------------------------*/
+  27:Core/Src/freertos.c **** /* USER CODE BEGIN Includes */
+  28:Core/Src/freertos.c **** #include "encodermotor.h"
+  29:Core/Src/freertos.c **** #include "stdio.h"
+  30:Core/Src/freertos.c **** /* USER CODE END Includes */
+ARM GAS  /tmp/ccboiZvu.s 			page 2
+
+
+  31:Core/Src/freertos.c **** 
+  32:Core/Src/freertos.c **** /* Private typedef -----------------------------------------------------------*/
+  33:Core/Src/freertos.c **** /* USER CODE BEGIN PTD */
+  34:Core/Src/freertos.c **** 
+  35:Core/Src/freertos.c **** /* USER CODE END PTD */
+  36:Core/Src/freertos.c **** 
+  37:Core/Src/freertos.c **** /* Private define ------------------------------------------------------------*/
+  38:Core/Src/freertos.c **** /* USER CODE BEGIN PD */
+  39:Core/Src/freertos.c **** 
+  40:Core/Src/freertos.c **** /* USER CODE END PD */
+  41:Core/Src/freertos.c **** 
+  42:Core/Src/freertos.c **** /* Private macro -------------------------------------------------------------*/
+  43:Core/Src/freertos.c **** /* USER CODE BEGIN PM */
+  44:Core/Src/freertos.c **** 
+  45:Core/Src/freertos.c **** /* USER CODE END PM */
+  46:Core/Src/freertos.c **** 
+  47:Core/Src/freertos.c **** /* Private variables ---------------------------------------------------------*/
+  48:Core/Src/freertos.c **** /* USER CODE BEGIN Variables */
+  49:Core/Src/freertos.c **** 
+  50:Core/Src/freertos.c **** /* USER CODE END Variables */
+  51:Core/Src/freertos.c **** /* Definitions for defaultTask */
+  52:Core/Src/freertos.c **** osThreadId_t defaultTaskHandle;
+  53:Core/Src/freertos.c **** const osThreadAttr_t defaultTask_attributes = {
+  54:Core/Src/freertos.c ****   .name = "defaultTask",
+  55:Core/Src/freertos.c ****   .stack_size = 128 * 4,
+  56:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityNormal,
+  57:Core/Src/freertos.c **** };
+  58:Core/Src/freertos.c **** /* Definitions for UartRxTask */
+  59:Core/Src/freertos.c **** osThreadId_t UartRxTaskHandle;
+  60:Core/Src/freertos.c **** const osThreadAttr_t UartRxTask_attributes = {
+  61:Core/Src/freertos.c ****   .name = "UartRxTask",
+  62:Core/Src/freertos.c ****   .stack_size = 256 * 4,
+  63:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityNormal,
+  64:Core/Src/freertos.c **** };
+  65:Core/Src/freertos.c **** /* Definitions for UartTxTask */
+  66:Core/Src/freertos.c **** osThreadId_t UartTxTaskHandle;
+  67:Core/Src/freertos.c **** const osThreadAttr_t UartTxTask_attributes = {
+  68:Core/Src/freertos.c ****   .name = "UartTxTask",
+  69:Core/Src/freertos.c ****   .stack_size = 128 * 4,
+  70:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityNormal,
+  71:Core/Src/freertos.c **** };
+  72:Core/Src/freertos.c **** /* Definitions for MPU6050Task */
+  73:Core/Src/freertos.c **** osThreadId_t MPU6050TaskHandle;
+  74:Core/Src/freertos.c **** const osThreadAttr_t MPU6050Task_attributes = {
+  75:Core/Src/freertos.c ****   .name = "MPU6050Task",
+  76:Core/Src/freertos.c ****   .stack_size = 128 * 4,
+  77:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityNormal,
+  78:Core/Src/freertos.c **** };
+  79:Core/Src/freertos.c **** /* Definitions for MotorTask */
+  80:Core/Src/freertos.c **** osThreadId_t MotorTaskHandle;
+  81:Core/Src/freertos.c **** const osThreadAttr_t MotorTask_attributes = {
+  82:Core/Src/freertos.c ****   .name = "MotorTask",
+  83:Core/Src/freertos.c ****   .stack_size = 128 * 4,
+  84:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityNormal,
+  85:Core/Src/freertos.c **** };
+  86:Core/Src/freertos.c **** /* Definitions for UartTxQueue */
+  87:Core/Src/freertos.c **** osMessageQueueId_t UartTxQueueHandle;
+ARM GAS  /tmp/ccboiZvu.s 			page 3
+
+
+  88:Core/Src/freertos.c **** const osMessageQueueAttr_t UartTxQueue_attributes = {
+  89:Core/Src/freertos.c ****   .name = "UartTxQueue"
+  90:Core/Src/freertos.c **** };
+  91:Core/Src/freertos.c **** /* Definitions for UartTxDoneSemaphore */
+  92:Core/Src/freertos.c **** osSemaphoreId_t UartTxDoneSemaphoreHandle;
+  93:Core/Src/freertos.c **** const osSemaphoreAttr_t UartTxDoneSemaphore_attributes = {
+  94:Core/Src/freertos.c ****   .name = "UartTxDoneSemaphore"
+  95:Core/Src/freertos.c **** };
+  96:Core/Src/freertos.c **** 
+  97:Core/Src/freertos.c **** /* Private function prototypes -----------------------------------------------*/
+  98:Core/Src/freertos.c **** /* USER CODE BEGIN FunctionPrototypes */
+  99:Core/Src/freertos.c **** 
+ 100:Core/Src/freertos.c **** /* USER CODE END FunctionPrototypes */
+ 101:Core/Src/freertos.c **** 
+ 102:Core/Src/freertos.c **** void StartDefaultTask(void *argument);
+ 103:Core/Src/freertos.c **** extern void StartUartRxTask(void *argument);
+ 104:Core/Src/freertos.c **** extern void StartUartTxTask(void *argument);
+ 105:Core/Src/freertos.c **** extern void StartMPU6050Task(void *argument);
+ 106:Core/Src/freertos.c **** extern void StartMotorTask(void *argument);
+ 107:Core/Src/freertos.c **** 
+ 108:Core/Src/freertos.c **** void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
+ 109:Core/Src/freertos.c **** 
+ 110:Core/Src/freertos.c **** /**
+ 111:Core/Src/freertos.c ****   * @brief  FreeRTOS initialization
+ 112:Core/Src/freertos.c ****   * @param  None
+ 113:Core/Src/freertos.c ****   * @retval None
+ 114:Core/Src/freertos.c ****   */
+ 115:Core/Src/freertos.c **** void MX_FREERTOS_Init(void) {
+ 116:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
+ 117:Core/Src/freertos.c **** 
+ 118:Core/Src/freertos.c ****   /* USER CODE END Init */
+ 119:Core/Src/freertos.c **** 
+ 120:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_MUTEX */
+ 121:Core/Src/freertos.c ****   /* add mutexes, ... */
+ 122:Core/Src/freertos.c ****   /* USER CODE END RTOS_MUTEX */
+ 123:Core/Src/freertos.c **** 
+ 124:Core/Src/freertos.c ****   /* Create the semaphores(s) */
+ 125:Core/Src/freertos.c ****   /* creation of UartTxDoneSemaphore */
+ 126:Core/Src/freertos.c ****   UartTxDoneSemaphoreHandle = osSemaphoreNew(1, 1, &UartTxDoneSemaphore_attributes);
+ 127:Core/Src/freertos.c **** 
+ 128:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_SEMAPHORES */
+ 129:Core/Src/freertos.c ****   /* add semaphores, ... */
+ 130:Core/Src/freertos.c ****   /* USER CODE END RTOS_SEMAPHORES */
+ 131:Core/Src/freertos.c **** 
+ 132:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_TIMERS */
+ 133:Core/Src/freertos.c ****   /* start timers, add new ones, ... */
+ 134:Core/Src/freertos.c ****   /* USER CODE END RTOS_TIMERS */
+ 135:Core/Src/freertos.c **** 
+ 136:Core/Src/freertos.c ****   /* Create the queue(s) */
+ 137:Core/Src/freertos.c ****   /* creation of UartTxQueue */
+ 138:Core/Src/freertos.c ****   UartTxQueueHandle = osMessageQueueNew (10, sizeof(uint16_t), &UartTxQueue_attributes);
+ 139:Core/Src/freertos.c **** 
+ 140:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_QUEUES */
+ 141:Core/Src/freertos.c ****   /* add queues, ... */
+ 142:Core/Src/freertos.c ****   /* USER CODE END RTOS_QUEUES */
+ 143:Core/Src/freertos.c **** 
+ 144:Core/Src/freertos.c ****   /* Create the thread(s) */
+ARM GAS  /tmp/ccboiZvu.s 			page 4
+
+
+ 145:Core/Src/freertos.c ****   /* creation of defaultTask */
+ 146:Core/Src/freertos.c ****   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+ 147:Core/Src/freertos.c **** 
+ 148:Core/Src/freertos.c ****   /* creation of UartRxTask */
+ 149:Core/Src/freertos.c ****   UartRxTaskHandle = osThreadNew(StartUartRxTask, NULL, &UartRxTask_attributes);
+ 150:Core/Src/freertos.c **** 
+ 151:Core/Src/freertos.c ****   /* creation of UartTxTask */
+ 152:Core/Src/freertos.c ****   UartTxTaskHandle = osThreadNew(StartUartTxTask, NULL, &UartTxTask_attributes);
+ 153:Core/Src/freertos.c **** 
+ 154:Core/Src/freertos.c ****   /* creation of MPU6050Task */
+ 155:Core/Src/freertos.c ****   MPU6050TaskHandle = osThreadNew(StartMPU6050Task, NULL, &MPU6050Task_attributes);
+ 156:Core/Src/freertos.c **** 
+ 157:Core/Src/freertos.c ****   /* creation of MotorTask */
+ 158:Core/Src/freertos.c ****   MotorTaskHandle = osThreadNew(StartMotorTask, NULL, &MotorTask_attributes);
+ 159:Core/Src/freertos.c **** 
+ 160:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_THREADS */
+ 161:Core/Src/freertos.c ****   /* add threads, ... */
+ 162:Core/Src/freertos.c ****   /* USER CODE END RTOS_THREADS */
+ 163:Core/Src/freertos.c **** 
+ 164:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_EVENTS */
+ 165:Core/Src/freertos.c ****   /* add events, ... */
+ 166:Core/Src/freertos.c ****   /* USER CODE END RTOS_EVENTS */
+ 167:Core/Src/freertos.c **** 
+ 168:Core/Src/freertos.c **** }
+ 169:Core/Src/freertos.c **** 
+ 170:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartDefaultTask */
+ 171:Core/Src/freertos.c **** /**
+ 172:Core/Src/freertos.c ****   * @brief  Function implementing the defaultTask thread.
+ 173:Core/Src/freertos.c ****   * @param  argument: Not used
+ 174:Core/Src/freertos.c ****   * @retval None
+ 175:Core/Src/freertos.c ****   */
+ 176:Core/Src/freertos.c **** /* USER CODE END Header_StartDefaultTask */
+ 177:Core/Src/freertos.c **** void StartDefaultTask(void *argument)
+ 178:Core/Src/freertos.c **** {
+  29              		.loc 1 178 1 view -0
+  30              		.cfi_startproc
+  31              		@ Volatile: function does not return.
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              	.LVL0:
+  35              		.loc 1 178 1 is_stmt 0 view .LVU1
+  36 0000 08B5     		push	{r3, lr}
+  37              	.LCFI0:
+  38              		.cfi_def_cfa_offset 8
+  39              		.cfi_offset 3, -8
+  40              		.cfi_offset 14, -4
+  41              	.LVL1:
+  42              	.L2:
+ 179:Core/Src/freertos.c ****   /* USER CODE BEGIN StartDefaultTask */
+ 180:Core/Src/freertos.c ****   /* Infinite loop */
+ 181:Core/Src/freertos.c ****   for(;;)
+  43              		.loc 1 181 3 is_stmt 1 view .LVU2
+ 182:Core/Src/freertos.c ****   {
+ 183:Core/Src/freertos.c ****      /*正反转测试*/
+ 184:Core/Src/freertos.c **** 
+ 185:Core/Src/freertos.c **** 
+ 186:Core/Src/freertos.c ****   //  Motor_SetPWM(&Motor_A, 100);
+ARM GAS  /tmp/ccboiZvu.s 			page 5
+
+
+ 187:Core/Src/freertos.c ****   //  Motor_SetPWM(&Motor_B, 100);
+ 188:Core/Src/freertos.c ****   //  Motor_SetPWM(&Motor_C, 100);
+ 189:Core/Src/freertos.c ****   //  Motor_SetPWM(&Motor_D, 100);
+ 190:Core/Src/freertos.c ****   //  HAL_Delay(2000);
+ 191:Core/Src/freertos.c ****   //  Motor_SetPWM(&Motor_A, -100);
+ 192:Core/Src/freertos.c ****   //  Motor_SetPWM(&Motor_B, -100);
+ 193:Core/Src/freertos.c ****   //  Motor_SetPWM(&Motor_C, -100);
+ 194:Core/Src/freertos.c ****   //  Motor_SetPWM(&Motor_D, -100);
+ 195:Core/Src/freertos.c ****  
+ 196:Core/Src/freertos.c ****   //  HAL_Delay(2000);
+ 197:Core/Src/freertos.c **** 
+ 198:Core/Src/freertos.c **** 
+ 199:Core/Src/freertos.c ****     osDelay(1);
+  44              		.loc 1 199 5 discriminator 1 view .LVU3
+  45 0002 0120     		movs	r0, #1
+  46 0004 FFF7FEFF 		bl	osDelay
+  47              	.LVL2:
+ 181:Core/Src/freertos.c ****   {
+  48              		.loc 1 181 3 view .LVU4
+  49 0008 FBE7     		b	.L2
+  50              		.cfi_endproc
+  51              	.LFE142:
+  53              		.section	.text.MX_FREERTOS_Init,"ax",%progbits
+  54              		.align	1
+  55              		.global	MX_FREERTOS_Init
+  56              		.syntax unified
+  57              		.thumb
+  58              		.thumb_func
+  60              	MX_FREERTOS_Init:
+  61              	.LFB141:
+ 115:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
+  62              		.loc 1 115 29 view -0
+  63              		.cfi_startproc
+  64              		@ args = 0, pretend = 0, frame = 0
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66 0000 08B5     		push	{r3, lr}
+  67              	.LCFI1:
+  68              		.cfi_def_cfa_offset 8
+  69              		.cfi_offset 3, -8
+  70              		.cfi_offset 14, -4
+ 126:Core/Src/freertos.c **** 
+  71              		.loc 1 126 3 view .LVU6
+ 126:Core/Src/freertos.c **** 
+  72              		.loc 1 126 31 is_stmt 0 view .LVU7
+  73 0002 194A     		ldr	r2, .L6
+  74 0004 0121     		movs	r1, #1
+  75 0006 0846     		mov	r0, r1
+  76 0008 FFF7FEFF 		bl	osSemaphoreNew
+  77              	.LVL3:
+ 126:Core/Src/freertos.c **** 
+  78              		.loc 1 126 29 discriminator 1 view .LVU8
+  79 000c 174B     		ldr	r3, .L6+4
+  80 000e 1860     		str	r0, [r3]
+ 138:Core/Src/freertos.c **** 
+  81              		.loc 1 138 3 is_stmt 1 view .LVU9
+ 138:Core/Src/freertos.c **** 
+  82              		.loc 1 138 23 is_stmt 0 view .LVU10
+ARM GAS  /tmp/ccboiZvu.s 			page 6
+
+
+  83 0010 174A     		ldr	r2, .L6+8
+  84 0012 0221     		movs	r1, #2
+  85 0014 0A20     		movs	r0, #10
+  86 0016 FFF7FEFF 		bl	osMessageQueueNew
+  87              	.LVL4:
+ 138:Core/Src/freertos.c **** 
+  88              		.loc 1 138 21 discriminator 1 view .LVU11
+  89 001a 164B     		ldr	r3, .L6+12
+  90 001c 1860     		str	r0, [r3]
+ 146:Core/Src/freertos.c **** 
+  91              		.loc 1 146 3 is_stmt 1 view .LVU12
+ 146:Core/Src/freertos.c **** 
+  92              		.loc 1 146 23 is_stmt 0 view .LVU13
+  93 001e 164A     		ldr	r2, .L6+16
+  94 0020 0021     		movs	r1, #0
+  95 0022 1648     		ldr	r0, .L6+20
+  96 0024 FFF7FEFF 		bl	osThreadNew
+  97              	.LVL5:
+ 146:Core/Src/freertos.c **** 
+  98              		.loc 1 146 21 discriminator 1 view .LVU14
+  99 0028 154B     		ldr	r3, .L6+24
+ 100 002a 1860     		str	r0, [r3]
+ 149:Core/Src/freertos.c **** 
+ 101              		.loc 1 149 3 is_stmt 1 view .LVU15
+ 149:Core/Src/freertos.c **** 
+ 102              		.loc 1 149 22 is_stmt 0 view .LVU16
+ 103 002c 154A     		ldr	r2, .L6+28
+ 104 002e 0021     		movs	r1, #0
+ 105 0030 1548     		ldr	r0, .L6+32
+ 106 0032 FFF7FEFF 		bl	osThreadNew
+ 107              	.LVL6:
+ 149:Core/Src/freertos.c **** 
+ 108              		.loc 1 149 20 discriminator 1 view .LVU17
+ 109 0036 154B     		ldr	r3, .L6+36
+ 110 0038 1860     		str	r0, [r3]
+ 152:Core/Src/freertos.c **** 
+ 111              		.loc 1 152 3 is_stmt 1 view .LVU18
+ 152:Core/Src/freertos.c **** 
+ 112              		.loc 1 152 22 is_stmt 0 view .LVU19
+ 113 003a 154A     		ldr	r2, .L6+40
+ 114 003c 0021     		movs	r1, #0
+ 115 003e 1548     		ldr	r0, .L6+44
+ 116 0040 FFF7FEFF 		bl	osThreadNew
+ 117              	.LVL7:
+ 152:Core/Src/freertos.c **** 
+ 118              		.loc 1 152 20 discriminator 1 view .LVU20
+ 119 0044 144B     		ldr	r3, .L6+48
+ 120 0046 1860     		str	r0, [r3]
+ 155:Core/Src/freertos.c **** 
+ 121              		.loc 1 155 3 is_stmt 1 view .LVU21
+ 155:Core/Src/freertos.c **** 
+ 122              		.loc 1 155 23 is_stmt 0 view .LVU22
+ 123 0048 144A     		ldr	r2, .L6+52
+ 124 004a 0021     		movs	r1, #0
+ 125 004c 1448     		ldr	r0, .L6+56
+ 126 004e FFF7FEFF 		bl	osThreadNew
+ 127              	.LVL8:
+ARM GAS  /tmp/ccboiZvu.s 			page 7
+
+
+ 155:Core/Src/freertos.c **** 
+ 128              		.loc 1 155 21 discriminator 1 view .LVU23
+ 129 0052 144B     		ldr	r3, .L6+60
+ 130 0054 1860     		str	r0, [r3]
+ 158:Core/Src/freertos.c **** 
+ 131              		.loc 1 158 3 is_stmt 1 view .LVU24
+ 158:Core/Src/freertos.c **** 
+ 132              		.loc 1 158 21 is_stmt 0 view .LVU25
+ 133 0056 144A     		ldr	r2, .L6+64
+ 134 0058 0021     		movs	r1, #0
+ 135 005a 1448     		ldr	r0, .L6+68
+ 136 005c FFF7FEFF 		bl	osThreadNew
+ 137              	.LVL9:
+ 158:Core/Src/freertos.c **** 
+ 138              		.loc 1 158 19 discriminator 1 view .LVU26
+ 139 0060 134B     		ldr	r3, .L6+72
+ 140 0062 1860     		str	r0, [r3]
+ 168:Core/Src/freertos.c **** 
+ 141              		.loc 1 168 1 view .LVU27
+ 142 0064 08BD     		pop	{r3, pc}
+ 143              	.L7:
+ 144 0066 00BF     		.align	2
+ 145              	.L6:
+ 146 0068 00000000 		.word	UartTxDoneSemaphore_attributes
+ 147 006c 00000000 		.word	UartTxDoneSemaphoreHandle
+ 148 0070 00000000 		.word	UartTxQueue_attributes
+ 149 0074 00000000 		.word	UartTxQueueHandle
+ 150 0078 00000000 		.word	defaultTask_attributes
+ 151 007c 00000000 		.word	StartDefaultTask
+ 152 0080 00000000 		.word	defaultTaskHandle
+ 153 0084 00000000 		.word	UartRxTask_attributes
+ 154 0088 00000000 		.word	StartUartRxTask
+ 155 008c 00000000 		.word	UartRxTaskHandle
+ 156 0090 00000000 		.word	UartTxTask_attributes
+ 157 0094 00000000 		.word	StartUartTxTask
+ 158 0098 00000000 		.word	UartTxTaskHandle
+ 159 009c 00000000 		.word	MPU6050Task_attributes
+ 160 00a0 00000000 		.word	StartMPU6050Task
+ 161 00a4 00000000 		.word	MPU6050TaskHandle
+ 162 00a8 00000000 		.word	MotorTask_attributes
+ 163 00ac 00000000 		.word	StartMotorTask
+ 164 00b0 00000000 		.word	MotorTaskHandle
+ 165              		.cfi_endproc
+ 166              	.LFE141:
+ 168              		.global	UartTxDoneSemaphore_attributes
+ 169              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 170              		.align	2
+ 171              	.LC0:
+ 172 0000 55617274 		.ascii	"UartTxDoneSemaphore\000"
+ 172      5478446F 
+ 172      6E655365 
+ 172      6D617068 
+ 172      6F726500 
+ 173              		.section	.rodata.UartTxDoneSemaphore_attributes,"a"
+ 174              		.align	2
+ 177              	UartTxDoneSemaphore_attributes:
+ 178 0000 00000000 		.word	.LC0
+ARM GAS  /tmp/ccboiZvu.s 			page 8
+
+
+ 179 0004 00000000 		.space	12
+ 179      00000000 
+ 179      00000000 
+ 180              		.global	UartTxDoneSemaphoreHandle
+ 181              		.section	.bss.UartTxDoneSemaphoreHandle,"aw",%nobits
+ 182              		.align	2
+ 185              	UartTxDoneSemaphoreHandle:
+ 186 0000 00000000 		.space	4
+ 187              		.global	UartTxQueue_attributes
+ 188              		.section	.rodata.str1.4
+ 189              		.align	2
+ 190              	.LC1:
+ 191 0014 55617274 		.ascii	"UartTxQueue\000"
+ 191      54785175 
+ 191      65756500 
+ 192              		.section	.rodata.UartTxQueue_attributes,"a"
+ 193              		.align	2
+ 196              	UartTxQueue_attributes:
+ 197 0000 14000000 		.word	.LC1
+ 198 0004 00000000 		.space	20
+ 198      00000000 
+ 198      00000000 
+ 198      00000000 
+ 198      00000000 
+ 199              		.global	UartTxQueueHandle
+ 200              		.section	.bss.UartTxQueueHandle,"aw",%nobits
+ 201              		.align	2
+ 204              	UartTxQueueHandle:
+ 205 0000 00000000 		.space	4
+ 206              		.global	MotorTask_attributes
+ 207              		.section	.rodata.str1.4
+ 208              		.align	2
+ 209              	.LC2:
+ 210 0020 4D6F746F 		.ascii	"MotorTask\000"
+ 210      72546173 
+ 210      6B00
+ 211              		.section	.rodata.MotorTask_attributes,"a"
+ 212              		.align	2
+ 215              	MotorTask_attributes:
+ 216 0000 20000000 		.word	.LC2
+ 217 0004 00000000 		.space	16
+ 217      00000000 
+ 217      00000000 
+ 217      00000000 
+ 218 0014 00020000 		.word	512
+ 219 0018 18000000 		.word	24
+ 220 001c 00000000 		.space	8
+ 220      00000000 
+ 221              		.global	MotorTaskHandle
+ 222              		.section	.bss.MotorTaskHandle,"aw",%nobits
+ 223              		.align	2
+ 226              	MotorTaskHandle:
+ 227 0000 00000000 		.space	4
+ 228              		.global	MPU6050Task_attributes
+ 229              		.section	.rodata.str1.4
+ 230 002a 0000     		.align	2
+ 231              	.LC3:
+ARM GAS  /tmp/ccboiZvu.s 			page 9
+
+
+ 232 002c 4D505536 		.ascii	"MPU6050Task\000"
+ 232      30353054 
+ 232      61736B00 
+ 233              		.section	.rodata.MPU6050Task_attributes,"a"
+ 234              		.align	2
+ 237              	MPU6050Task_attributes:
+ 238 0000 2C000000 		.word	.LC3
+ 239 0004 00000000 		.space	16
+ 239      00000000 
+ 239      00000000 
+ 239      00000000 
+ 240 0014 00020000 		.word	512
+ 241 0018 18000000 		.word	24
+ 242 001c 00000000 		.space	8
+ 242      00000000 
+ 243              		.global	MPU6050TaskHandle
+ 244              		.section	.bss.MPU6050TaskHandle,"aw",%nobits
+ 245              		.align	2
+ 248              	MPU6050TaskHandle:
+ 249 0000 00000000 		.space	4
+ 250              		.global	UartTxTask_attributes
+ 251              		.section	.rodata.str1.4
+ 252              		.align	2
+ 253              	.LC4:
+ 254 0038 55617274 		.ascii	"UartTxTask\000"
+ 254      54785461 
+ 254      736B00
+ 255              		.section	.rodata.UartTxTask_attributes,"a"
+ 256              		.align	2
+ 259              	UartTxTask_attributes:
+ 260 0000 38000000 		.word	.LC4
+ 261 0004 00000000 		.space	16
+ 261      00000000 
+ 261      00000000 
+ 261      00000000 
+ 262 0014 00020000 		.word	512
+ 263 0018 18000000 		.word	24
+ 264 001c 00000000 		.space	8
+ 264      00000000 
+ 265              		.global	UartTxTaskHandle
+ 266              		.section	.bss.UartTxTaskHandle,"aw",%nobits
+ 267              		.align	2
+ 270              	UartTxTaskHandle:
+ 271 0000 00000000 		.space	4
+ 272              		.global	UartRxTask_attributes
+ 273              		.section	.rodata.str1.4
+ 274 0043 00       		.align	2
+ 275              	.LC5:
+ 276 0044 55617274 		.ascii	"UartRxTask\000"
+ 276      52785461 
+ 276      736B00
+ 277              		.section	.rodata.UartRxTask_attributes,"a"
+ 278              		.align	2
+ 281              	UartRxTask_attributes:
+ 282 0000 44000000 		.word	.LC5
+ 283 0004 00000000 		.space	16
+ 283      00000000 
+ARM GAS  /tmp/ccboiZvu.s 			page 10
+
+
+ 283      00000000 
+ 283      00000000 
+ 284 0014 00040000 		.word	1024
+ 285 0018 18000000 		.word	24
+ 286 001c 00000000 		.space	8
+ 286      00000000 
+ 287              		.global	UartRxTaskHandle
+ 288              		.section	.bss.UartRxTaskHandle,"aw",%nobits
+ 289              		.align	2
+ 292              	UartRxTaskHandle:
+ 293 0000 00000000 		.space	4
+ 294              		.global	defaultTask_attributes
+ 295              		.section	.rodata.str1.4
+ 296 004f 00       		.align	2
+ 297              	.LC6:
+ 298 0050 64656661 		.ascii	"defaultTask\000"
+ 298      756C7454 
+ 298      61736B00 
+ 299              		.section	.rodata.defaultTask_attributes,"a"
+ 300              		.align	2
+ 303              	defaultTask_attributes:
+ 304 0000 50000000 		.word	.LC6
+ 305 0004 00000000 		.space	16
+ 305      00000000 
+ 305      00000000 
+ 305      00000000 
+ 306 0014 00020000 		.word	512
+ 307 0018 18000000 		.word	24
+ 308 001c 00000000 		.space	8
+ 308      00000000 
+ 309              		.global	defaultTaskHandle
+ 310              		.section	.bss.defaultTaskHandle,"aw",%nobits
+ 311              		.align	2
+ 314              	defaultTaskHandle:
+ 315 0000 00000000 		.space	4
+ 316              		.text
+ 317              	.Letext0:
+ 318              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 319              		.file 3 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ARM GAS  /tmp/ccboiZvu.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 freertos.c
+     /tmp/ccboiZvu.s:21     .text.StartDefaultTask:00000000 $t
+     /tmp/ccboiZvu.s:27     .text.StartDefaultTask:00000000 StartDefaultTask
+     /tmp/ccboiZvu.s:54     .text.MX_FREERTOS_Init:00000000 $t
+     /tmp/ccboiZvu.s:60     .text.MX_FREERTOS_Init:00000000 MX_FREERTOS_Init
+     /tmp/ccboiZvu.s:146    .text.MX_FREERTOS_Init:00000068 $d
+     /tmp/ccboiZvu.s:177    .rodata.UartTxDoneSemaphore_attributes:00000000 UartTxDoneSemaphore_attributes
+     /tmp/ccboiZvu.s:185    .bss.UartTxDoneSemaphoreHandle:00000000 UartTxDoneSemaphoreHandle
+     /tmp/ccboiZvu.s:196    .rodata.UartTxQueue_attributes:00000000 UartTxQueue_attributes
+     /tmp/ccboiZvu.s:204    .bss.UartTxQueueHandle:00000000 UartTxQueueHandle
+     /tmp/ccboiZvu.s:303    .rodata.defaultTask_attributes:00000000 defaultTask_attributes
+     /tmp/ccboiZvu.s:314    .bss.defaultTaskHandle:00000000 defaultTaskHandle
+     /tmp/ccboiZvu.s:281    .rodata.UartRxTask_attributes:00000000 UartRxTask_attributes
+     /tmp/ccboiZvu.s:292    .bss.UartRxTaskHandle:00000000 UartRxTaskHandle
+     /tmp/ccboiZvu.s:259    .rodata.UartTxTask_attributes:00000000 UartTxTask_attributes
+     /tmp/ccboiZvu.s:270    .bss.UartTxTaskHandle:00000000 UartTxTaskHandle
+     /tmp/ccboiZvu.s:237    .rodata.MPU6050Task_attributes:00000000 MPU6050Task_attributes
+     /tmp/ccboiZvu.s:248    .bss.MPU6050TaskHandle:00000000 MPU6050TaskHandle
+     /tmp/ccboiZvu.s:215    .rodata.MotorTask_attributes:00000000 MotorTask_attributes
+     /tmp/ccboiZvu.s:226    .bss.MotorTaskHandle:00000000 MotorTaskHandle
+     /tmp/ccboiZvu.s:170    .rodata.str1.4:00000000 $d
+     /tmp/ccboiZvu.s:174    .rodata.UartTxDoneSemaphore_attributes:00000000 $d
+     /tmp/ccboiZvu.s:182    .bss.UartTxDoneSemaphoreHandle:00000000 $d
+     /tmp/ccboiZvu.s:193    .rodata.UartTxQueue_attributes:00000000 $d
+     /tmp/ccboiZvu.s:201    .bss.UartTxQueueHandle:00000000 $d
+     /tmp/ccboiZvu.s:212    .rodata.MotorTask_attributes:00000000 $d
+     /tmp/ccboiZvu.s:223    .bss.MotorTaskHandle:00000000 $d
+     /tmp/ccboiZvu.s:234    .rodata.MPU6050Task_attributes:00000000 $d
+     /tmp/ccboiZvu.s:245    .bss.MPU6050TaskHandle:00000000 $d
+     /tmp/ccboiZvu.s:256    .rodata.UartTxTask_attributes:00000000 $d
+     /tmp/ccboiZvu.s:267    .bss.UartTxTaskHandle:00000000 $d
+     /tmp/ccboiZvu.s:278    .rodata.UartRxTask_attributes:00000000 $d
+     /tmp/ccboiZvu.s:289    .bss.UartRxTaskHandle:00000000 $d
+     /tmp/ccboiZvu.s:300    .rodata.defaultTask_attributes:00000000 $d
+     /tmp/ccboiZvu.s:311    .bss.defaultTaskHandle:00000000 $d
+
+UNDEFINED SYMBOLS
+osDelay
+osSemaphoreNew
+osMessageQueueNew
+osThreadNew
+StartUartRxTask
+StartUartTxTask
+StartMPU6050Task
+StartMotorTask

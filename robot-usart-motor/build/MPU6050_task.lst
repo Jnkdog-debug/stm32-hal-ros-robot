@@ -1,0 +1,91 @@
+ARM GAS  /tmp/cc3oddky.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"MPU6050_task.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/MPU6050_task.c"
+  20              		.section	.text.StartMPU6050Task,"ax",%progbits
+  21              		.align	1
+  22              		.global	StartMPU6050Task
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	StartMPU6050Task:
+  28              	.LFB138:
+   1:Core/Src/MPU6050_task.c **** #include "MPU6050_task.h"
+   2:Core/Src/MPU6050_task.c **** #include "cmsis_os.h"
+   3:Core/Src/MPU6050_task.c **** #include "protocol.h"
+   4:Core/Src/MPU6050_task.c **** #include "uart_tasks.h" // 引用发送队列句柄
+   5:Core/Src/MPU6050_task.c **** #include "MPU6050_task.h" // 假设包含您的编码器和电机驱动
+   6:Core/Src/MPU6050_task.c **** 
+   7:Core/Src/MPU6050_task.c **** 
+   8:Core/Src/MPU6050_task.c **** 
+   9:Core/Src/MPU6050_task.c **** 
+  10:Core/Src/MPU6050_task.c **** 
+  11:Core/Src/MPU6050_task.c **** /**
+  12:Core/Src/MPU6050_task.c ****  * @brief Function implementing the MPU6050Task thread.
+  13:Core/Src/MPU6050_task.c ****  */
+  14:Core/Src/MPU6050_task.c **** void StartMPU6050Task(void *argument)
+  15:Core/Src/MPU6050_task.c **** {
+  29              		.loc 1 15 1 view -0
+  30              		.cfi_startproc
+  31              		@ Volatile: function does not return.
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              	.LVL0:
+  35              		.loc 1 15 1 is_stmt 0 view .LVU1
+  36 0000 08B5     		push	{r3, lr}
+  37              	.LCFI0:
+  38              		.cfi_def_cfa_offset 8
+  39              		.cfi_offset 3, -8
+  40              		.cfi_offset 14, -4
+  41              	.LVL1:
+  42              	.L2:
+  16:Core/Src/MPU6050_task.c ****     /* Infinite loop */
+ARM GAS  /tmp/cc3oddky.s 			page 2
+
+
+  17:Core/Src/MPU6050_task.c ****     for(;;)
+  43              		.loc 1 17 5 is_stmt 1 view .LVU2
+  18:Core/Src/MPU6050_task.c ****     {
+  19:Core/Src/MPU6050_task.c ****         // MPU6050 传感器读取逻辑
+  20:Core/Src/MPU6050_task.c ****         osDelay(100);
+  44              		.loc 1 20 9 discriminator 1 view .LVU3
+  45 0002 6420     		movs	r0, #100
+  46 0004 FFF7FEFF 		bl	osDelay
+  47              	.LVL2:
+  17:Core/Src/MPU6050_task.c ****     {
+  48              		.loc 1 17 5 view .LVU4
+  49 0008 FBE7     		b	.L2
+  50              		.cfi_endproc
+  51              	.LFE138:
+  53              		.text
+  54              	.Letext0:
+  55              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+  56              		.file 3 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ARM GAS  /tmp/cc3oddky.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 MPU6050_task.c
+     /tmp/cc3oddky.s:21     .text.StartMPU6050Task:00000000 $t
+     /tmp/cc3oddky.s:27     .text.StartMPU6050Task:00000000 StartMPU6050Task
+
+UNDEFINED SYMBOLS
+osDelay

@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "STM32 Debug (OpenOCD)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+            "cwd": "${workspaceFolder}",
+            
+            // 1. 指定编译好的 elf 文件路径
+            "executable": "./build/robot-mpu6050.elf",
+            
+            // 2. 指定芯片配置文件 (F1用stm32f1x.cfg, F4用stm32f4x.cfg)
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32f4x.cfg"
+            ],
+
+            // 3. 指定工具路径 (解决 Linux 下找不到 nm/objdump 的红字报错)
+            "gdbPath": "gdb-multiarch",
+            "objdumpPath": "arm-none-eabi-objdump",
+            "nmPath": "arm-none-eabi-nm",
+
+            // 4. FreeRTOS 调试神器 (开启多任务查看)
+            "rtos": "FreeRTOS",
+
+            // 5. 启动后自动复位并停在 main 函数
+            "runToEntryPoint": "main",
+            
+            // 6. (可选) 查看寄存器需配置 SVD 文件
+            // "svdFile": "${workspaceFolder}/STM32F4xx.svd"
+        }
+    ]
+}

@@ -22,13 +22,14 @@
 #include "task.h"
 #include "main.h"
 #include "cmsis_os.h"
-#include "queue.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "mpu6050.h"
 #include "usart.h"
 #include "i2c.h"
 #include <stdio.h>
+#include "queue.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,21 +59,21 @@ int _write(int file, char *data, int len)
 osThreadId_t ProcessingTaskHandle;
 const osThreadAttr_t ProcessingTask_attributes = {
   .name = "ProcessingTask",
-  .stack_size = 1024 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for SensorTask */
 osThreadId_t SensorTaskHandle;
 const osThreadAttr_t SensorTask_attributes = {
   .name = "SensorTask",
-  .stack_size = 1024 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for UartTask */
 osThreadId_t UartTaskHandle;
 const osThreadAttr_t UartTask_attributes = {
   .name = "UartTask",
-  .stack_size = 1024 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for dataQueue01 */
@@ -116,7 +117,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the queue(s) */
   /* creation of dataQueue01 */
-  dataQueue01Handle = osMessageQueueNew (100, sizeof(MPU6050DATATYPE*), &dataQueue01_attributes);
+  dataQueue01Handle = osMessageQueueNew (16, sizeof(uint16_t), &dataQueue01_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -251,9 +252,10 @@ void StartUartTask(void *argument)
     }
 
     osDelay(50); // 短暂延时，避免任务空转占用过多CPU，让其他任务有机会运行
+  }
   /* USER CODE END StartUartTask */
 }
-}
+
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 
