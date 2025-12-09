@@ -49,8 +49,6 @@ Core/Src/usart.c \
 Core/Src/stm32f4xx_it.c \
 Core/Src/stm32f4xx_hal_msp.c \
 Core/Src/stm32f4xx_hal_timebase_tim.c \
-USB_HOST/Target/usbh_conf.c \
-USB_HOST/App/usb_host.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hcd.c \
@@ -86,16 +84,40 @@ Middlewares/Third_Party/FreeRTOS/Source/timers.c \
 Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c \
-Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_core.c \
-Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_ctlreq.c \
-Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_ioreq.c \
-Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_pipes.c \
-Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid.c \
-Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c \
-Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_mouse.c \
-Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_parser.c \
 Core/Src/sysmem.c \
-Core/Src/syscalls.c  
+Core/Src/syscalls.c \
+Hiwonder/Chassis/ackermann_chassis.c \
+Hiwonder/Chassis/differential_chassis.c \
+Hiwonder/Chassis/mecanum_chassis.c \
+Hiwonder/Misc/checksum.c \
+Hiwonder/Misc/log.c \
+Hiwonder/Misc/packet.c \
+Hiwonder/Misc/pid.c \
+Hiwonder/Misc/sbus.c \
+Hiwonder/Misc/syscall.c \
+Hiwonder/Peripherals/button.c \
+Hiwonder/Peripherals/buzzer.c \
+Hiwonder/Peripherals/encoder_motor.c \
+Hiwonder/Peripherals/imu.c \
+Hiwonder/Peripherals/imu_mpu6050.c \
+Hiwonder/Peripherals/key.c \
+Hiwonder/Peripherals/led.c \
+Hiwonder/Peripherals/pwm_servo.c \
+Hiwonder/Peripherals/serial_servo.c \
+Hiwonder/Portings/bluetooth_porting.c \
+Hiwonder/Portings/button_porting.c \
+Hiwonder/Portings/buzzer_porting.c \
+Hiwonder/Portings/chassis_porting.c \
+Hiwonder/Portings/imu_porting.c \
+Hiwonder/Portings/led_porting.c \
+Hiwonder/Portings/lwmem_porting.c \
+Hiwonder/Portings/motor_porting.c \
+Hiwonder/Portings/packet_porting.c \
+Hiwonder/Portings/pwm_servo_porting.c \
+Hiwonder/System/app.c \
+Hiwonder/System/battery_handle.c \
+
+
 
 # ASM sources
 ASM_SOURCES =  \
@@ -164,13 +186,28 @@ AS_INCLUDES =  \
 -IMiddlewares/ST/STM32_USB_Host_Library/Core/Inc \
 -IMiddlewares/ST/STM32_USB_Host_Library/Class/HID/Inc \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
--IDrivers/CMSIS/Include
+-IDrivers/CMSIS/Include \
+-IHiwonder/Chassis \
+-IHiwonder/Misc \
+-IHiwonder/Peripherals \
+-IHiwonder/Portings \
+-IHiwonder/System \
+-IHiwonder/USB_HOST \
+-IHiwonder/LVGL_UI \
+-IHiwonder/LVGL_UI/guider_fonts \
+-IHiwonder/LVGL_UI/guider_customer_fonts \
+-IHiwonder/LVGL_UI/images \
+-IThird_Party/Lw \
+-IThird_Party/Fusion/Fusion \
+-IThird_Party/RTT \
+-IThird_Party/LVGL \
+-IThird_Party/LVGL/src \
+-IThird_Party/LVGL/porting \
+-IThird_Party/U8g2
 
 # C includes
 C_INCLUDES =  \
 -ICore/Inc \
--IUSB_HOST/App \
--IUSB_HOST/Target \
 -IDrivers/STM32F4xx_HAL_Driver/Inc \
 -IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy \
 -IMiddlewares/Third_Party/FreeRTOS/Source/include \
@@ -179,7 +216,15 @@ C_INCLUDES =  \
 -IMiddlewares/ST/STM32_USB_Host_Library/Core/Inc \
 -IMiddlewares/ST/STM32_USB_Host_Library/Class/HID/Inc \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
--IDrivers/CMSIS/Include
+-IDrivers/CMSIS/Include \
+-IHiwonder/Chassis \
+-IHiwonder/Misc \
+-IHiwonder/Peripherals \
+-IHiwonder/Portings \
+-IHiwonder/System \
+-IThird_Party/Lw \
+-IThird_Party/Fusion/Fusion \
+-IThird_Party/RTT 
 
 
 # compile gcc flags

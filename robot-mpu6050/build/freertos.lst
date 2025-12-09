@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccqicPWC.s 			page 1
+ARM GAS  /tmp/ccVhLVAu.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
   28:Core/Src/freertos.c **** #include "mpu6050.h"
   29:Core/Src/freertos.c **** #include "usart.h"
   30:Core/Src/freertos.c **** #include "i2c.h"
-ARM GAS  /tmp/ccqicPWC.s 			page 2
+ARM GAS  /tmp/ccVhLVAu.s 			page 2
 
 
   31:Core/Src/freertos.c **** #include <stdio.h>
@@ -69,7 +69,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
   36:Core/Src/freertos.c **** /* USER CODE BEGIN PTD */
   37:Core/Src/freertos.c **** int _write(int file, char *data, int len)
   38:Core/Src/freertos.c **** {
-  39:Core/Src/freertos.c ****     HAL_UART_Transmit(&huart1, (uint8_t*)data, len, HAL_MAX_DELAY);
+  39:Core/Src/freertos.c ****     HAL_UART_Transmit(&huart1, (uint8_t*)data, len, 100);
   40:Core/Src/freertos.c ****     return len;
   41:Core/Src/freertos.c **** }
   42:Core/Src/freertos.c **** /* USER CODE END PTD */
@@ -100,7 +100,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
   67:Core/Src/freertos.c **** const osThreadAttr_t SensorTask_attributes = {
   68:Core/Src/freertos.c ****   .name = "SensorTask",
   69:Core/Src/freertos.c ****   .stack_size = 256 * 4,
-  70:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityLow,
+  70:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityAboveNormal,
   71:Core/Src/freertos.c **** };
   72:Core/Src/freertos.c **** /* Definitions for UartTask */
   73:Core/Src/freertos.c **** osThreadId_t UartTaskHandle;
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
   85:Core/Src/freertos.c **** /* Private function prototypes -----------------------------------------------*/
   86:Core/Src/freertos.c **** /* USER CODE BEGIN FunctionPrototypes */
   87:Core/Src/freertos.c **** 
-ARM GAS  /tmp/ccqicPWC.s 			page 3
+ARM GAS  /tmp/ccVhLVAu.s 			page 3
 
 
   88:Core/Src/freertos.c **** /* USER CODE END FunctionPrototypes */
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
  142:Core/Src/freertos.c ****   /* USER CODE END RTOS_EVENTS */
  143:Core/Src/freertos.c **** 
  144:Core/Src/freertos.c **** }
-ARM GAS  /tmp/ccqicPWC.s 			page 4
+ARM GAS  /tmp/ccVhLVAu.s 			page 4
 
 
  145:Core/Src/freertos.c **** 
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
  166:Core/Src/freertos.c **** * @brief Function implementing the SensorTask thread.
  167:Core/Src/freertos.c **** * @param argument: Not used
  168:Core/Src/freertos.c **** * @retval None
-ARM GAS  /tmp/ccqicPWC.s 			page 5
+ARM GAS  /tmp/ccVhLVAu.s 			page 5
 
 
  169:Core/Src/freertos.c **** */
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
  194:Core/Src/freertos.c ****       MPU6050_Read_Gyro();
  195:Core/Src/freertos.c ****       MPU6050_Read_Temp();
  196:Core/Src/freertos.c **** 
-ARM GAS  /tmp/ccqicPWC.s 			page 6
+ARM GAS  /tmp/ccVhLVAu.s 			page 6
 
 
  197:Core/Src/freertos.c **** 
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
  123 0036 0B4D     		ldr	r5, .L11
  124 0038 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
  125 003a 0FC4     		stmia	r4!, {r0, r1, r2, r3}
-ARM GAS  /tmp/ccqicPWC.s 			page 7
+ARM GAS  /tmp/ccVhLVAu.s 			page 7
 
 
  126 003c 95E80700 		ldm	r5, {r0, r1, r2}
@@ -418,7 +418,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
  167              	.LC2:
  168 0030 41636365 		.ascii	"Accel (X, Y, Z): %.2f, %.2f, %.2f\015\012\000"
  168      6C202858 
-ARM GAS  /tmp/ccqicPWC.s 			page 8
+ARM GAS  /tmp/ccVhLVAu.s 			page 8
 
 
  168      2C20592C 
@@ -478,7 +478,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
  199 0004 44E0     		b	.L15
  200              	.LVL15:
  201              	.L17:
-ARM GAS  /tmp/ccqicPWC.s 			page 9
+ARM GAS  /tmp/ccVhLVAu.s 			page 9
 
 
  223:Core/Src/freertos.c ****   /* USER CODE BEGIN StartUartTask */
@@ -538,7 +538,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
  236 003e CDE90001 		strd	r0, [sp]
  237 0042 2246     		mov	r2, r4
  238 0044 2B46     		mov	r3, r5
-ARM GAS  /tmp/ccqicPWC.s 			page 10
+ARM GAS  /tmp/ccVhLVAu.s 			page 10
 
 
  239 0046 1948     		ldr	r0, .L18+8
@@ -598,7 +598,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
  253:Core/Src/freertos.c **** 
  254:Core/Src/freertos.c ****     osDelay(50); // 短暂延时，避免任务空转占用过多CPU，让其他任务有机会运�
  281              		.loc 1 254 5 is_stmt 1 view .LVU47
-ARM GAS  /tmp/ccqicPWC.s 			page 11
+ARM GAS  /tmp/ccVhLVAu.s 			page 11
 
 
  282 008a 3220     		movs	r0, #50
@@ -646,46 +646,46 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
  320              	_write:
  321              	.LVL31:
  322              	.LFB141:
-  38:Core/Src/freertos.c ****     HAL_UART_Transmit(&huart1, (uint8_t*)data, len, HAL_MAX_DELAY);
+  38:Core/Src/freertos.c ****     HAL_UART_Transmit(&huart1, (uint8_t*)data, len, 100);
  323              		.loc 1 38 1 is_stmt 1 view -0
  324              		.cfi_startproc
  325              		@ args = 0, pretend = 0, frame = 0
  326              		@ frame_needed = 0, uses_anonymous_args = 0
-  38:Core/Src/freertos.c ****     HAL_UART_Transmit(&huart1, (uint8_t*)data, len, HAL_MAX_DELAY);
+  38:Core/Src/freertos.c ****     HAL_UART_Transmit(&huart1, (uint8_t*)data, len, 100);
  327              		.loc 1 38 1 is_stmt 0 view .LVU55
  328 0000 10B5     		push	{r4, lr}
  329              	.LCFI5:
  330              		.cfi_def_cfa_offset 8
  331              		.cfi_offset 4, -8
  332              		.cfi_offset 14, -4
-ARM GAS  /tmp/ccqicPWC.s 			page 12
+ARM GAS  /tmp/ccVhLVAu.s 			page 12
 
 
  333 0002 1446     		mov	r4, r2
   39:Core/Src/freertos.c ****     return len;
  334              		.loc 1 39 5 is_stmt 1 view .LVU56
- 335 0004 4FF0FF33 		mov	r3, #-1
- 336 0008 92B2     		uxth	r2, r2
+ 335 0004 6423     		movs	r3, #100
+ 336 0006 92B2     		uxth	r2, r2
  337              	.LVL32:
   39:Core/Src/freertos.c ****     return len;
  338              		.loc 1 39 5 is_stmt 0 view .LVU57
- 339 000a 0248     		ldr	r0, .L22
+ 339 0008 0248     		ldr	r0, .L22
  340              	.LVL33:
   39:Core/Src/freertos.c ****     return len;
  341              		.loc 1 39 5 view .LVU58
- 342 000c FFF7FEFF 		bl	HAL_UART_Transmit
+ 342 000a FFF7FEFF 		bl	HAL_UART_Transmit
  343              	.LVL34:
   40:Core/Src/freertos.c **** }
  344              		.loc 1 40 5 is_stmt 1 view .LVU59
   41:Core/Src/freertos.c **** /* USER CODE END PTD */
  345              		.loc 1 41 1 is_stmt 0 view .LVU60
- 346 0010 2046     		mov	r0, r4
- 347 0012 10BD     		pop	{r4, pc}
+ 346 000e 2046     		mov	r0, r4
+ 347 0010 10BD     		pop	{r4, pc}
  348              	.LVL35:
  349              	.L23:
   41:Core/Src/freertos.c **** /* USER CODE END PTD */
  350              		.loc 1 41 1 view .LVU61
- 351              		.align	2
+ 351 0012 00BF     		.align	2
  352              	.L22:
  353 0014 00000000 		.word	huart1
  354              		.cfi_endproc
@@ -718,7 +718,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
  380 0008 FFF7FEFF 		bl	osMessageQueueNew
  381              	.LVL36:
  120:Core/Src/freertos.c **** 
-ARM GAS  /tmp/ccqicPWC.s 			page 13
+ARM GAS  /tmp/ccVhLVAu.s 			page 13
 
 
  382              		.loc 1 120 21 discriminator 1 view .LVU65
@@ -778,7 +778,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
  426 0054 00000000 		.word	StartSensorTask
  427 0058 00000000 		.word	SensorTaskHandle
  428 005c 00000000 		.word	UartTask_attributes
-ARM GAS  /tmp/ccqicPWC.s 			page 14
+ARM GAS  /tmp/ccVhLVAu.s 			page 14
 
 
  429 0060 00000000 		.word	StartUartTask
@@ -838,7 +838,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
  479      6F725461 
  479      736B00
  480              		.section	.rodata.SensorTask_attributes,"a"
-ARM GAS  /tmp/ccqicPWC.s 			page 15
+ARM GAS  /tmp/ccVhLVAu.s 			page 15
 
 
  481              		.align	2
@@ -849,7 +849,7 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
  486      00000000 
  486      00000000 
  487 0014 00040000 		.word	1024
- 488 0018 08000000 		.word	8
+ 488 0018 20000000 		.word	32
  489 001c 00000000 		.space	8
  489      00000000 
  490              		.global	SensorTaskHandle
@@ -898,46 +898,46 @@ ARM GAS  /tmp/ccqicPWC.s 			page 1
  532              		.file 13 "/usr/include/newlib/stdio.h"
  533              		.file 14 "Middlewares/Third_Party/FreeRTOS/Source/include/portable.h"
  534              		.file 15 "<built-in>"
-ARM GAS  /tmp/ccqicPWC.s 			page 16
+ARM GAS  /tmp/ccVhLVAu.s 			page 16
 
 
-ARM GAS  /tmp/ccqicPWC.s 			page 17
+ARM GAS  /tmp/ccVhLVAu.s 			page 17
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 freertos.c
-     /tmp/ccqicPWC.s:21     .text.StartProcessingTask:00000000 $t
-     /tmp/ccqicPWC.s:27     .text.StartProcessingTask:00000000 StartProcessingTask
-     /tmp/ccqicPWC.s:54     .text.StartSensorTask:00000000 $t
-     /tmp/ccqicPWC.s:60     .text.StartSensorTask:00000000 StartSensorTask
-     /tmp/ccqicPWC.s:152    .text.StartSensorTask:00000064 $d
-     /tmp/ccqicPWC.s:451    .bss.dataQueue01Handle:00000000 dataQueue01Handle
-     /tmp/ccqicPWC.s:159    .rodata.StartUartTask.str1.4:00000000 $d
-     /tmp/ccqicPWC.s:176    .text.StartUartTask:00000000 $t
-     /tmp/ccqicPWC.s:182    .text.StartUartTask:00000000 StartUartTask
-     /tmp/ccqicPWC.s:304    .text.StartUartTask:000000a4 $d
-     /tmp/ccqicPWC.s:314    .text._write:00000000 $t
-     /tmp/ccqicPWC.s:320    .text._write:00000000 _write
-     /tmp/ccqicPWC.s:353    .text._write:00000014 $d
-     /tmp/ccqicPWC.s:358    .text.MX_FREERTOS_Init:00000000 $t
-     /tmp/ccqicPWC.s:364    .text.MX_FREERTOS_Init:00000000 MX_FREERTOS_Init
-     /tmp/ccqicPWC.s:420    .text.MX_FREERTOS_Init:0000003c $d
-     /tmp/ccqicPWC.s:443    .rodata.dataQueue01_attributes:00000000 dataQueue01_attributes
-     /tmp/ccqicPWC.s:506    .rodata.ProcessingTask_attributes:00000000 ProcessingTask_attributes
-     /tmp/ccqicPWC.s:517    .bss.ProcessingTaskHandle:00000000 ProcessingTaskHandle
-     /tmp/ccqicPWC.s:484    .rodata.SensorTask_attributes:00000000 SensorTask_attributes
-     /tmp/ccqicPWC.s:495    .bss.SensorTaskHandle:00000000 SensorTaskHandle
-     /tmp/ccqicPWC.s:462    .rodata.UartTask_attributes:00000000 UartTask_attributes
-     /tmp/ccqicPWC.s:473    .bss.UartTaskHandle:00000000 UartTaskHandle
-     /tmp/ccqicPWC.s:436    .rodata.str1.4:00000000 $d
-     /tmp/ccqicPWC.s:440    .rodata.dataQueue01_attributes:00000000 $d
-     /tmp/ccqicPWC.s:448    .bss.dataQueue01Handle:00000000 $d
-     /tmp/ccqicPWC.s:459    .rodata.UartTask_attributes:00000000 $d
-     /tmp/ccqicPWC.s:470    .bss.UartTaskHandle:00000000 $d
-     /tmp/ccqicPWC.s:481    .rodata.SensorTask_attributes:00000000 $d
-     /tmp/ccqicPWC.s:492    .bss.SensorTaskHandle:00000000 $d
-     /tmp/ccqicPWC.s:503    .rodata.ProcessingTask_attributes:00000000 $d
-     /tmp/ccqicPWC.s:514    .bss.ProcessingTaskHandle:00000000 $d
+     /tmp/ccVhLVAu.s:21     .text.StartProcessingTask:00000000 $t
+     /tmp/ccVhLVAu.s:27     .text.StartProcessingTask:00000000 StartProcessingTask
+     /tmp/ccVhLVAu.s:54     .text.StartSensorTask:00000000 $t
+     /tmp/ccVhLVAu.s:60     .text.StartSensorTask:00000000 StartSensorTask
+     /tmp/ccVhLVAu.s:152    .text.StartSensorTask:00000064 $d
+     /tmp/ccVhLVAu.s:451    .bss.dataQueue01Handle:00000000 dataQueue01Handle
+     /tmp/ccVhLVAu.s:159    .rodata.StartUartTask.str1.4:00000000 $d
+     /tmp/ccVhLVAu.s:176    .text.StartUartTask:00000000 $t
+     /tmp/ccVhLVAu.s:182    .text.StartUartTask:00000000 StartUartTask
+     /tmp/ccVhLVAu.s:304    .text.StartUartTask:000000a4 $d
+     /tmp/ccVhLVAu.s:314    .text._write:00000000 $t
+     /tmp/ccVhLVAu.s:320    .text._write:00000000 _write
+     /tmp/ccVhLVAu.s:353    .text._write:00000014 $d
+     /tmp/ccVhLVAu.s:358    .text.MX_FREERTOS_Init:00000000 $t
+     /tmp/ccVhLVAu.s:364    .text.MX_FREERTOS_Init:00000000 MX_FREERTOS_Init
+     /tmp/ccVhLVAu.s:420    .text.MX_FREERTOS_Init:0000003c $d
+     /tmp/ccVhLVAu.s:443    .rodata.dataQueue01_attributes:00000000 dataQueue01_attributes
+     /tmp/ccVhLVAu.s:506    .rodata.ProcessingTask_attributes:00000000 ProcessingTask_attributes
+     /tmp/ccVhLVAu.s:517    .bss.ProcessingTaskHandle:00000000 ProcessingTaskHandle
+     /tmp/ccVhLVAu.s:484    .rodata.SensorTask_attributes:00000000 SensorTask_attributes
+     /tmp/ccVhLVAu.s:495    .bss.SensorTaskHandle:00000000 SensorTaskHandle
+     /tmp/ccVhLVAu.s:462    .rodata.UartTask_attributes:00000000 UartTask_attributes
+     /tmp/ccVhLVAu.s:473    .bss.UartTaskHandle:00000000 UartTaskHandle
+     /tmp/ccVhLVAu.s:436    .rodata.str1.4:00000000 $d
+     /tmp/ccVhLVAu.s:440    .rodata.dataQueue01_attributes:00000000 $d
+     /tmp/ccVhLVAu.s:448    .bss.dataQueue01Handle:00000000 $d
+     /tmp/ccVhLVAu.s:459    .rodata.UartTask_attributes:00000000 $d
+     /tmp/ccVhLVAu.s:470    .bss.UartTaskHandle:00000000 $d
+     /tmp/ccVhLVAu.s:481    .rodata.SensorTask_attributes:00000000 $d
+     /tmp/ccVhLVAu.s:492    .bss.SensorTaskHandle:00000000 $d
+     /tmp/ccVhLVAu.s:503    .rodata.ProcessingTask_attributes:00000000 $d
+     /tmp/ccVhLVAu.s:514    .bss.ProcessingTaskHandle:00000000 $d
 
 UNDEFINED SYMBOLS
 osDelay

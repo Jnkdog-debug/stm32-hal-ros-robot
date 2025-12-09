@@ -19,15 +19,12 @@
 #include "button.h"
 #include "led.h"
 #include "buzzer.h"
-#include "display.h"
-#include "display_st7735.h"
 #include "encoder_motor.h"
 #include "pid.h"
 #include "log.h"
 #include "pwm_servo.h"
 #include "imu.h"
 #include "packet.h"
-#include "usbh_hid_gamepad.h"
 #include "object.h"
 #include "chassis.h"
 
@@ -36,17 +33,12 @@ extern struct PacketController packet_controller;
 extern ButtonObjectTypeDef *buttons[2];
 extern BuzzerObjectTypeDef *buzzers[1];
 extern LEDObjectTypeDef *leds[1];
-extern DisplayObjectTypeDef *lcd;
 extern IMU_ObjectTypeDef *imus[1];
 extern PWMServoObjectTypeDef *pwm_servos[4];
 extern EncoderMotorObjectTypeDef *motors[4];
 extern ChassisTypeDef *chassis;
 
 
-typedef struct{
-	ObjectTypeIDEnum type_id;
-	HID_GAMEPAD_Info_TypeDef status;
-}GamepadStatusObjectTypeDef;
 
 
 void set_chassis_type(uint8_t chassis_type);

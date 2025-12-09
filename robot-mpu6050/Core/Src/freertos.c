@@ -36,7 +36,7 @@
 /* USER CODE BEGIN PTD */
 int _write(int file, char *data, int len)
 {
-    HAL_UART_Transmit(&huart1, (uint8_t*)data, len, HAL_MAX_DELAY);
+    HAL_UART_Transmit(&huart1, (uint8_t*)data, len, 100);
     return len;
 }
 /* USER CODE END PTD */
@@ -67,7 +67,7 @@ osThreadId_t SensorTaskHandle;
 const osThreadAttr_t SensorTask_attributes = {
   .name = "SensorTask",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityAboveNormal,
 };
 /* Definitions for UartTask */
 osThreadId_t UartTaskHandle;
@@ -247,7 +247,7 @@ void StartUartTask(void *argument)
 
       // 3. **重要：** 使用完毕后，**释放**动态分配的内存
       // 这块内存是 SensorTask 中通过 pvPortMalloc 分配的，必须由接收方释放，否则会造成内存泄漏。
-      vPortFree(p_received_mpu_data);
+      //vPortFree(p_received_mpu_data);
       p_received_mpu_data = NULL; // 将指针置空，避免后续意外使用已释放的内存（野指针）
     }
 

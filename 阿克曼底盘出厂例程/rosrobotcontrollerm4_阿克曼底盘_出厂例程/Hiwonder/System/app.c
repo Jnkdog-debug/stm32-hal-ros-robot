@@ -13,11 +13,8 @@
 #include "led.h"
 #include "lwmem_porting.h"
 #include "global.h"
-#include "lvgl.h"
-#include "lv_port_disp.h"
 #include "global.h"
 #include "adc.h"
-#include "u8g2_porting.h"
 #include "pwm_servo.h"
 #include "serial_servo.h"
 

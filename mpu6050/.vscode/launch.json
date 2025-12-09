@@ -1,0 +1,45 @@
+{
+
+"version": "0.2.0",
+
+"configurations": [
+
+{
+
+"name": "Cortex Debug (OpenOCD)",
+
+"cwd": "${workspaceFolder}",
+
+"executable": "./build/mpu6050.elf", /* 【修改1】这里改成你 Makefile 生成的 .elf 文件路径，通常在 build 目录下 */
+
+"request": "launch",
+
+"type": "cortex-debug",
+
+"servertype": "openocd",
+
+"gdbPath": "gdb-multiarch", /* Linux下通常叫这个名字 */
+
+"objdumpPath": "arm-none-eabi-objdump",
+
+"nmPath": "arm-none-eabi-nm",
+
+"rtos": "FreeRTOS",
+
+"runToEntryPoint": "main",/* 从main开始是必须的，这样才能正常调试 */
+
+"configFiles": [
+
+"interface/stlink.cfg", /* 使用 ST-Link */
+
+"target/stm32f4x.cfg" /* 【修改2】如果你是 F4 系列就改成 stm32f4x.cfg，F1 就用 f1x */
+
+],
+
+"svdFile": "${workspaceFolder}/STM32F407.svd" /* 选做：如果你想看寄存器，需要下载对应的 .svd 文件并填在这里 */
+
+}
+
+]
+
+}

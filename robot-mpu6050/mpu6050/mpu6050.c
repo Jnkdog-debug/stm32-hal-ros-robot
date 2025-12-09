@@ -19,26 +19,53 @@ int16_t Sensor_I2C2_Serch(void)
 			return i;
 		}
 	}
-	return 0xD1;
+	return 0x68;
 }
+
+
 int8_t MPU6050_Init(int16_t Addr)
 {
-	uint8_t check;
-	HAL_I2C_Mem_Read(&hi2c2,Addr,WHO_AM_I,1,&check,1,1000);
-	if(check == 0x68) // 确认设备用 地址寄存器
-	{	
-		check = 0x00;
-		Sensor_I2C2_Write(Addr,PWR_MGMT_1,&check, 1); 	    // 唤醒
-		check = 0x07;	
-		Sensor_I2C2_Write(Addr,SMPLRT_DIV,&check, 1);	    // 1Khz的速率
-		check = 0x00;
-		Sensor_I2C2_Write(Addr,ACCEL_CONFIG,&check, 1);	 	// 加速度配置
-		check = 0x00;
-		Sensor_I2C2_Write(Addr,GYRO_CONFIG,&check, 1);		// 陀螺配置
-		return 0;
-	}
-	return -1;
+    uint8_t check;
+    uint8_t write_val;
+    HAL_StatusTypeDef status;
+
+    // 1. 读取 WHO_AM_I 并检查 I2C 通信状态
+    status = Sensor_I2C2_Read(Addr, WHO_AM_I, &check, 1);
+    
+    if (status != HAL_OK) {
+        return -2; // I2C 通信错误
+    }
+
+    if (check != 0x68) {
+        return -1; // 设备ID不匹配
+    }
+
+    // 2. 唤醒并设置时钟源
+    write_val = 0x00; // 内部振荡器
+    if(Sensor_I2C2_Write(Addr, PWR_MGMT_1, &write_val, 1) != HAL_OK) return -3;
+
+    // 3. 配置数字低通滤波器 (DLPF) - 推荐添加此步骤
+    // 例如：设置 DLPF 为 5 (截止频率 10Hz/10Hz)
+    write_val = 0x05; 
+    if(Sensor_I2C2_Write(Addr, CONFIG, &write_val, 1) != HAL_OK) return -4;
+
+    // 4. 配置采样率分频 (1kHz / (1+7) = 125Hz)
+    write_val = 0x07;
+    if(Sensor_I2C2_Write(Addr, SMPLRT_DIV, &write_val, 1) != HAL_OK) return -5;
+
+    // 5. 加速度配置：±2g (0x00)
+    write_val = 0x00; 
+    if(Sensor_I2C2_Write(Addr, ACCEL_CONFIG, &write_val, 1) != HAL_OK) return -6;
+
+    // 6. 陀螺仪配置：±250 deg/s (0x00)
+    write_val = 0x00; 
+    if(Sensor_I2C2_Write(Addr, GYRO_CONFIG, &write_val, 1) != HAL_OK) return -7;
+
+    return 0; // 初始化成功
 }
+
+
+
 void MPU6050_Read_Accel(void)
 {
 	uint8_t Read_Buf[6];
