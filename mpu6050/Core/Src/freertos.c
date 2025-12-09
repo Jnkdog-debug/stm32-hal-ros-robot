@@ -53,6 +53,24 @@ return len;
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+/* 定义系统控制块 */
+typedef struct {
+    uint8_t is_running;      // 0: 停止, 1: 运行
+    uint32_t sample_period;  // 采样周期 (ms)
+} SystemControl_t;
+
+/* 初始化默认值: 默认运行，50ms一次 */
+SystemControl_t g_sys_ctrl = {1, 50}; 
+/* 接收缓冲区 (1字节) */
+uint8_t rx_buffer_byte;
+
+/* 解析状态机的状态定义 */
+typedef enum {
+    STATE_WAIT_HEADER_1,
+    STATE_WAIT_HEADER_2,
+    STATE_WAIT_CMD,
+    STATE_WAIT_PARAM
+} ParserState_t;
 
 /* USER CODE END PD */
 
@@ -79,10 +97,22 @@ const osThreadAttr_t usartTask_attributes = {
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for cmdTask */
+osThreadId_t cmdTaskHandle;
+const osThreadAttr_t cmdTask_attributes = {
+  .name = "cmdTask",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityAboveNormal,
+};
 /* Definitions for dataQueue */
 osMessageQueueId_t dataQueueHandle;
 const osMessageQueueAttr_t dataQueue_attributes = {
   .name = "dataQueue"
+};
+/* Definitions for cmdQueue */
+osMessageQueueId_t cmdQueueHandle;
+const osMessageQueueAttr_t cmdQueue_attributes = {
+  .name = "cmdQueue"
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -92,6 +122,7 @@ const osMessageQueueAttr_t dataQueue_attributes = {
 
 void StartDefaultTask(void *argument);
 void StartUsartTask(void *argument);
+void StartcmdTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -119,7 +150,10 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the queue(s) */
   /* creation of dataQueue */
-  dataQueueHandle = osMessageQueueNew (16, sizeof(MPU6050DATATYPE*), &dataQueue_attributes);
+  dataQueueHandle = osMessageQueueNew (32, sizeof(MPU6050DATATYPE*), &dataQueue_attributes);
+
+  /* creation of cmdQueue */
+  cmdQueueHandle = osMessageQueueNew (32, sizeof(uint8_t), &cmdQueue_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -131,6 +165,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of usartTask */
   usartTaskHandle = osThreadNew(StartUsartTask, NULL, &usartTask_attributes);
+
+  /* creation of cmdTask */
+  cmdTaskHandle = osThreadNew(StartcmdTask, NULL, &cmdTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -152,42 +189,44 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
+  HAL_UART_Receive_IT(&huart3, &rx_buffer_byte, 1);
+
   MPU6050_Init(Sensor_I2C2_Serch());
   /* Infinite loop */
   for(;;)
     {
-        MPU6050DATATYPE* p_mpu_data = (MPU6050DATATYPE*) pvPortMalloc(sizeof(Mpu6050_Data));
+        // 1. 读取全局变量中的采样周期
+        uint32_t delay_time = g_sys_ctrl.sample_period;
+        if (delay_time < 5) delay_time = 5; // 保护一下，别太快卡死
 
-        // 1. 检查内存是否分配成功！
-        if (p_mpu_data != NULL) 
+        // 2. 检查是否处于运行状态
+        if (g_sys_ctrl.is_running == 1)
         {
-            // 2. 完整采集数据
-            MPU6050_Read_Accel();
-            MPU6050_Read_Gyro(); 
-            MPU6050_Read_Temp();
-            
-            // 3. 将全局数据复制到堆内存中
-            *p_mpu_data = Mpu6050_Data; 
+            MPU6050DATATYPE* p_mpu_data = (MPU6050DATATYPE*) pvPortMalloc(sizeof(Mpu6050_Data));
 
-            // 4. 尝试发送指针
-            if (xQueueSend(dataQueueHandle, &p_mpu_data, portMAX_DELAY) != pdPASS) {
-                // 发送失败：必须释放内存
-                vPortFree(p_mpu_data);
-                p_mpu_data = NULL; // 最佳实践
-            }
-        } 
-        else 
+            if (p_mpu_data != NULL) 
+            {
+                MPU6050_Read_Accel();
+                MPU6050_Read_Gyro(); 
+                MPU6050_Read_Temp();
+                *p_mpu_data = Mpu6050_Data; 
+
+                if (xQueueSend(dataQueueHandle, &p_mpu_data, 0) != pdPASS) { 
+                    // 这里 timeout 改成 0，如果队列满了就丢弃这帧数据，不要阻塞采集任务
+                    vPortFree(p_mpu_data);
+                }
+            } 
+        }
+        else
         {
-            // 内存分配失败，打印警告或报警
-            printf("Error: MPU data malloc failed!\r\n");
+            // 如果停止了，就不申请内存，也不读取 I2C，省电省资源
         }
 
-        // 5. 添加延时以控制采样频率和让出 CPU
-        osDelay(50);
+        // 3. 动态延时
+        osDelay(delay_time);
     }
   /* USER CODE END StartDefaultTask */
 }
-
 
 /* USER CODE BEGIN Header_StartUsartTask */
 /**
@@ -226,8 +265,105 @@ void StartUsartTask(void *argument)
   /* USER CODE END StartUsartTask */
 }
 
+/* USER CODE BEGIN Header_StartcmdTask */
+/**
+* @brief Function implementing the cmdTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartcmdTask */
+void StartcmdTask(void *argument)
+{
+  /* USER CODE BEGIN StartcmdTask */
+ 
+    uint8_t rx_byte;
+    uint8_t cmd_cache = 0; // 暂存命令
+    ParserState_t current_state = STATE_WAIT_HEADER_1; // 初始状态
+  /* Infinite loop */
+    for(;;)
+    {
+        // 从 commandQueue 接收一个字节 (永久阻塞等待)
+        if (xQueueReceive(cmdQueueHandle, &rx_byte, portMAX_DELAY) == pdPASS)
+        {
+            // --- 有限状态机 (FSM) 开始 ---
+            switch (current_state)
+            {
+                case STATE_WAIT_HEADER_1:
+                    if (rx_byte == 0xAA) {
+                        current_state = STATE_WAIT_HEADER_2;
+                    }
+                    break;
+
+                case STATE_WAIT_HEADER_2:
+                    if (rx_byte == 0x55) {
+                        current_state = STATE_WAIT_CMD;
+                    } else if (rx_byte == 0xAA) {
+                         // 特殊情况：如果是 AA AA，可能第二个是头，保持在 Wait Header 2
+                        current_state = STATE_WAIT_HEADER_2; 
+                    } else {
+                        current_state = STATE_WAIT_HEADER_1; // 错了，重头再来
+                    }
+                    break;
+
+                case STATE_WAIT_CMD:
+                    cmd_cache = rx_byte; // 记下命令
+                    current_state = STATE_WAIT_PARAM;
+                    break;
+
+                case STATE_WAIT_PARAM:
+                    // 收到参数，一帧完整了，开始执行逻辑
+                    switch (cmd_cache)
+                    {
+                        case 0x01: // START
+                            g_sys_ctrl.is_running = 1;
+                            printf("CMD: System Started\r\n");
+                            break;
+                            
+                        case 0x02: // STOP
+                            g_sys_ctrl.is_running = 0;
+                            printf("CMD: System Stopped\r\n");
+                            break;
+                            
+                        case 0x03: // SET PERIOD
+                            if (rx_byte > 0) {
+                                g_sys_ctrl.sample_period = rx_byte * 10; // 参数*10ms
+                                printf("CMD: Period set to %lu ms\r\n", g_sys_ctrl.sample_period);
+                            }
+                            break;
+                            
+                        default:
+                            printf("CMD: Unknown Command\r\n");
+                            break;
+                    }
+                    // 处理完一帧，回到初始状态
+                    current_state = STATE_WAIT_HEADER_1;
+                    break;
+            }
+            // --- FSM 结束 ---
+        }
+    }
+  /* USER CODE END StartcmdTask */
+}
+
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+/* 串口接收完成回调函数 */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == USART3) // 确认是哪个串口
+    {
+        BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
+        // 把收到的这 1 个字节发送到 commandQueue
+        // 注意：这是在中断里，要用 FromISR 版本
+        xQueueSendFromISR(cmdQueueHandle, &rx_buffer_byte, &xHigherPriorityTaskWoken);
+
+        // 重新开启中断接收下一个字节
+        HAL_UART_Receive_IT(&huart3, &rx_buffer_byte, 1);
+
+        // 如果唤醒了高优先级任务，进行上下文切换
+        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    }
+}
 /* USER CODE END Application */
 
