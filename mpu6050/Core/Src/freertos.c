@@ -25,10 +25,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "mpu6050.h"
+
 #include <stdio.h>
 #include "usart.h"
 #include "queue.h"
+#include "robot_sys.h"
+#include "mpu6050.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,23 +56,6 @@ return len;
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 /* 定义系统控制块 */
-typedef struct {
-    uint8_t is_running;      // 0: 停止, 1: 运行
-    uint32_t sample_period;  // 采样周期 (ms)
-} SystemControl_t;
-
-/* 初始化默认值: 默认运行，50ms一次 */
-SystemControl_t g_sys_ctrl = {1, 50}; 
-/* 接收缓冲区 (1字节) */
-uint8_t rx_buffer_byte;
-
-/* 解析状态机的状态定义 */
-typedef enum {
-    STATE_WAIT_HEADER_1,
-    STATE_WAIT_HEADER_2,
-    STATE_WAIT_CMD,
-    STATE_WAIT_PARAM
-} ParserState_t;
 
 /* USER CODE END PD */
 
@@ -82,27 +67,44 @@ typedef enum {
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 
+// 全局变量的定义
+
+/* 初始化默认值: 默认运行，50ms一次 */
+SystemControl_t g_sys_ctrl = {1, 50}; 
+Robot_State_t g_robot = {0, 0.0f, 0.0f};
+/* 接收缓冲区 (1字节) */
+
+
+
+
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
-  .stack_size = 256 * 4,
+  .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for usartTask */
 osThreadId_t usartTaskHandle;
 const osThreadAttr_t usartTask_attributes = {
   .name = "usartTask",
-  .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityAboveNormal1,
 };
 /* Definitions for cmdTask */
 osThreadId_t cmdTaskHandle;
 const osThreadAttr_t cmdTask_attributes = {
   .name = "cmdTask",
-  .stack_size = 256 * 4,
+  .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityAboveNormal,
+};
+/* Definitions for motorTask */
+osThreadId_t motorTaskHandle;
+const osThreadAttr_t motorTask_attributes = {
+  .name = "motorTask",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for dataQueue */
 osMessageQueueId_t dataQueueHandle;
@@ -114,6 +116,11 @@ osMessageQueueId_t cmdQueueHandle;
 const osMessageQueueAttr_t cmdQueue_attributes = {
   .name = "cmdQueue"
 };
+/* Definitions for robotMutex */
+osMutexId_t robotMutexHandle;
+const osMutexAttr_t robotMutex_attributes = {
+  .name = "robotMutex"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -123,6 +130,7 @@ const osMessageQueueAttr_t cmdQueue_attributes = {
 void StartDefaultTask(void *argument);
 void StartUsartTask(void *argument);
 void StartcmdTask(void *argument);
+void StartmotorTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -135,6 +143,9 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
+  /* Create the mutex(es) */
+  /* creation of robotMutex */
+  robotMutexHandle = osMutexNew(&robotMutex_attributes);
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -150,7 +161,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the queue(s) */
   /* creation of dataQueue */
-  dataQueueHandle = osMessageQueueNew (32, sizeof(MPU6050DATATYPE*), &dataQueue_attributes);
+  dataQueueHandle = osMessageQueueNew (32, sizeof(TxMessage_t), &dataQueue_attributes);
 
   /* creation of cmdQueue */
   cmdQueueHandle = osMessageQueueNew (32, sizeof(uint8_t), &cmdQueue_attributes);
@@ -169,6 +180,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of cmdTask */
   cmdTaskHandle = osThreadNew(StartcmdTask, NULL, &cmdTask_attributes);
 
+  /* creation of motorTask */
+  motorTaskHandle = osThreadNew(StartmotorTask, NULL, &motorTask_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -186,44 +200,13 @@ void MX_FREERTOS_Init(void) {
   * @retval None
   */
 /* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
+__weak void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
-  HAL_UART_Receive_IT(&huart3, &rx_buffer_byte, 1);
-
-  MPU6050_Init(Sensor_I2C2_Serch());
   /* Infinite loop */
   for(;;)
     {
-        // 1. 读取全局变量中的采样周期
-        uint32_t delay_time = g_sys_ctrl.sample_period;
-        if (delay_time < 5) delay_time = 5; // 保护一下，别太快卡死
-
-        // 2. 检查是否处于运行状态
-        if (g_sys_ctrl.is_running == 1)
-        {
-            MPU6050DATATYPE* p_mpu_data = (MPU6050DATATYPE*) pvPortMalloc(sizeof(Mpu6050_Data));
-
-            if (p_mpu_data != NULL) 
-            {
-                MPU6050_Read_Accel();
-                MPU6050_Read_Gyro(); 
-                MPU6050_Read_Temp();
-                *p_mpu_data = Mpu6050_Data; 
-
-                if (xQueueSend(dataQueueHandle, &p_mpu_data, 0) != pdPASS) { 
-                    // 这里 timeout 改成 0，如果队列满了就丢弃这帧数据，不要阻塞采集任务
-                    vPortFree(p_mpu_data);
-                }
-            } 
-        }
-        else
-        {
-            // 如果停止了，就不申请内存，也不读取 I2C，省电省资源
-        }
-
-        // 3. 动态延时
-        osDelay(delay_time);
+      osDelay(1);
     }
   /* USER CODE END StartDefaultTask */
 }
@@ -235,32 +218,13 @@ void StartDefaultTask(void *argument)
 * @retval None
 */
 /* USER CODE END Header_StartUsartTask */
-void StartUsartTask(void *argument)
+__weak void StartUsartTask(void *argument)
 {
   /* USER CODE BEGIN StartUsartTask */
   /* Infinite loop */
   for(;;)
   {
-    MPU6050DATATYPE* p_received_mpu_data; 
-
-    // 1. 接收队列中的**指针**，无限期阻塞等待
-    if (xQueueReceive(dataQueueHandle, &p_received_mpu_data, portMAX_DELAY) == pdPASS) {
-
-        // 2. 通过指针访问数据（读取、打印等）
-        printf("Temperature: %.2f C\r\n", p_received_mpu_data->Temp);
-        printf("Gyro: X=%.2f deg/s, Y=%.2f deg/s, Z=%.2f deg/s\r\n", 
-               p_received_mpu_data->Gyro_X, 
-               p_received_mpu_data->Gyro_Y, 
-               p_received_mpu_data->Gyro_Z);
-        printf("Accel: X=%.2f g, Y=%.2f g, Z=%.2f g\r\n", 
-               p_received_mpu_data->Accel_X, 
-               p_received_mpu_data->Accel_Y, 
-               p_received_mpu_data->Accel_Z);
-        // 3. **关键步骤：** 使用完毕后，释放生产者分配的内存
-        vPortFree(p_received_mpu_data);
-        p_received_mpu_data = NULL; 
-    }
-    //osDelay(100);
+    osDelay(1);
   }
   /* USER CODE END StartUsartTask */
 }
@@ -272,82 +236,39 @@ void StartUsartTask(void *argument)
 * @retval None
 */
 /* USER CODE END Header_StartcmdTask */
-void StartcmdTask(void *argument)
+__weak void StartcmdTask(void *argument)
 {
   /* USER CODE BEGIN StartcmdTask */
- 
-    uint8_t rx_byte;
-    uint8_t cmd_cache = 0; // 暂存命令
-    ParserState_t current_state = STATE_WAIT_HEADER_1; // 初始状态
   /* Infinite loop */
-    for(;;)
-    {
-        // 从 commandQueue 接收一个字节 (永久阻塞等待)
-        if (xQueueReceive(cmdQueueHandle, &rx_byte, portMAX_DELAY) == pdPASS)
-        {
-            // --- 有限状态机 (FSM) 开始 ---
-            switch (current_state)
-            {
-                case STATE_WAIT_HEADER_1:
-                    if (rx_byte == 0xAA) {
-                        current_state = STATE_WAIT_HEADER_2;
-                    }
-                    break;
-
-                case STATE_WAIT_HEADER_2:
-                    if (rx_byte == 0x55) {
-                        current_state = STATE_WAIT_CMD;
-                    } else if (rx_byte == 0xAA) {
-                         // 特殊情况：如果是 AA AA，可能第二个是头，保持在 Wait Header 2
-                        current_state = STATE_WAIT_HEADER_2; 
-                    } else {
-                        current_state = STATE_WAIT_HEADER_1; // 错了，重头再来
-                    }
-                    break;
-
-                case STATE_WAIT_CMD:
-                    cmd_cache = rx_byte; // 记下命令
-                    current_state = STATE_WAIT_PARAM;
-                    break;
-
-                case STATE_WAIT_PARAM:
-                    // 收到参数，一帧完整了，开始执行逻辑
-                    switch (cmd_cache)
-                    {
-                        case 0x01: // START
-                            g_sys_ctrl.is_running = 1;
-                            printf("CMD: System Started\r\n");
-                            break;
-                            
-                        case 0x02: // STOP
-                            g_sys_ctrl.is_running = 0;
-                            printf("CMD: System Stopped\r\n");
-                            break;
-                            
-                        case 0x03: // SET PERIOD
-                            if (rx_byte > 0) {
-                                g_sys_ctrl.sample_period = rx_byte * 10; // 参数*10ms
-                                printf("CMD: Period set to %lu ms\r\n", g_sys_ctrl.sample_period);
-                            }
-                            break;
-                            
-                        default:
-                            printf("CMD: Unknown Command\r\n");
-                            break;
-                    }
-                    // 处理完一帧，回到初始状态
-                    current_state = STATE_WAIT_HEADER_1;
-                    break;
-            }
-            // --- FSM 结束 ---
-        }
-    }
+  for(;;)
+  {
+    osDelay(1);
+  }
   /* USER CODE END StartcmdTask */
+}
+
+/* USER CODE BEGIN Header_StartmotorTask */
+/**
+* @brief Function implementing the motorTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartmotorTask */
+__weak void StartmotorTask(void *argument)
+{
+  /* USER CODE BEGIN StartmotorTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartmotorTask */
 }
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 /* 串口接收完成回调函数 */
+uint8_t rx_buffer_byte;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     if (huart->Instance == USART3) // 确认是哪个串口

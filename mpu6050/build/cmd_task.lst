@@ -1,0 +1,681 @@
+ARM GAS  /tmp/ccIj6Krw.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"cmd_task.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "RobotApp/Src/cmd_task.c"
+  20              		.global	__aeabi_f2d
+  21              		.section	.rodata.Process_Command.str1.4,"aMS",%progbits,1
+  22              		.align	2
+  23              	.LC0:
+  24 0000 53657420 		.ascii	"Set Speed: L=%.2f R=%.2f\015\012\000"
+  24      53706565 
+  24      643A204C 
+  24      3D252E32 
+  24      6620523D 
+  25 001b 00       		.align	2
+  26              	.LC1:
+  27 001c 50494420 		.ascii	"PID Update: P=%.2f I=%.2f D=%.2f\015\012\000"
+  27      55706461 
+  27      74653A20 
+  27      503D252E 
+  27      32662049 
+  28              		.section	.text.Process_Command,"ax",%progbits
+  29              		.align	1
+  30              		.global	Process_Command
+  31              		.syntax unified
+  32              		.thumb
+  33              		.thumb_func
+  35              	Process_Command:
+  36              	.LVL0:
+  37              	.LFB141:
+   1:RobotApp/Src/cmd_task.c **** #include "cmd_task.h"
+   2:RobotApp/Src/cmd_task.c **** #include "robot_sys.h"
+   3:RobotApp/Src/cmd_task.c **** #include "stdio.h" 
+   4:RobotApp/Src/cmd_task.c **** #include <string.h> // 用于 memcpy 
+   5:RobotApp/Src/cmd_task.c **** 
+   6:RobotApp/Src/cmd_task.c **** //命令解析函数
+   7:RobotApp/Src/cmd_task.c **** void Process_Command(uint8_t func, uint8_t* payload, uint8_t len)
+   8:RobotApp/Src/cmd_task.c **** {
+  38              		.loc 1 8 1 view -0
+  39              		.cfi_startproc
+  40              		@ args = 0, pretend = 0, frame = 0
+  41              		@ frame_needed = 0, uses_anonymous_args = 0
+  42              		.loc 1 8 1 is_stmt 0 view .LVU1
+ARM GAS  /tmp/ccIj6Krw.s 			page 2
+
+
+  43 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  44              	.LCFI0:
+  45              		.cfi_def_cfa_offset 20
+  46              		.cfi_offset 4, -20
+  47              		.cfi_offset 5, -16
+  48              		.cfi_offset 6, -12
+  49              		.cfi_offset 7, -8
+  50              		.cfi_offset 14, -4
+  51 0002 85B0     		sub	sp, sp, #20
+  52              	.LCFI1:
+  53              		.cfi_def_cfa_offset 40
+  54 0004 0446     		mov	r4, r0
+  55 0006 0E46     		mov	r6, r1
+  56 0008 1546     		mov	r5, r2
+   9:RobotApp/Src/cmd_task.c ****     // 获取互斥锁，因为我们要修改全局变量了
+  10:RobotApp/Src/cmd_task.c ****     osMutexAcquire(robotMutexHandle, osWaitForever);
+  57              		.loc 1 10 5 is_stmt 1 view .LVU2
+  58 000a 4FF0FF31 		mov	r1, #-1
+  59              	.LVL1:
+  60              		.loc 1 10 5 is_stmt 0 view .LVU3
+  61 000e 234B     		ldr	r3, .L6
+  62 0010 1868     		ldr	r0, [r3]
+  63              	.LVL2:
+  64              		.loc 1 10 5 view .LVU4
+  65 0012 FFF7FEFF 		bl	osMutexAcquire
+  66              	.LVL3:
+  11:RobotApp/Src/cmd_task.c **** 
+  12:RobotApp/Src/cmd_task.c ****     switch (func)
+  67              		.loc 1 12 5 is_stmt 1 view .LVU5
+  68 0016 102C     		cmp	r4, #16
+  69 0018 0CD0     		beq	.L2
+  70 001a 112C     		cmp	r4, #17
+  71 001c 20D0     		beq	.L3
+  72 001e 012C     		cmp	r4, #1
+  73 0020 02D1     		bne	.L4
+  13:RobotApp/Src/cmd_task.c ****     {
+  14:RobotApp/Src/cmd_task.c ****         case 0x01: // 启停
+  15:RobotApp/Src/cmd_task.c ****             g_robot.is_running = payload[0];
+  74              		.loc 1 15 13 view .LVU6
+  75              		.loc 1 15 41 is_stmt 0 view .LVU7
+  76 0022 3278     		ldrb	r2, [r6]	@ zero_extendqisi2
+  77              		.loc 1 15 32 view .LVU8
+  78 0024 1E4B     		ldr	r3, .L6+4
+  79 0026 1A70     		strb	r2, [r3]
+  16:RobotApp/Src/cmd_task.c ****             break;
+  80              		.loc 1 16 13 is_stmt 1 view .LVU9
+  81              	.LVL4:
+  82              	.L4:
+  17:RobotApp/Src/cmd_task.c **** 
+  18:RobotApp/Src/cmd_task.c ****         case 0x10: // 设置目标速度 (2个 float = 8字节)
+  19:RobotApp/Src/cmd_task.c ****             if (len == 8) {
+  20:RobotApp/Src/cmd_task.c ****                 // 使用 memcpy 安全地转换类型
+  21:RobotApp/Src/cmd_task.c ****                 memcpy(&g_robot.target_speed_L, &payload[0], 4);
+  22:RobotApp/Src/cmd_task.c ****                 memcpy(&g_robot.target_speed_R, &payload[4], 4);
+  23:RobotApp/Src/cmd_task.c ****                 printf("Set Speed: L=%.2f R=%.2f\r\n", g_robot.target_speed_L, g_robot.target_speed
+  24:RobotApp/Src/cmd_task.c ****             }
+  25:RobotApp/Src/cmd_task.c ****             break;
+ARM GAS  /tmp/ccIj6Krw.s 			page 3
+
+
+  26:RobotApp/Src/cmd_task.c **** 
+  27:RobotApp/Src/cmd_task.c ****         case 0x11: // 设置 PID (3个 float = 12字节)
+  28:RobotApp/Src/cmd_task.c ****             if (len == 12) {
+  29:RobotApp/Src/cmd_task.c ****                 memcpy(&g_robot.pid_vel_kp, &payload[0], 4);
+  30:RobotApp/Src/cmd_task.c ****                 memcpy(&g_robot.pid_vel_ki, &payload[4], 4);
+  31:RobotApp/Src/cmd_task.c ****                 memcpy(&g_robot.pid_vel_kd, &payload[8], 4);
+  32:RobotApp/Src/cmd_task.c ****                 printf("PID Update: P=%.2f I=%.2f D=%.2f\r\n", 
+  33:RobotApp/Src/cmd_task.c ****                         g_robot.pid_vel_kp, g_robot.pid_vel_ki, g_robot.pid_vel_kd);
+  34:RobotApp/Src/cmd_task.c ****             }
+  35:RobotApp/Src/cmd_task.c ****             break;
+  36:RobotApp/Src/cmd_task.c ****             
+  37:RobotApp/Src/cmd_task.c ****         // ... 更多命令
+  38:RobotApp/Src/cmd_task.c ****     }
+  39:RobotApp/Src/cmd_task.c **** 
+  40:RobotApp/Src/cmd_task.c ****     // 释放锁
+  41:RobotApp/Src/cmd_task.c ****     osMutexRelease(robotMutexHandle);
+  83              		.loc 1 41 5 view .LVU10
+  84 0028 1C4B     		ldr	r3, .L6
+  85 002a 1868     		ldr	r0, [r3]
+  86 002c FFF7FEFF 		bl	osMutexRelease
+  87              	.LVL5:
+  42:RobotApp/Src/cmd_task.c **** }
+  88              		.loc 1 42 1 is_stmt 0 view .LVU11
+  89 0030 05B0     		add	sp, sp, #20
+  90              	.LCFI2:
+  91              		.cfi_remember_state
+  92              		.cfi_def_cfa_offset 20
+  93              		@ sp needed
+  94 0032 F0BD     		pop	{r4, r5, r6, r7, pc}
+  95              	.LVL6:
+  96              	.L2:
+  97              	.LCFI3:
+  98              		.cfi_restore_state
+  19:RobotApp/Src/cmd_task.c ****                 // 使用 memcpy 安全地转换类型
+  99              		.loc 1 19 13 is_stmt 1 view .LVU12
+  19:RobotApp/Src/cmd_task.c ****                 // 使用 memcpy 安全地转换类型
+ 100              		.loc 1 19 16 is_stmt 0 view .LVU13
+ 101 0034 082D     		cmp	r5, #8
+ 102 0036 F7D1     		bne	.L4
+  21:RobotApp/Src/cmd_task.c ****                 memcpy(&g_robot.target_speed_R, &payload[4], 4);
+ 103              		.loc 1 21 17 is_stmt 1 view .LVU14
+ 104 0038 3068     		ldr	r0, [r6]	@ unaligned
+ 105 003a 194B     		ldr	r3, .L6+4
+ 106 003c 5860     		str	r0, [r3, #4]
+  22:RobotApp/Src/cmd_task.c ****                 printf("Set Speed: L=%.2f R=%.2f\r\n", g_robot.target_speed_L, g_robot.target_speed
+ 107              		.loc 1 22 17 view .LVU15
+ 108 003e 7668     		ldr	r6, [r6, #4]	@ unaligned
+ 109              	.LVL7:
+  22:RobotApp/Src/cmd_task.c ****                 printf("Set Speed: L=%.2f R=%.2f\r\n", g_robot.target_speed_L, g_robot.target_speed
+ 110              		.loc 1 22 17 is_stmt 0 view .LVU16
+ 111 0040 9E60     		str	r6, [r3, #8]
+  23:RobotApp/Src/cmd_task.c ****             }
+ 112              		.loc 1 23 17 is_stmt 1 view .LVU17
+ 113 0042 FFF7FEFF 		bl	__aeabi_f2d
+ 114              	.LVL8:
+ 115 0046 0446     		mov	r4, r0
+ 116 0048 0D46     		mov	r5, r1
+ARM GAS  /tmp/ccIj6Krw.s 			page 4
+
+
+ 117 004a 3046     		mov	r0, r6	@ float
+ 118 004c FFF7FEFF 		bl	__aeabi_f2d
+ 119              	.LVL9:
+ 120 0050 CDE90001 		strd	r0, [sp]
+ 121 0054 2246     		mov	r2, r4
+ 122 0056 2B46     		mov	r3, r5
+ 123 0058 1248     		ldr	r0, .L6+8
+ 124 005a FFF7FEFF 		bl	printf
+ 125              	.LVL10:
+ 126 005e E3E7     		b	.L4
+ 127              	.LVL11:
+ 128              	.L3:
+  28:RobotApp/Src/cmd_task.c ****                 memcpy(&g_robot.pid_vel_kp, &payload[0], 4);
+ 129              		.loc 1 28 13 view .LVU18
+  28:RobotApp/Src/cmd_task.c ****                 memcpy(&g_robot.pid_vel_kp, &payload[0], 4);
+ 130              		.loc 1 28 16 is_stmt 0 view .LVU19
+ 131 0060 0C2D     		cmp	r5, #12
+ 132 0062 E1D1     		bne	.L4
+  29:RobotApp/Src/cmd_task.c ****                 memcpy(&g_robot.pid_vel_ki, &payload[4], 4);
+ 133              		.loc 1 29 17 is_stmt 1 view .LVU20
+ 134 0064 3068     		ldr	r0, [r6]	@ unaligned
+ 135 0066 0E4B     		ldr	r3, .L6+4
+ 136 0068 D860     		str	r0, [r3, #12]
+  30:RobotApp/Src/cmd_task.c ****                 memcpy(&g_robot.pid_vel_kd, &payload[8], 4);
+ 137              		.loc 1 30 17 view .LVU21
+ 138 006a 7768     		ldr	r7, [r6, #4]	@ unaligned
+ 139 006c 1F61     		str	r7, [r3, #16]
+  31:RobotApp/Src/cmd_task.c ****                 printf("PID Update: P=%.2f I=%.2f D=%.2f\r\n", 
+ 140              		.loc 1 31 17 view .LVU22
+ 141 006e B668     		ldr	r6, [r6, #8]	@ unaligned
+ 142              	.LVL12:
+  31:RobotApp/Src/cmd_task.c ****                 printf("PID Update: P=%.2f I=%.2f D=%.2f\r\n", 
+ 143              		.loc 1 31 17 is_stmt 0 view .LVU23
+ 144 0070 5E61     		str	r6, [r3, #20]
+  32:RobotApp/Src/cmd_task.c ****                         g_robot.pid_vel_kp, g_robot.pid_vel_ki, g_robot.pid_vel_kd);
+ 145              		.loc 1 32 17 is_stmt 1 view .LVU24
+ 146 0072 FFF7FEFF 		bl	__aeabi_f2d
+ 147              	.LVL13:
+ 148 0076 0446     		mov	r4, r0
+ 149 0078 0D46     		mov	r5, r1
+ 150 007a 3046     		mov	r0, r6	@ float
+ 151 007c FFF7FEFF 		bl	__aeabi_f2d
+ 152              	.LVL14:
+ 153 0080 CDE90201 		strd	r0, [sp, #8]
+ 154 0084 3846     		mov	r0, r7	@ float
+ 155 0086 FFF7FEFF 		bl	__aeabi_f2d
+ 156              	.LVL15:
+ 157 008a CDE90001 		strd	r0, [sp]
+ 158 008e 2246     		mov	r2, r4
+ 159 0090 2B46     		mov	r3, r5
+ 160 0092 0548     		ldr	r0, .L6+12
+ 161 0094 FFF7FEFF 		bl	printf
+ 162              	.LVL16:
+ 163 0098 C6E7     		b	.L4
+ 164              	.L7:
+ 165 009a 00BF     		.align	2
+ 166              	.L6:
+ARM GAS  /tmp/ccIj6Krw.s 			page 5
+
+
+ 167 009c 00000000 		.word	robotMutexHandle
+ 168 00a0 00000000 		.word	g_robot
+ 169 00a4 00000000 		.word	.LC0
+ 170 00a8 1C000000 		.word	.LC1
+ 171              		.cfi_endproc
+ 172              	.LFE141:
+ 174              		.section	.rodata.StartcmdTask.str1.4,"aMS",%progbits,1
+ 175              		.align	2
+ 176              	.LC2:
+ 177 0000 4572726F 		.ascii	"Error: CRC Failed!\015\000"
+ 177      723A2043 
+ 177      52432046 
+ 177      61696C65 
+ 177      64210D00 
+ 178              		.section	.text.StartcmdTask,"ax",%progbits
+ 179              		.align	1
+ 180              		.global	StartcmdTask
+ 181              		.syntax unified
+ 182              		.thumb
+ 183              		.thumb_func
+ 185              	StartcmdTask:
+ 186              	.LVL17:
+ 187              	.LFB142:
+  43:RobotApp/Src/cmd_task.c **** 
+  44:RobotApp/Src/cmd_task.c **** 
+  45:RobotApp/Src/cmd_task.c **** 
+  46:RobotApp/Src/cmd_task.c **** 
+  47:RobotApp/Src/cmd_task.c **** void StartcmdTask(void *argument)
+  48:RobotApp/Src/cmd_task.c **** {
+ 188              		.loc 1 48 1 view -0
+ 189              		.cfi_startproc
+ 190              		@ args = 0, pretend = 0, frame = 72
+ 191              		@ frame_needed = 0, uses_anonymous_args = 0
+ 192              		.loc 1 48 1 is_stmt 0 view .LVU26
+ 193 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 194              	.LCFI4:
+ 195              		.cfi_def_cfa_offset 24
+ 196              		.cfi_offset 4, -24
+ 197              		.cfi_offset 5, -20
+ 198              		.cfi_offset 6, -16
+ 199              		.cfi_offset 7, -12
+ 200              		.cfi_offset 8, -8
+ 201              		.cfi_offset 14, -4
+ 202 0004 92B0     		sub	sp, sp, #72
+ 203              	.LCFI5:
+ 204              		.cfi_def_cfa_offset 96
+  49:RobotApp/Src/cmd_task.c ****     uint8_t rx_byte;
+ 205              		.loc 1 49 5 is_stmt 1 view .LVU27
+  50:RobotApp/Src/cmd_task.c ****     FrameState_t state = STATE_WAIT_HEADER_1;
+ 206              		.loc 1 50 5 view .LVU28
+ 207              	.LVL18:
+  51:RobotApp/Src/cmd_task.c ****     
+  52:RobotApp/Src/cmd_task.c ****     // 临时变量用来存一帧数据
+  53:RobotApp/Src/cmd_task.c ****     uint8_t frame_func = 0;
+ 208              		.loc 1 53 5 view .LVU29
+  54:RobotApp/Src/cmd_task.c ****     uint8_t frame_len = 0;
+ 209              		.loc 1 54 5 view .LVU30
+ARM GAS  /tmp/ccIj6Krw.s 			page 6
+
+
+  55:RobotApp/Src/cmd_task.c ****     uint8_t payload_buf[MAX_PAYLOAD_LEN];
+ 210              		.loc 1 55 5 view .LVU31
+  56:RobotApp/Src/cmd_task.c ****     uint8_t payload_count = 0;
+ 211              		.loc 1 56 5 view .LVU32
+  57:RobotApp/Src/cmd_task.c ****     uint8_t calc_crc = 0; // 用来算校验和
+ 212              		.loc 1 57 5 view .LVU33
+ 213              		.loc 1 57 13 is_stmt 0 view .LVU34
+ 214 0006 0025     		movs	r5, #0
+  56:RobotApp/Src/cmd_task.c ****     uint8_t payload_count = 0;
+ 215              		.loc 1 56 13 view .LVU35
+ 216 0008 2E46     		mov	r6, r5
+  54:RobotApp/Src/cmd_task.c ****     uint8_t payload_buf[MAX_PAYLOAD_LEN];
+ 217              		.loc 1 54 13 view .LVU36
+ 218 000a 2F46     		mov	r7, r5
+  53:RobotApp/Src/cmd_task.c ****     uint8_t frame_len = 0;
+ 219              		.loc 1 53 13 view .LVU37
+ 220 000c A846     		mov	r8, r5
+  50:RobotApp/Src/cmd_task.c ****     
+ 221              		.loc 1 50 18 view .LVU38
+ 222 000e 2C46     		mov	r4, r5
+ 223 0010 1DE0     		b	.L9
+ 224              	.LVL19:
+ 225              	.L20:
+ 226              	.LBB2:
+  58:RobotApp/Src/cmd_task.c **** 
+  59:RobotApp/Src/cmd_task.c ****     for(;;)
+  60:RobotApp/Src/cmd_task.c ****     {
+  61:RobotApp/Src/cmd_task.c ****         if (xQueueReceive(cmdQueueHandle, &rx_byte, portMAX_DELAY) == pdPASS)
+  62:RobotApp/Src/cmd_task.c ****         {
+  63:RobotApp/Src/cmd_task.c ****             switch (state)
+  64:RobotApp/Src/cmd_task.c ****             {
+  65:RobotApp/Src/cmd_task.c ****                 case STATE_WAIT_HEADER_1:
+  66:RobotApp/Src/cmd_task.c ****                     if (rx_byte == 0xAA) state = STATE_WAIT_HEADER_2;
+  67:RobotApp/Src/cmd_task.c ****                     break;
+  68:RobotApp/Src/cmd_task.c **** 
+  69:RobotApp/Src/cmd_task.c ****                 case STATE_WAIT_HEADER_2:
+  70:RobotApp/Src/cmd_task.c ****                     if (rx_byte == 0x55) {
+  71:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_FUNC;
+  72:RobotApp/Src/cmd_task.c ****                         calc_crc = 0; // 重置校验和计算
+ 227              		.loc 1 72 34 view .LVU39
+ 228 0012 0025     		movs	r5, #0
+ 229              	.LVL20:
+  71:RobotApp/Src/cmd_task.c ****                         calc_crc = 0; // 重置校验和计算
+ 230              		.loc 1 71 31 view .LVU40
+ 231 0014 0224     		movs	r4, #2
+ 232              	.LVL21:
+  71:RobotApp/Src/cmd_task.c ****                         calc_crc = 0; // 重置校验和计算
+ 233              		.loc 1 71 31 view .LVU41
+ 234 0016 1AE0     		b	.L9
+ 235              	.LVL22:
+ 236              	.L22:
+  73:RobotApp/Src/cmd_task.c ****                     } else if (rx_byte == 0xAA) {
+  74:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_HEADER_2;
+  75:RobotApp/Src/cmd_task.c ****                     } else {
+  76:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_HEADER_1;
+  77:RobotApp/Src/cmd_task.c ****                     }
+  78:RobotApp/Src/cmd_task.c ****                     break;
+ARM GAS  /tmp/ccIj6Krw.s 			page 7
+
+
+  79:RobotApp/Src/cmd_task.c **** 
+  80:RobotApp/Src/cmd_task.c ****                 case STATE_WAIT_FUNC:
+  81:RobotApp/Src/cmd_task.c ****                     frame_func = rx_byte;
+  82:RobotApp/Src/cmd_task.c ****                     calc_crc += rx_byte; // 累加校验
+  83:RobotApp/Src/cmd_task.c ****                     state = STATE_WAIT_LEN;
+  84:RobotApp/Src/cmd_task.c ****                     break;
+  85:RobotApp/Src/cmd_task.c **** 
+  86:RobotApp/Src/cmd_task.c ****                 case STATE_WAIT_LEN:
+  87:RobotApp/Src/cmd_task.c ****                     frame_len = rx_byte;
+  88:RobotApp/Src/cmd_task.c ****                     calc_crc += rx_byte;
+  89:RobotApp/Src/cmd_task.c ****                     if (frame_len == 0) {
+  90:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_CRC; // 没数据，直接跳去校验
+ 237              		.loc 1 90 31 view .LVU42
+ 238 0018 0524     		movs	r4, #5
+ 239              	.LVL23:
+ 240              		.loc 1 90 31 view .LVU43
+ 241 001a 18E0     		b	.L9
+ 242              	.LVL24:
+ 243              	.L23:
+  91:RobotApp/Src/cmd_task.c ****                     } else if (frame_len > MAX_PAYLOAD_LEN) {
+  92:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_HEADER_1; // 长度非法，报错重置
+  93:RobotApp/Src/cmd_task.c ****                     } else {
+  94:RobotApp/Src/cmd_task.c ****                         payload_count = 0;
+ 244              		.loc 1 94 39 view .LVU44
+ 245 001c 0026     		movs	r6, #0
+ 246              	.LVL25:
+  95:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_PAYLOAD;
+ 247              		.loc 1 95 31 view .LVU45
+ 248 001e 0424     		movs	r4, #4
+ 249              	.LVL26:
+ 250              		.loc 1 95 31 view .LVU46
+ 251 0020 15E0     		b	.L9
+ 252              	.LVL27:
+ 253              	.L24:
+  96:RobotApp/Src/cmd_task.c ****                     }
+  97:RobotApp/Src/cmd_task.c ****                     break;
+  98:RobotApp/Src/cmd_task.c **** 
+  99:RobotApp/Src/cmd_task.c ****                 case STATE_WAIT_PAYLOAD:
+ 100:RobotApp/Src/cmd_task.c ****                     payload_buf[payload_count++] = rx_byte;
+ 254              		.loc 1 100 46 view .LVU47
+ 255 0022 1E46     		mov	r6, r3
+ 101:RobotApp/Src/cmd_task.c ****                     calc_crc += rx_byte;
+ 102:RobotApp/Src/cmd_task.c ****                     if (payload_count == frame_len) {
+ 103:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_CRC;
+ 256              		.loc 1 103 31 view .LVU48
+ 257 0024 0524     		movs	r4, #5
+ 258              	.LVL28:
+ 259              		.loc 1 103 31 view .LVU49
+ 260 0026 12E0     		b	.L9
+ 261              	.LVL29:
+ 262              	.L17:
+  66:RobotApp/Src/cmd_task.c ****                     break;
+ 263              		.loc 1 66 21 is_stmt 1 view .LVU50
+  66:RobotApp/Src/cmd_task.c ****                     break;
+ 264              		.loc 1 66 33 is_stmt 0 view .LVU51
+ 265 0028 9DF84730 		ldrb	r3, [sp, #71]	@ zero_extendqisi2
+  66:RobotApp/Src/cmd_task.c ****                     break;
+ARM GAS  /tmp/ccIj6Krw.s 			page 8
+
+
+ 266              		.loc 1 66 24 view .LVU52
+ 267 002c AA2B     		cmp	r3, #170
+ 268 002e 0ED1     		bne	.L9
+  66:RobotApp/Src/cmd_task.c ****                     break;
+ 269              		.loc 1 66 48 discriminator 1 view .LVU53
+ 270 0030 0124     		movs	r4, #1
+ 271              	.LVL30:
+  66:RobotApp/Src/cmd_task.c ****                     break;
+ 272              		.loc 1 66 48 discriminator 1 view .LVU54
+ 273 0032 0CE0     		b	.L9
+ 274              	.LVL31:
+ 275              	.L16:
+  70:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_FUNC;
+ 276              		.loc 1 70 21 is_stmt 1 view .LVU55
+  70:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_FUNC;
+ 277              		.loc 1 70 33 is_stmt 0 view .LVU56
+ 278 0034 9DF84730 		ldrb	r3, [sp, #71]	@ zero_extendqisi2
+  70:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_FUNC;
+ 279              		.loc 1 70 24 view .LVU57
+ 280 0038 552B     		cmp	r3, #85
+ 281 003a EAD0     		beq	.L20
+  73:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_HEADER_2;
+ 282              		.loc 1 73 28 is_stmt 1 view .LVU58
+  73:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_HEADER_2;
+ 283              		.loc 1 73 31 is_stmt 0 view .LVU59
+ 284 003c AA2B     		cmp	r3, #170
+ 285 003e 06D0     		beq	.L9
+  76:RobotApp/Src/cmd_task.c ****                     }
+ 286              		.loc 1 76 31 view .LVU60
+ 287 0040 0024     		movs	r4, #0
+ 288              	.LVL32:
+  76:RobotApp/Src/cmd_task.c ****                     }
+ 289              		.loc 1 76 31 view .LVU61
+ 290 0042 04E0     		b	.L9
+ 291              	.LVL33:
+ 292              	.L15:
+  81:RobotApp/Src/cmd_task.c ****                     calc_crc += rx_byte; // 累加校验
+ 293              		.loc 1 81 21 is_stmt 1 view .LVU62
+  81:RobotApp/Src/cmd_task.c ****                     calc_crc += rx_byte; // 累加校验
+ 294              		.loc 1 81 32 is_stmt 0 view .LVU63
+ 295 0044 9DF84780 		ldrb	r8, [sp, #71]	@ zero_extendqisi2
+ 296              	.LVL34:
+  82:RobotApp/Src/cmd_task.c ****                     state = STATE_WAIT_LEN;
+ 297              		.loc 1 82 21 is_stmt 1 view .LVU64
+  82:RobotApp/Src/cmd_task.c ****                     state = STATE_WAIT_LEN;
+ 298              		.loc 1 82 30 is_stmt 0 view .LVU65
+ 299 0048 4544     		add	r5, r5, r8
+ 300              	.LVL35:
+  82:RobotApp/Src/cmd_task.c ****                     state = STATE_WAIT_LEN;
+ 301              		.loc 1 82 30 view .LVU66
+ 302 004a EDB2     		uxtb	r5, r5
+ 303              	.LVL36:
+  83:RobotApp/Src/cmd_task.c ****                     break;
+ 304              		.loc 1 83 21 is_stmt 1 view .LVU67
+  84:RobotApp/Src/cmd_task.c **** 
+ 305              		.loc 1 84 21 view .LVU68
+  83:RobotApp/Src/cmd_task.c ****                     break;
+ARM GAS  /tmp/ccIj6Krw.s 			page 9
+
+
+ 306              		.loc 1 83 27 is_stmt 0 view .LVU69
+ 307 004c 0324     		movs	r4, #3
+ 308              	.LVL37:
+ 309              	.L9:
+  83:RobotApp/Src/cmd_task.c ****                     break;
+ 310              		.loc 1 83 27 view .LVU70
+ 311              	.LBE2:
+  59:RobotApp/Src/cmd_task.c ****     {
+ 312              		.loc 1 59 5 is_stmt 1 view .LVU71
+  61:RobotApp/Src/cmd_task.c ****         {
+ 313              		.loc 1 61 9 view .LVU72
+ 314              	.LBB3:
+  61:RobotApp/Src/cmd_task.c ****         {
+ 315              		.loc 1 61 13 is_stmt 0 view .LVU73
+ 316 004e 4FF0FF32 		mov	r2, #-1
+ 317 0052 0DF14701 		add	r1, sp, #71
+ 318 0056 204B     		ldr	r3, .L28
+ 319 0058 1868     		ldr	r0, [r3]
+ 320 005a FFF7FEFF 		bl	xQueueReceive
+ 321              	.LVL38:
+  61:RobotApp/Src/cmd_task.c ****         {
+ 322              		.loc 1 61 12 discriminator 1 view .LVU74
+ 323 005e 0128     		cmp	r0, #1
+ 324 0060 F5D1     		bne	.L9
+  63:RobotApp/Src/cmd_task.c ****             {
+ 325              		.loc 1 63 13 is_stmt 1 view .LVU75
+ 326 0062 052C     		cmp	r4, #5
+ 327 0064 F3D8     		bhi	.L9
+ 328 0066 01A3     		adr	r3, .L12
+ 329 0068 53F824F0 		ldr	pc, [r3, r4, lsl #2]
+ 330              		.p2align 2
+ 331              	.L12:
+ 332 006c 29000000 		.word	.L17+1
+ 333 0070 35000000 		.word	.L16+1
+ 334 0074 45000000 		.word	.L15+1
+ 335 0078 85000000 		.word	.L14+1
+ 336 007c 99000000 		.word	.L13+1
+ 337 0080 B9000000 		.word	.L11+1
+ 338              		.p2align 1
+ 339              	.L14:
+  87:RobotApp/Src/cmd_task.c ****                     calc_crc += rx_byte;
+ 340              		.loc 1 87 21 view .LVU76
+  87:RobotApp/Src/cmd_task.c ****                     calc_crc += rx_byte;
+ 341              		.loc 1 87 31 is_stmt 0 view .LVU77
+ 342 0084 9DF84770 		ldrb	r7, [sp, #71]	@ zero_extendqisi2
+ 343              	.LVL39:
+  88:RobotApp/Src/cmd_task.c ****                     if (frame_len == 0) {
+ 344              		.loc 1 88 21 is_stmt 1 view .LVU78
+  88:RobotApp/Src/cmd_task.c ****                     if (frame_len == 0) {
+ 345              		.loc 1 88 30 is_stmt 0 view .LVU79
+ 346 0088 3D44     		add	r5, r5, r7
+ 347              	.LVL40:
+  88:RobotApp/Src/cmd_task.c ****                     if (frame_len == 0) {
+ 348              		.loc 1 88 30 view .LVU80
+ 349 008a EDB2     		uxtb	r5, r5
+ 350              	.LVL41:
+  89:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_CRC; // 没数据，直接跳去校验
+ARM GAS  /tmp/ccIj6Krw.s 			page 10
+
+
+ 351              		.loc 1 89 21 is_stmt 1 view .LVU81
+  89:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_CRC; // 没数据，直接跳去校验
+ 352              		.loc 1 89 24 is_stmt 0 view .LVU82
+ 353 008c 002F     		cmp	r7, #0
+ 354 008e C3D0     		beq	.L22
+  91:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_HEADER_1; // 长度非法，报错重置
+ 355              		.loc 1 91 28 is_stmt 1 view .LVU83
+  91:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_HEADER_1; // 长度非法，报错重置
+ 356              		.loc 1 91 31 is_stmt 0 view .LVU84
+ 357 0090 402F     		cmp	r7, #64
+ 358 0092 C3D9     		bls	.L23
+  92:RobotApp/Src/cmd_task.c ****                     } else {
+ 359              		.loc 1 92 31 view .LVU85
+ 360 0094 0024     		movs	r4, #0
+ 361              	.LVL42:
+  92:RobotApp/Src/cmd_task.c ****                     } else {
+ 362              		.loc 1 92 31 view .LVU86
+ 363 0096 DAE7     		b	.L9
+ 364              	.LVL43:
+ 365              	.L13:
+ 100:RobotApp/Src/cmd_task.c ****                     calc_crc += rx_byte;
+ 366              		.loc 1 100 21 is_stmt 1 view .LVU87
+ 100:RobotApp/Src/cmd_task.c ****                     calc_crc += rx_byte;
+ 367              		.loc 1 100 46 is_stmt 0 view .LVU88
+ 368 0098 731C     		adds	r3, r6, #1
+ 369 009a DBB2     		uxtb	r3, r3
+ 370              	.LVL44:
+ 100:RobotApp/Src/cmd_task.c ****                     calc_crc += rx_byte;
+ 371              		.loc 1 100 50 view .LVU89
+ 372 009c 9DF84720 		ldrb	r2, [sp, #71]	@ zero_extendqisi2
+ 373 00a0 06F14801 		add	r1, r6, #72
+ 374 00a4 0DEB0106 		add	r6, sp, r1
+ 375 00a8 06F8442C 		strb	r2, [r6, #-68]
+ 101:RobotApp/Src/cmd_task.c ****                     if (payload_count == frame_len) {
+ 376              		.loc 1 101 21 is_stmt 1 view .LVU90
+ 101:RobotApp/Src/cmd_task.c ****                     if (payload_count == frame_len) {
+ 377              		.loc 1 101 30 is_stmt 0 view .LVU91
+ 378 00ac 2A44     		add	r2, r2, r5
+ 379 00ae D5B2     		uxtb	r5, r2
+ 380              	.LVL45:
+ 102:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_CRC;
+ 381              		.loc 1 102 21 is_stmt 1 view .LVU92
+ 102:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_CRC;
+ 382              		.loc 1 102 24 is_stmt 0 view .LVU93
+ 383 00b0 9F42     		cmp	r7, r3
+ 384 00b2 B6D0     		beq	.L24
+ 100:RobotApp/Src/cmd_task.c ****                     calc_crc += rx_byte;
+ 385              		.loc 1 100 46 view .LVU94
+ 386 00b4 1E46     		mov	r6, r3
+ 387 00b6 CAE7     		b	.L9
+ 388              	.LVL46:
+ 389              	.L11:
+ 104:RobotApp/Src/cmd_task.c ****                     }
+ 105:RobotApp/Src/cmd_task.c ****                     break;
+ 106:RobotApp/Src/cmd_task.c **** 
+ 107:RobotApp/Src/cmd_task.c ****                 case STATE_WAIT_CRC:
+ 108:RobotApp/Src/cmd_task.c ****                     if (calc_crc == rx_byte) {
+ARM GAS  /tmp/ccIj6Krw.s 			page 11
+
+
+ 390              		.loc 1 108 21 is_stmt 1 view .LVU95
+ 391              		.loc 1 108 34 is_stmt 0 view .LVU96
+ 392 00b8 9DF84730 		ldrb	r3, [sp, #71]	@ zero_extendqisi2
+ 393              		.loc 1 108 24 view .LVU97
+ 394 00bc AB42     		cmp	r3, r5
+ 395 00be 04D0     		beq	.L27
+ 109:RobotApp/Src/cmd_task.c ****                         // --- 校验通过！执行命令解析 ---
+ 110:RobotApp/Src/cmd_task.c ****                         Process_Command(frame_func, payload_buf, frame_len);
+ 111:RobotApp/Src/cmd_task.c ****                     } else {
+ 112:RobotApp/Src/cmd_task.c ****                         printf("Error: CRC Failed!\r\n");
+ 396              		.loc 1 112 25 is_stmt 1 view .LVU98
+ 397 00c0 0648     		ldr	r0, .L28+4
+ 398 00c2 FFF7FEFF 		bl	puts
+ 399              	.LVL47:
+ 113:RobotApp/Src/cmd_task.c ****                     }
+ 114:RobotApp/Src/cmd_task.c ****                     state = STATE_WAIT_HEADER_1; // 回到起点
+ 400              		.loc 1 114 27 is_stmt 0 view .LVU99
+ 401 00c6 0024     		movs	r4, #0
+ 402              	.LVL48:
+ 403              		.loc 1 114 27 view .LVU100
+ 404 00c8 C1E7     		b	.L9
+ 405              	.LVL49:
+ 406              	.L27:
+ 110:RobotApp/Src/cmd_task.c ****                     } else {
+ 407              		.loc 1 110 25 is_stmt 1 view .LVU101
+ 408 00ca 3A46     		mov	r2, r7
+ 409 00cc 01A9     		add	r1, sp, #4
+ 410 00ce 4046     		mov	r0, r8
+ 411 00d0 FFF7FEFF 		bl	Process_Command
+ 412              	.LVL50:
+ 413              		.loc 1 114 27 is_stmt 0 view .LVU102
+ 414 00d4 0024     		movs	r4, #0
+ 415              	.LVL51:
+ 416              		.loc 1 114 27 view .LVU103
+ 417 00d6 BAE7     		b	.L9
+ 418              	.L29:
+ 419              		.align	2
+ 420              	.L28:
+ 421 00d8 00000000 		.word	cmdQueueHandle
+ 422 00dc 00000000 		.word	.LC2
+ 423              	.LBE3:
+ 424              		.cfi_endproc
+ 425              	.LFE142:
+ 427              		.text
+ 428              	.Letext0:
+ 429              		.file 2 "RobotApp/Inc/cmd_task.h"
+ 430              		.file 3 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 431              		.file 4 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 432              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 433              		.file 6 "RobotApp/Inc/robot_sys.h"
+ 434              		.file 7 "/usr/include/newlib/stdio.h"
+ 435              		.file 8 "<built-in>"
+ARM GAS  /tmp/ccIj6Krw.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 cmd_task.c
+     /tmp/ccIj6Krw.s:22     .rodata.Process_Command.str1.4:00000000 $d
+     /tmp/ccIj6Krw.s:29     .text.Process_Command:00000000 $t
+     /tmp/ccIj6Krw.s:35     .text.Process_Command:00000000 Process_Command
+     /tmp/ccIj6Krw.s:167    .text.Process_Command:0000009c $d
+     /tmp/ccIj6Krw.s:175    .rodata.StartcmdTask.str1.4:00000000 $d
+     /tmp/ccIj6Krw.s:179    .text.StartcmdTask:00000000 $t
+     /tmp/ccIj6Krw.s:185    .text.StartcmdTask:00000000 StartcmdTask
+     /tmp/ccIj6Krw.s:332    .text.StartcmdTask:0000006c $d
+     /tmp/ccIj6Krw.s:338    .text.StartcmdTask:00000084 $t
+     /tmp/ccIj6Krw.s:421    .text.StartcmdTask:000000d8 $d
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+osMutexAcquire
+osMutexRelease
+printf
+robotMutexHandle
+g_robot
+xQueueReceive
+puts
+cmdQueueHandle

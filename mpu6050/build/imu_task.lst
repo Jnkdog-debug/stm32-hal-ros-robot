@@ -1,0 +1,287 @@
+ARM GAS  /tmp/ccZEAgrM.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"imu_task.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "RobotApp/Src/imu_task.c"
+  20              		.section	.text.StartDefaultTask,"ax",%progbits
+  21              		.align	1
+  22              		.global	StartDefaultTask
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	StartDefaultTask:
+  28              	.LVL0:
+  29              	.LFB138:
+   1:RobotApp/Src/imu_task.c **** #include "imu_task.h"
+   2:RobotApp/Src/imu_task.c **** #include "mpu6050.h"
+   3:RobotApp/Src/imu_task.c **** #include "robot_sys.h"
+   4:RobotApp/Src/imu_task.c **** #include "queue.h"
+   5:RobotApp/Src/imu_task.c **** 
+   6:RobotApp/Src/imu_task.c **** 
+   7:RobotApp/Src/imu_task.c **** void StartDefaultTask(void *argument)
+   8:RobotApp/Src/imu_task.c **** {
+  30              		.loc 1 8 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 8
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 8 1 is_stmt 0 view .LVU1
+  35 0000 70B5     		push	{r4, r5, r6, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 16
+  38              		.cfi_offset 4, -16
+  39              		.cfi_offset 5, -12
+  40              		.cfi_offset 6, -8
+  41              		.cfi_offset 14, -4
+  42 0002 82B0     		sub	sp, sp, #8
+  43              	.LCFI1:
+  44              		.cfi_def_cfa_offset 24
+   9:RobotApp/Src/imu_task.c ****   /* USER CODE BEGIN StartDefaultTask */
+  10:RobotApp/Src/imu_task.c ****   HAL_UART_Receive_IT(&huart3, &rx_buffer_byte, 1);
+  45              		.loc 1 10 3 is_stmt 1 view .LVU2
+  46 0004 0122     		movs	r2, #1
+  47 0006 1D49     		ldr	r1, .L8
+  48 0008 1D48     		ldr	r0, .L8+4
+ARM GAS  /tmp/ccZEAgrM.s 			page 2
+
+
+  49              	.LVL1:
+  50              		.loc 1 10 3 is_stmt 0 view .LVU3
+  51 000a FFF7FEFF 		bl	HAL_UART_Receive_IT
+  52              	.LVL2:
+  11:RobotApp/Src/imu_task.c **** 
+  12:RobotApp/Src/imu_task.c ****   MPU6050_Init(Sensor_I2C2_Serch());
+  53              		.loc 1 12 3 is_stmt 1 view .LVU4
+  54 000e FFF7FEFF 		bl	Sensor_I2C2_Serch
+  55              	.LVL3:
+  56              		.loc 1 12 3 is_stmt 0 discriminator 1 view .LVU5
+  57 0012 FFF7FEFF 		bl	MPU6050_Init
+  58              	.LVL4:
+  59 0016 02E0     		b	.L5
+  60              	.LVL5:
+  61              	.L3:
+  62              	.LBB2:
+  13:RobotApp/Src/imu_task.c ****   /* Infinite loop */
+  14:RobotApp/Src/imu_task.c ****   for(;;)
+  15:RobotApp/Src/imu_task.c ****     {
+  16:RobotApp/Src/imu_task.c ****         // 1. 读取全局变量中的采样周期
+  17:RobotApp/Src/imu_task.c ****         uint32_t delay_time = g_sys_ctrl.sample_period;
+  18:RobotApp/Src/imu_task.c ****         if (delay_time < 5) delay_time = 5; // 保护一下，别太快卡死
+  19:RobotApp/Src/imu_task.c **** 
+  20:RobotApp/Src/imu_task.c ****         // 2. 检查是否处于运行状态
+  21:RobotApp/Src/imu_task.c ****         if (g_sys_ctrl.is_running == 1)
+  22:RobotApp/Src/imu_task.c ****         {
+  23:RobotApp/Src/imu_task.c ****             MPU6050DATATYPE* p_mpu_data = (MPU6050DATATYPE*) pvPortMalloc(sizeof(Mpu6050_Data));
+  24:RobotApp/Src/imu_task.c **** 
+  25:RobotApp/Src/imu_task.c ****             if (p_mpu_data != NULL) 
+  26:RobotApp/Src/imu_task.c ****             {
+  27:RobotApp/Src/imu_task.c ****                 MPU6050_Read_Accel();
+  28:RobotApp/Src/imu_task.c ****                 MPU6050_Read_Gyro(); 
+  29:RobotApp/Src/imu_task.c ****                 MPU6050_Read_Temp();
+  30:RobotApp/Src/imu_task.c ****                 *p_mpu_data = Mpu6050_Data; 
+  31:RobotApp/Src/imu_task.c ****                 // 构造消息信封
+  32:RobotApp/Src/imu_task.c ****                 TxMessage_t msg;
+  33:RobotApp/Src/imu_task.c ****                 msg.type = MSG_TYPE_IMU;
+  34:RobotApp/Src/imu_task.c ****                 msg.p_data = p_mpu_data; 
+  35:RobotApp/Src/imu_task.c ****                 if (xQueueSend(dataQueueHandle, &msg, 0) != pdPASS) { 
+  36:RobotApp/Src/imu_task.c ****                     // 这里 timeout 改成 0，如果队列满了就丢弃这帧数据，不要�
+  37:RobotApp/Src/imu_task.c ****                     vPortFree(p_mpu_data);
+  38:RobotApp/Src/imu_task.c ****                 }
+  39:RobotApp/Src/imu_task.c ****             } 
+  40:RobotApp/Src/imu_task.c ****         }
+  41:RobotApp/Src/imu_task.c ****         else
+  42:RobotApp/Src/imu_task.c ****         {
+  43:RobotApp/Src/imu_task.c ****             // 如果停止了，就不申请内存，也不读取 I2C，省电省资源
+  44:RobotApp/Src/imu_task.c ****         }
+  63              		.loc 1 44 9 is_stmt 1 view .LVU6
+  45:RobotApp/Src/imu_task.c **** 
+  46:RobotApp/Src/imu_task.c ****         // 3. 动态延时
+  47:RobotApp/Src/imu_task.c ****         osDelay(delay_time);
+  64              		.loc 1 47 9 view .LVU7
+  65 0018 2846     		mov	r0, r5
+  66 001a FFF7FEFF 		bl	osDelay
+  67              	.LVL6:
+  68              	.LBE2:
+ARM GAS  /tmp/ccZEAgrM.s 			page 3
+
+
+  14:RobotApp/Src/imu_task.c ****     {
+  69              		.loc 1 14 3 view .LVU8
+  70              	.L5:
+  14:RobotApp/Src/imu_task.c ****     {
+  71              		.loc 1 14 3 view .LVU9
+  72              	.LBB5:
+  17:RobotApp/Src/imu_task.c ****         if (delay_time < 5) delay_time = 5; // 保护一下，别太快卡死
+  73              		.loc 1 17 9 view .LVU10
+  17:RobotApp/Src/imu_task.c ****         if (delay_time < 5) delay_time = 5; // 保护一下，别太快卡死
+  74              		.loc 1 17 18 is_stmt 0 view .LVU11
+  75 001e 194B     		ldr	r3, .L8+8
+  76 0020 5D68     		ldr	r5, [r3, #4]
+  77              	.LVL7:
+  18:RobotApp/Src/imu_task.c **** 
+  78              		.loc 1 18 9 is_stmt 1 view .LVU12
+  18:RobotApp/Src/imu_task.c **** 
+  79              		.loc 1 18 12 is_stmt 0 view .LVU13
+  80 0022 042D     		cmp	r5, #4
+  81 0024 00D8     		bhi	.L2
+  18:RobotApp/Src/imu_task.c **** 
+  82              		.loc 1 18 40 discriminator 1 view .LVU14
+  83 0026 0525     		movs	r5, #5
+  84              	.LVL8:
+  85              	.L2:
+  21:RobotApp/Src/imu_task.c ****         {
+  86              		.loc 1 21 9 is_stmt 1 view .LVU15
+  21:RobotApp/Src/imu_task.c ****         {
+  87              		.loc 1 21 23 is_stmt 0 view .LVU16
+  88 0028 164B     		ldr	r3, .L8+8
+  89 002a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  21:RobotApp/Src/imu_task.c ****         {
+  90              		.loc 1 21 12 view .LVU17
+  91 002c 012B     		cmp	r3, #1
+  92 002e F3D1     		bne	.L3
+  93              	.LBB3:
+  23:RobotApp/Src/imu_task.c **** 
+  94              		.loc 1 23 13 is_stmt 1 view .LVU18
+  23:RobotApp/Src/imu_task.c **** 
+  95              		.loc 1 23 62 is_stmt 0 view .LVU19
+  96 0030 1C20     		movs	r0, #28
+  97 0032 FFF7FEFF 		bl	pvPortMalloc
+  98              	.LVL9:
+  25:RobotApp/Src/imu_task.c ****             {
+  99              		.loc 1 25 13 is_stmt 1 view .LVU20
+  25:RobotApp/Src/imu_task.c ****             {
+ 100              		.loc 1 25 16 is_stmt 0 view .LVU21
+ 101 0036 0646     		mov	r6, r0
+ 102 0038 0028     		cmp	r0, #0
+ 103 003a EDD0     		beq	.L3
+ 104              	.LBB4:
+  27:RobotApp/Src/imu_task.c ****                 MPU6050_Read_Gyro(); 
+ 105              		.loc 1 27 17 is_stmt 1 view .LVU22
+ 106 003c FFF7FEFF 		bl	MPU6050_Read_Accel
+ 107              	.LVL10:
+  28:RobotApp/Src/imu_task.c ****                 MPU6050_Read_Temp();
+ 108              		.loc 1 28 17 view .LVU23
+ 109 0040 FFF7FEFF 		bl	MPU6050_Read_Gyro
+ARM GAS  /tmp/ccZEAgrM.s 			page 4
+
+
+ 110              	.LVL11:
+  29:RobotApp/Src/imu_task.c ****                 *p_mpu_data = Mpu6050_Data; 
+ 111              		.loc 1 29 17 view .LVU24
+ 112 0044 FFF7FEFF 		bl	MPU6050_Read_Temp
+ 113              	.LVL12:
+  30:RobotApp/Src/imu_task.c ****                 // 构造消息信封
+ 114              		.loc 1 30 17 view .LVU25
+  30:RobotApp/Src/imu_task.c ****                 // 构造消息信封
+ 115              		.loc 1 30 29 is_stmt 0 view .LVU26
+ 116 0048 B446     		mov	ip, r6
+ 117 004a 0F4C     		ldr	r4, .L8+12
+ 118 004c 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+ 119 004e ACE80F00 		stmia	ip!, {r0, r1, r2, r3}
+ 120 0052 94E80700 		ldm	r4, {r0, r1, r2}
+ 121 0056 8CE80700 		stm	ip, {r0, r1, r2}
+  32:RobotApp/Src/imu_task.c ****                 msg.type = MSG_TYPE_IMU;
+ 122              		.loc 1 32 17 is_stmt 1 view .LVU27
+  33:RobotApp/Src/imu_task.c ****                 msg.p_data = p_mpu_data; 
+ 123              		.loc 1 33 17 view .LVU28
+  33:RobotApp/Src/imu_task.c ****                 msg.p_data = p_mpu_data; 
+ 124              		.loc 1 33 26 is_stmt 0 view .LVU29
+ 125 005a 0022     		movs	r2, #0
+ 126 005c 8DF80020 		strb	r2, [sp]
+  34:RobotApp/Src/imu_task.c ****                 if (xQueueSend(dataQueueHandle, &msg, 0) != pdPASS) { 
+ 127              		.loc 1 34 17 is_stmt 1 view .LVU30
+  34:RobotApp/Src/imu_task.c ****                 if (xQueueSend(dataQueueHandle, &msg, 0) != pdPASS) { 
+ 128              		.loc 1 34 28 is_stmt 0 view .LVU31
+ 129 0060 0196     		str	r6, [sp, #4]
+  35:RobotApp/Src/imu_task.c ****                     // 这里 timeout 改成 0，如果队列满了就丢弃这帧数据，不要�
+ 130              		.loc 1 35 17 is_stmt 1 view .LVU32
+  35:RobotApp/Src/imu_task.c ****                     // 这里 timeout 改成 0，如果队列满了就丢弃这帧数据，不要�
+ 131              		.loc 1 35 21 is_stmt 0 view .LVU33
+ 132 0062 1346     		mov	r3, r2
+ 133 0064 6946     		mov	r1, sp
+ 134 0066 0948     		ldr	r0, .L8+16
+ 135 0068 0068     		ldr	r0, [r0]
+ 136 006a FFF7FEFF 		bl	xQueueGenericSend
+ 137              	.LVL13:
+  35:RobotApp/Src/imu_task.c ****                     // 这里 timeout 改成 0，如果队列满了就丢弃这帧数据，不要�
+ 138              		.loc 1 35 20 discriminator 1 view .LVU34
+ 139 006e 0128     		cmp	r0, #1
+ 140 0070 D2D0     		beq	.L3
+  37:RobotApp/Src/imu_task.c ****                 }
+ 141              		.loc 1 37 21 is_stmt 1 view .LVU35
+ 142 0072 3046     		mov	r0, r6
+ 143 0074 FFF7FEFF 		bl	vPortFree
+ 144              	.LVL14:
+ 145 0078 CEE7     		b	.L3
+ 146              	.L9:
+ 147 007a 00BF     		.align	2
+ 148              	.L8:
+ 149 007c 00000000 		.word	rx_buffer_byte
+ 150 0080 00000000 		.word	huart3
+ 151 0084 00000000 		.word	g_sys_ctrl
+ 152 0088 00000000 		.word	Mpu6050_Data
+ 153 008c 00000000 		.word	dataQueueHandle
+ 154              	.LBE4:
+ARM GAS  /tmp/ccZEAgrM.s 			page 5
+
+
+ 155              	.LBE3:
+ 156              	.LBE5:
+ 157              		.cfi_endproc
+ 158              	.LFE138:
+ 160              		.text
+ 161              	.Letext0:
+ 162              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 163              		.file 3 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 164              		.file 4 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stddef.h"
+ 165              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 166              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 167              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 168              		.file 8 "BSP/mpu6050/mpu6050.h"
+ 169              		.file 9 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 170              		.file 10 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 171              		.file 11 "Core/Inc/usart.h"
+ 172              		.file 12 "RobotApp/Inc/robot_sys.h"
+ 173              		.file 13 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 174              		.file 14 "Middlewares/Third_Party/FreeRTOS/Source/include/portable.h"
+ARM GAS  /tmp/ccZEAgrM.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 imu_task.c
+     /tmp/ccZEAgrM.s:21     .text.StartDefaultTask:00000000 $t
+     /tmp/ccZEAgrM.s:27     .text.StartDefaultTask:00000000 StartDefaultTask
+     /tmp/ccZEAgrM.s:149    .text.StartDefaultTask:0000007c $d
+
+UNDEFINED SYMBOLS
+HAL_UART_Receive_IT
+Sensor_I2C2_Serch
+MPU6050_Init
+osDelay
+pvPortMalloc
+MPU6050_Read_Accel
+MPU6050_Read_Gyro
+MPU6050_Read_Temp
+xQueueGenericSend
+vPortFree
+rx_buffer_byte
+huart3
+g_sys_ctrl
+Mpu6050_Data
+dataQueueHandle
