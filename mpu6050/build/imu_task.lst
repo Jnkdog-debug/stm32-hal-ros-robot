@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccZEAgrM.s 			page 1
+ARM GAS  /tmp/ccDzHqQn.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccZEAgrM.s 			page 1
   46 0004 0122     		movs	r2, #1
   47 0006 1D49     		ldr	r1, .L8
   48 0008 1D48     		ldr	r0, .L8+4
-ARM GAS  /tmp/ccZEAgrM.s 			page 2
+ARM GAS  /tmp/ccDzHqQn.s 			page 2
 
 
   49              	.LVL1:
@@ -81,11 +81,11 @@ ARM GAS  /tmp/ccZEAgrM.s 			page 1
   14:RobotApp/Src/imu_task.c ****   for(;;)
   15:RobotApp/Src/imu_task.c ****     {
   16:RobotApp/Src/imu_task.c ****         // 1. 读取全局变量中的采样周期
-  17:RobotApp/Src/imu_task.c ****         uint32_t delay_time = g_sys_ctrl.sample_period;
+  17:RobotApp/Src/imu_task.c ****         uint32_t delay_time = g_robot.sample_period;
   18:RobotApp/Src/imu_task.c ****         if (delay_time < 5) delay_time = 5; // 保护一下，别太快卡死
   19:RobotApp/Src/imu_task.c **** 
   20:RobotApp/Src/imu_task.c ****         // 2. 检查是否处于运行状态
-  21:RobotApp/Src/imu_task.c ****         if (g_sys_ctrl.is_running == 1)
+  21:RobotApp/Src/imu_task.c ****         if (g_robot.is_running == 1)
   22:RobotApp/Src/imu_task.c ****         {
   23:RobotApp/Src/imu_task.c ****             MPU6050DATATYPE* p_mpu_data = (MPU6050DATATYPE*) pvPortMalloc(sizeof(Mpu6050_Data));
   24:RobotApp/Src/imu_task.c **** 
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccZEAgrM.s 			page 1
   66 001a FFF7FEFF 		bl	osDelay
   67              	.LVL6:
   68              	.LBE2:
-ARM GAS  /tmp/ccZEAgrM.s 			page 3
+ARM GAS  /tmp/ccDzHqQn.s 			page 3
 
 
   14:RobotApp/Src/imu_task.c ****     {
@@ -148,7 +148,7 @@ ARM GAS  /tmp/ccZEAgrM.s 			page 1
   21:RobotApp/Src/imu_task.c ****         {
   86              		.loc 1 21 9 is_stmt 1 view .LVU15
   21:RobotApp/Src/imu_task.c ****         {
-  87              		.loc 1 21 23 is_stmt 0 view .LVU16
+  87              		.loc 1 21 20 is_stmt 0 view .LVU16
   88 0028 164B     		ldr	r3, .L8+8
   89 002a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
   21:RobotApp/Src/imu_task.c ****         {
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccZEAgrM.s 			page 1
   28:RobotApp/Src/imu_task.c ****                 MPU6050_Read_Temp();
  108              		.loc 1 28 17 view .LVU23
  109 0040 FFF7FEFF 		bl	MPU6050_Read_Gyro
-ARM GAS  /tmp/ccZEAgrM.s 			page 4
+ARM GAS  /tmp/ccDzHqQn.s 			page 4
 
 
  110              	.LVL11:
@@ -234,11 +234,11 @@ ARM GAS  /tmp/ccZEAgrM.s 			page 1
  148              	.L8:
  149 007c 00000000 		.word	rx_buffer_byte
  150 0080 00000000 		.word	huart3
- 151 0084 00000000 		.word	g_sys_ctrl
+ 151 0084 00000000 		.word	g_robot
  152 0088 00000000 		.word	Mpu6050_Data
  153 008c 00000000 		.word	dataQueueHandle
  154              	.LBE4:
-ARM GAS  /tmp/ccZEAgrM.s 			page 5
+ARM GAS  /tmp/ccDzHqQn.s 			page 5
 
 
  155              	.LBE3:
@@ -260,14 +260,14 @@ ARM GAS  /tmp/ccZEAgrM.s 			page 1
  172              		.file 12 "RobotApp/Inc/robot_sys.h"
  173              		.file 13 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
  174              		.file 14 "Middlewares/Third_Party/FreeRTOS/Source/include/portable.h"
-ARM GAS  /tmp/ccZEAgrM.s 			page 6
+ARM GAS  /tmp/ccDzHqQn.s 			page 6
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 imu_task.c
-     /tmp/ccZEAgrM.s:21     .text.StartDefaultTask:00000000 $t
-     /tmp/ccZEAgrM.s:27     .text.StartDefaultTask:00000000 StartDefaultTask
-     /tmp/ccZEAgrM.s:149    .text.StartDefaultTask:0000007c $d
+     /tmp/ccDzHqQn.s:21     .text.StartDefaultTask:00000000 $t
+     /tmp/ccDzHqQn.s:27     .text.StartDefaultTask:00000000 StartDefaultTask
+     /tmp/ccDzHqQn.s:149    .text.StartDefaultTask:0000007c $d
 
 UNDEFINED SYMBOLS
 HAL_UART_Receive_IT
@@ -282,6 +282,6 @@ xQueueGenericSend
 vPortFree
 rx_buffer_byte
 huart3
-g_sys_ctrl
+g_robot
 Mpu6050_Data
 dataQueueHandle

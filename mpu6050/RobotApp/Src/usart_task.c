@@ -75,8 +75,7 @@ void StartUsartTask(void *argument)
                 uint8_t total_len = 2 + 1 + 1 + payload_len + 1;
                 
                 // 计算前面所有字节的校验和 (除了最后一个字节)
-                tx_buf[total_len - 1] = Calc_Checksum(tx_buf, total_len - 1);
-                
+                tx_buf[total_len - 1] = Calc_Checksum(&tx_buf[2], total_len - 3);                
                 // 发送二进制流
                 HAL_UART_Transmit(&huart3, tx_buf, total_len, 10);
             }

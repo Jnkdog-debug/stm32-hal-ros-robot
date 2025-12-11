@@ -34,6 +34,7 @@ typedef struct {
 // 1. 定义全局结构体类型
 typedef struct {
     uint8_t is_running;
+    uint32_t sample_period;  // 采样周期 (ms)
     float target_speed_L;
     float target_speed_R;
     float pid_vel_kp;
@@ -42,10 +43,7 @@ typedef struct {
     // ... 其他变量
 } Robot_State_t;
 
-typedef struct {
-    uint8_t is_running;      // 0: 停止, 1: 运行
-    uint32_t sample_period;  // 采样周期 (ms)
-} SystemControl_t;
+
 
 
 
@@ -54,7 +52,6 @@ typedef struct {
 // 告诉所有引用这个文件的 c 文件：去别的地方找这些变量，别自己重新创建
 extern Robot_State_t g_robot;
 extern osMutexId_t robotMutexHandle;
-extern SystemControl_t g_sys_ctrl;
 extern uint8_t rx_buffer_byte;
 
 // 3. 声明队列句柄

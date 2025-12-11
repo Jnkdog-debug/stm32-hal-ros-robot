@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccEgldQz.s 			page 1
+ARM GAS  /tmp/cc0660ps.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
   28:Core/Src/freertos.c **** 
   29:Core/Src/freertos.c **** #include <stdio.h>
   30:Core/Src/freertos.c **** #include "usart.h"
-ARM GAS  /tmp/ccEgldQz.s 			page 2
+ARM GAS  /tmp/cc0660ps.s 			page 2
 
 
   31:Core/Src/freertos.c **** #include "queue.h"
@@ -103,153 +103,152 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
   70:Core/Src/freertos.c **** // 全局变量的定义
   71:Core/Src/freertos.c **** 
   72:Core/Src/freertos.c **** /* 初始化默认值: 默认运行，50ms一次 */
-  73:Core/Src/freertos.c **** SystemControl_t g_sys_ctrl = {1, 50}; 
-  74:Core/Src/freertos.c **** Robot_State_t g_robot = {0, 0.0f, 0.0f};
-  75:Core/Src/freertos.c **** /* 接收缓冲区 (1字节) */
+  73:Core/Src/freertos.c **** Robot_State_t g_robot = {1, 50, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f};
+  74:Core/Src/freertos.c **** /* 接收缓冲区 (1字节) */
+  75:Core/Src/freertos.c **** 
   76:Core/Src/freertos.c **** 
   77:Core/Src/freertos.c **** 
   78:Core/Src/freertos.c **** 
-  79:Core/Src/freertos.c **** 
-  80:Core/Src/freertos.c **** /* USER CODE END Variables */
-  81:Core/Src/freertos.c **** /* Definitions for defaultTask */
-  82:Core/Src/freertos.c **** osThreadId_t defaultTaskHandle;
-  83:Core/Src/freertos.c **** const osThreadAttr_t defaultTask_attributes = {
-  84:Core/Src/freertos.c ****   .name = "defaultTask",
-  85:Core/Src/freertos.c ****   .stack_size = 512 * 4,
-  86:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityNormal,
-  87:Core/Src/freertos.c **** };
-ARM GAS  /tmp/ccEgldQz.s 			page 3
+  79:Core/Src/freertos.c **** /* USER CODE END Variables */
+  80:Core/Src/freertos.c **** /* Definitions for defaultTask */
+  81:Core/Src/freertos.c **** osThreadId_t defaultTaskHandle;
+  82:Core/Src/freertos.c **** const osThreadAttr_t defaultTask_attributes = {
+  83:Core/Src/freertos.c ****   .name = "defaultTask",
+  84:Core/Src/freertos.c ****   .stack_size = 512 * 4,
+  85:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityNormal,
+  86:Core/Src/freertos.c **** };
+  87:Core/Src/freertos.c **** /* Definitions for usartTask */
+ARM GAS  /tmp/cc0660ps.s 			page 3
 
 
-  88:Core/Src/freertos.c **** /* Definitions for usartTask */
-  89:Core/Src/freertos.c **** osThreadId_t usartTaskHandle;
-  90:Core/Src/freertos.c **** const osThreadAttr_t usartTask_attributes = {
-  91:Core/Src/freertos.c ****   .name = "usartTask",
-  92:Core/Src/freertos.c ****   .stack_size = 512 * 4,
-  93:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityAboveNormal1,
-  94:Core/Src/freertos.c **** };
-  95:Core/Src/freertos.c **** /* Definitions for cmdTask */
-  96:Core/Src/freertos.c **** osThreadId_t cmdTaskHandle;
-  97:Core/Src/freertos.c **** const osThreadAttr_t cmdTask_attributes = {
-  98:Core/Src/freertos.c ****   .name = "cmdTask",
-  99:Core/Src/freertos.c ****   .stack_size = 512 * 4,
- 100:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityAboveNormal,
- 101:Core/Src/freertos.c **** };
- 102:Core/Src/freertos.c **** /* Definitions for motorTask */
- 103:Core/Src/freertos.c **** osThreadId_t motorTaskHandle;
- 104:Core/Src/freertos.c **** const osThreadAttr_t motorTask_attributes = {
- 105:Core/Src/freertos.c ****   .name = "motorTask",
- 106:Core/Src/freertos.c ****   .stack_size = 512 * 4,
- 107:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityLow,
- 108:Core/Src/freertos.c **** };
- 109:Core/Src/freertos.c **** /* Definitions for dataQueue */
- 110:Core/Src/freertos.c **** osMessageQueueId_t dataQueueHandle;
- 111:Core/Src/freertos.c **** const osMessageQueueAttr_t dataQueue_attributes = {
- 112:Core/Src/freertos.c ****   .name = "dataQueue"
- 113:Core/Src/freertos.c **** };
- 114:Core/Src/freertos.c **** /* Definitions for cmdQueue */
- 115:Core/Src/freertos.c **** osMessageQueueId_t cmdQueueHandle;
- 116:Core/Src/freertos.c **** const osMessageQueueAttr_t cmdQueue_attributes = {
- 117:Core/Src/freertos.c ****   .name = "cmdQueue"
- 118:Core/Src/freertos.c **** };
- 119:Core/Src/freertos.c **** /* Definitions for robotMutex */
- 120:Core/Src/freertos.c **** osMutexId_t robotMutexHandle;
- 121:Core/Src/freertos.c **** const osMutexAttr_t robotMutex_attributes = {
- 122:Core/Src/freertos.c ****   .name = "robotMutex"
- 123:Core/Src/freertos.c **** };
- 124:Core/Src/freertos.c **** 
- 125:Core/Src/freertos.c **** /* Private function prototypes -----------------------------------------------*/
- 126:Core/Src/freertos.c **** /* USER CODE BEGIN FunctionPrototypes */
- 127:Core/Src/freertos.c **** 
- 128:Core/Src/freertos.c **** /* USER CODE END FunctionPrototypes */
- 129:Core/Src/freertos.c **** 
- 130:Core/Src/freertos.c **** void StartDefaultTask(void *argument);
- 131:Core/Src/freertos.c **** void StartUsartTask(void *argument);
- 132:Core/Src/freertos.c **** void StartcmdTask(void *argument);
- 133:Core/Src/freertos.c **** void StartmotorTask(void *argument);
- 134:Core/Src/freertos.c **** 
- 135:Core/Src/freertos.c **** void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
- 136:Core/Src/freertos.c **** 
- 137:Core/Src/freertos.c **** /**
- 138:Core/Src/freertos.c ****   * @brief  FreeRTOS initialization
- 139:Core/Src/freertos.c ****   * @param  None
- 140:Core/Src/freertos.c ****   * @retval None
- 141:Core/Src/freertos.c ****   */
- 142:Core/Src/freertos.c **** void MX_FREERTOS_Init(void) {
- 143:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
- 144:Core/Src/freertos.c **** 
-ARM GAS  /tmp/ccEgldQz.s 			page 4
+  88:Core/Src/freertos.c **** osThreadId_t usartTaskHandle;
+  89:Core/Src/freertos.c **** const osThreadAttr_t usartTask_attributes = {
+  90:Core/Src/freertos.c ****   .name = "usartTask",
+  91:Core/Src/freertos.c ****   .stack_size = 512 * 4,
+  92:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityAboveNormal1,
+  93:Core/Src/freertos.c **** };
+  94:Core/Src/freertos.c **** /* Definitions for cmdTask */
+  95:Core/Src/freertos.c **** osThreadId_t cmdTaskHandle;
+  96:Core/Src/freertos.c **** const osThreadAttr_t cmdTask_attributes = {
+  97:Core/Src/freertos.c ****   .name = "cmdTask",
+  98:Core/Src/freertos.c ****   .stack_size = 512 * 4,
+  99:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityAboveNormal,
+ 100:Core/Src/freertos.c **** };
+ 101:Core/Src/freertos.c **** /* Definitions for motorTask */
+ 102:Core/Src/freertos.c **** osThreadId_t motorTaskHandle;
+ 103:Core/Src/freertos.c **** const osThreadAttr_t motorTask_attributes = {
+ 104:Core/Src/freertos.c ****   .name = "motorTask",
+ 105:Core/Src/freertos.c ****   .stack_size = 512 * 4,
+ 106:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityLow,
+ 107:Core/Src/freertos.c **** };
+ 108:Core/Src/freertos.c **** /* Definitions for dataQueue */
+ 109:Core/Src/freertos.c **** osMessageQueueId_t dataQueueHandle;
+ 110:Core/Src/freertos.c **** const osMessageQueueAttr_t dataQueue_attributes = {
+ 111:Core/Src/freertos.c ****   .name = "dataQueue"
+ 112:Core/Src/freertos.c **** };
+ 113:Core/Src/freertos.c **** /* Definitions for cmdQueue */
+ 114:Core/Src/freertos.c **** osMessageQueueId_t cmdQueueHandle;
+ 115:Core/Src/freertos.c **** const osMessageQueueAttr_t cmdQueue_attributes = {
+ 116:Core/Src/freertos.c ****   .name = "cmdQueue"
+ 117:Core/Src/freertos.c **** };
+ 118:Core/Src/freertos.c **** /* Definitions for robotMutex */
+ 119:Core/Src/freertos.c **** osMutexId_t robotMutexHandle;
+ 120:Core/Src/freertos.c **** const osMutexAttr_t robotMutex_attributes = {
+ 121:Core/Src/freertos.c ****   .name = "robotMutex"
+ 122:Core/Src/freertos.c **** };
+ 123:Core/Src/freertos.c **** 
+ 124:Core/Src/freertos.c **** /* Private function prototypes -----------------------------------------------*/
+ 125:Core/Src/freertos.c **** /* USER CODE BEGIN FunctionPrototypes */
+ 126:Core/Src/freertos.c **** 
+ 127:Core/Src/freertos.c **** /* USER CODE END FunctionPrototypes */
+ 128:Core/Src/freertos.c **** 
+ 129:Core/Src/freertos.c **** void StartDefaultTask(void *argument);
+ 130:Core/Src/freertos.c **** void StartUsartTask(void *argument);
+ 131:Core/Src/freertos.c **** void StartcmdTask(void *argument);
+ 132:Core/Src/freertos.c **** void StartmotorTask(void *argument);
+ 133:Core/Src/freertos.c **** 
+ 134:Core/Src/freertos.c **** void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
+ 135:Core/Src/freertos.c **** 
+ 136:Core/Src/freertos.c **** /**
+ 137:Core/Src/freertos.c ****   * @brief  FreeRTOS initialization
+ 138:Core/Src/freertos.c ****   * @param  None
+ 139:Core/Src/freertos.c ****   * @retval None
+ 140:Core/Src/freertos.c ****   */
+ 141:Core/Src/freertos.c **** void MX_FREERTOS_Init(void) {
+ 142:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
+ 143:Core/Src/freertos.c **** 
+ 144:Core/Src/freertos.c ****   /* USER CODE END Init */
+ARM GAS  /tmp/cc0660ps.s 			page 4
 
 
- 145:Core/Src/freertos.c ****   /* USER CODE END Init */
- 146:Core/Src/freertos.c ****   /* Create the mutex(es) */
- 147:Core/Src/freertos.c ****   /* creation of robotMutex */
- 148:Core/Src/freertos.c ****   robotMutexHandle = osMutexNew(&robotMutex_attributes);
- 149:Core/Src/freertos.c **** 
- 150:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_MUTEX */
- 151:Core/Src/freertos.c ****   /* add mutexes, ... */
- 152:Core/Src/freertos.c ****   /* USER CODE END RTOS_MUTEX */
- 153:Core/Src/freertos.c **** 
- 154:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_SEMAPHORES */
- 155:Core/Src/freertos.c ****   /* add semaphores, ... */
- 156:Core/Src/freertos.c ****   /* USER CODE END RTOS_SEMAPHORES */
- 157:Core/Src/freertos.c **** 
- 158:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_TIMERS */
- 159:Core/Src/freertos.c ****   /* start timers, add new ones, ... */
- 160:Core/Src/freertos.c ****   /* USER CODE END RTOS_TIMERS */
- 161:Core/Src/freertos.c **** 
- 162:Core/Src/freertos.c ****   /* Create the queue(s) */
- 163:Core/Src/freertos.c ****   /* creation of dataQueue */
- 164:Core/Src/freertos.c ****   dataQueueHandle = osMessageQueueNew (32, sizeof(TxMessage_t), &dataQueue_attributes);
- 165:Core/Src/freertos.c **** 
- 166:Core/Src/freertos.c ****   /* creation of cmdQueue */
- 167:Core/Src/freertos.c ****   cmdQueueHandle = osMessageQueueNew (32, sizeof(uint8_t), &cmdQueue_attributes);
- 168:Core/Src/freertos.c **** 
- 169:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_QUEUES */
- 170:Core/Src/freertos.c ****   /* add queues, ... */
- 171:Core/Src/freertos.c ****   /* USER CODE END RTOS_QUEUES */
- 172:Core/Src/freertos.c **** 
- 173:Core/Src/freertos.c ****   /* Create the thread(s) */
- 174:Core/Src/freertos.c ****   /* creation of defaultTask */
- 175:Core/Src/freertos.c ****   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
- 176:Core/Src/freertos.c **** 
- 177:Core/Src/freertos.c ****   /* creation of usartTask */
- 178:Core/Src/freertos.c ****   usartTaskHandle = osThreadNew(StartUsartTask, NULL, &usartTask_attributes);
- 179:Core/Src/freertos.c **** 
- 180:Core/Src/freertos.c ****   /* creation of cmdTask */
- 181:Core/Src/freertos.c ****   cmdTaskHandle = osThreadNew(StartcmdTask, NULL, &cmdTask_attributes);
- 182:Core/Src/freertos.c **** 
- 183:Core/Src/freertos.c ****   /* creation of motorTask */
- 184:Core/Src/freertos.c ****   motorTaskHandle = osThreadNew(StartmotorTask, NULL, &motorTask_attributes);
- 185:Core/Src/freertos.c **** 
- 186:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_THREADS */
- 187:Core/Src/freertos.c ****   /* add threads, ... */
- 188:Core/Src/freertos.c ****   /* USER CODE END RTOS_THREADS */
- 189:Core/Src/freertos.c **** 
- 190:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_EVENTS */
- 191:Core/Src/freertos.c ****   /* add events, ... */
- 192:Core/Src/freertos.c ****   /* USER CODE END RTOS_EVENTS */
- 193:Core/Src/freertos.c **** 
- 194:Core/Src/freertos.c **** }
- 195:Core/Src/freertos.c **** 
- 196:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartDefaultTask */
- 197:Core/Src/freertos.c **** /**
- 198:Core/Src/freertos.c ****   * @brief  Function implementing the defaultTask thread.
- 199:Core/Src/freertos.c ****   * @param  argument: Not used
- 200:Core/Src/freertos.c ****   * @retval None
- 201:Core/Src/freertos.c ****   */
-ARM GAS  /tmp/ccEgldQz.s 			page 5
+ 145:Core/Src/freertos.c ****   /* Create the mutex(es) */
+ 146:Core/Src/freertos.c ****   /* creation of robotMutex */
+ 147:Core/Src/freertos.c ****   robotMutexHandle = osMutexNew(&robotMutex_attributes);
+ 148:Core/Src/freertos.c **** 
+ 149:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_MUTEX */
+ 150:Core/Src/freertos.c ****   /* add mutexes, ... */
+ 151:Core/Src/freertos.c ****   /* USER CODE END RTOS_MUTEX */
+ 152:Core/Src/freertos.c **** 
+ 153:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_SEMAPHORES */
+ 154:Core/Src/freertos.c ****   /* add semaphores, ... */
+ 155:Core/Src/freertos.c ****   /* USER CODE END RTOS_SEMAPHORES */
+ 156:Core/Src/freertos.c **** 
+ 157:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_TIMERS */
+ 158:Core/Src/freertos.c ****   /* start timers, add new ones, ... */
+ 159:Core/Src/freertos.c ****   /* USER CODE END RTOS_TIMERS */
+ 160:Core/Src/freertos.c **** 
+ 161:Core/Src/freertos.c ****   /* Create the queue(s) */
+ 162:Core/Src/freertos.c ****   /* creation of dataQueue */
+ 163:Core/Src/freertos.c ****   dataQueueHandle = osMessageQueueNew (32, sizeof(TxMessage_t), &dataQueue_attributes);
+ 164:Core/Src/freertos.c **** 
+ 165:Core/Src/freertos.c ****   /* creation of cmdQueue */
+ 166:Core/Src/freertos.c ****   cmdQueueHandle = osMessageQueueNew (32, sizeof(uint8_t), &cmdQueue_attributes);
+ 167:Core/Src/freertos.c **** 
+ 168:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_QUEUES */
+ 169:Core/Src/freertos.c ****   /* add queues, ... */
+ 170:Core/Src/freertos.c ****   /* USER CODE END RTOS_QUEUES */
+ 171:Core/Src/freertos.c **** 
+ 172:Core/Src/freertos.c ****   /* Create the thread(s) */
+ 173:Core/Src/freertos.c ****   /* creation of defaultTask */
+ 174:Core/Src/freertos.c ****   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+ 175:Core/Src/freertos.c **** 
+ 176:Core/Src/freertos.c ****   /* creation of usartTask */
+ 177:Core/Src/freertos.c ****   usartTaskHandle = osThreadNew(StartUsartTask, NULL, &usartTask_attributes);
+ 178:Core/Src/freertos.c **** 
+ 179:Core/Src/freertos.c ****   /* creation of cmdTask */
+ 180:Core/Src/freertos.c ****   cmdTaskHandle = osThreadNew(StartcmdTask, NULL, &cmdTask_attributes);
+ 181:Core/Src/freertos.c **** 
+ 182:Core/Src/freertos.c ****   /* creation of motorTask */
+ 183:Core/Src/freertos.c ****   motorTaskHandle = osThreadNew(StartmotorTask, NULL, &motorTask_attributes);
+ 184:Core/Src/freertos.c **** 
+ 185:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_THREADS */
+ 186:Core/Src/freertos.c ****   /* add threads, ... */
+ 187:Core/Src/freertos.c ****   /* USER CODE END RTOS_THREADS */
+ 188:Core/Src/freertos.c **** 
+ 189:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_EVENTS */
+ 190:Core/Src/freertos.c ****   /* add events, ... */
+ 191:Core/Src/freertos.c ****   /* USER CODE END RTOS_EVENTS */
+ 192:Core/Src/freertos.c **** 
+ 193:Core/Src/freertos.c **** }
+ 194:Core/Src/freertos.c **** 
+ 195:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartDefaultTask */
+ 196:Core/Src/freertos.c **** /**
+ 197:Core/Src/freertos.c ****   * @brief  Function implementing the defaultTask thread.
+ 198:Core/Src/freertos.c ****   * @param  argument: Not used
+ 199:Core/Src/freertos.c ****   * @retval None
+ 200:Core/Src/freertos.c ****   */
+ 201:Core/Src/freertos.c **** /* USER CODE END Header_StartDefaultTask */
+ARM GAS  /tmp/cc0660ps.s 			page 5
 
 
- 202:Core/Src/freertos.c **** /* USER CODE END Header_StartDefaultTask */
- 203:Core/Src/freertos.c **** __weak void StartDefaultTask(void *argument)
- 204:Core/Src/freertos.c **** {
-  29              		.loc 1 204 1 view -0
+ 202:Core/Src/freertos.c **** __weak void StartDefaultTask(void *argument)
+ 203:Core/Src/freertos.c **** {
+  29              		.loc 1 203 1 view -0
   30              		.cfi_startproc
   31              		@ args = 0, pretend = 0, frame = 0
   32              		@ frame_needed = 0, uses_anonymous_args = 0
   33              	.LVL0:
-  34              		.loc 1 204 1 is_stmt 0 view .LVU1
+  34              		.loc 1 203 1 is_stmt 0 view .LVU1
   35 0000 08B5     		push	{r3, lr}
   36              	.LCFI0:
   37              		.cfi_def_cfa_offset 8
@@ -257,18 +256,18 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
   39              		.cfi_offset 14, -4
   40              	.LVL1:
   41              	.L2:
- 205:Core/Src/freertos.c ****   /* USER CODE BEGIN StartDefaultTask */
- 206:Core/Src/freertos.c ****   /* Infinite loop */
- 207:Core/Src/freertos.c ****   for(;;)
-  42              		.loc 1 207 3 is_stmt 1 view .LVU2
- 208:Core/Src/freertos.c ****     {
- 209:Core/Src/freertos.c ****       osDelay(1);
-  43              		.loc 1 209 7 discriminator 1 view .LVU3
+ 204:Core/Src/freertos.c ****   /* USER CODE BEGIN StartDefaultTask */
+ 205:Core/Src/freertos.c ****   /* Infinite loop */
+ 206:Core/Src/freertos.c ****   for(;;)
+  42              		.loc 1 206 3 is_stmt 1 view .LVU2
+ 207:Core/Src/freertos.c ****     {
+ 208:Core/Src/freertos.c ****       osDelay(1);
+  43              		.loc 1 208 7 discriminator 1 view .LVU3
   44 0002 0120     		movs	r0, #1
   45 0004 FFF7FEFF 		bl	osDelay
   46              	.LVL2:
- 207:Core/Src/freertos.c ****     {
-  47              		.loc 1 207 3 view .LVU4
+ 206:Core/Src/freertos.c ****     {
+  47              		.loc 1 206 3 view .LVU4
   48 0008 FBE7     		b	.L2
   49              		.cfi_endproc
   50              	.LFE143:
@@ -280,28 +279,28 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
   57              		.thumb_func
   59              	StartUsartTask:
   60              	.LFB144:
- 210:Core/Src/freertos.c ****     }
- 211:Core/Src/freertos.c ****   /* USER CODE END StartDefaultTask */
- 212:Core/Src/freertos.c **** }
- 213:Core/Src/freertos.c **** 
- 214:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartUsartTask */
- 215:Core/Src/freertos.c **** /**
- 216:Core/Src/freertos.c **** * @brief Function implementing the usartTask thread.
- 217:Core/Src/freertos.c **** * @param argument: Not used
- 218:Core/Src/freertos.c **** * @retval None
- 219:Core/Src/freertos.c **** */
- 220:Core/Src/freertos.c **** /* USER CODE END Header_StartUsartTask */
- 221:Core/Src/freertos.c **** __weak void StartUsartTask(void *argument)
- 222:Core/Src/freertos.c **** {
-  61              		.loc 1 222 1 view -0
+ 209:Core/Src/freertos.c ****     }
+ 210:Core/Src/freertos.c ****   /* USER CODE END StartDefaultTask */
+ 211:Core/Src/freertos.c **** }
+ 212:Core/Src/freertos.c **** 
+ 213:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartUsartTask */
+ 214:Core/Src/freertos.c **** /**
+ 215:Core/Src/freertos.c **** * @brief Function implementing the usartTask thread.
+ 216:Core/Src/freertos.c **** * @param argument: Not used
+ 217:Core/Src/freertos.c **** * @retval None
+ 218:Core/Src/freertos.c **** */
+ 219:Core/Src/freertos.c **** /* USER CODE END Header_StartUsartTask */
+ 220:Core/Src/freertos.c **** __weak void StartUsartTask(void *argument)
+ 221:Core/Src/freertos.c **** {
+  61              		.loc 1 221 1 view -0
   62              		.cfi_startproc
   63              		@ args = 0, pretend = 0, frame = 0
   64              		@ frame_needed = 0, uses_anonymous_args = 0
   65              	.LVL3:
-ARM GAS  /tmp/ccEgldQz.s 			page 6
+  66              		.loc 1 221 1 is_stmt 0 view .LVU6
+ARM GAS  /tmp/cc0660ps.s 			page 6
 
 
-  66              		.loc 1 222 1 is_stmt 0 view .LVU6
   67 0000 08B5     		push	{r3, lr}
   68              	.LCFI1:
   69              		.cfi_def_cfa_offset 8
@@ -309,18 +308,18 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
   71              		.cfi_offset 14, -4
   72              	.LVL4:
   73              	.L5:
- 223:Core/Src/freertos.c ****   /* USER CODE BEGIN StartUsartTask */
- 224:Core/Src/freertos.c ****   /* Infinite loop */
- 225:Core/Src/freertos.c ****   for(;;)
-  74              		.loc 1 225 3 is_stmt 1 view .LVU7
- 226:Core/Src/freertos.c ****   {
- 227:Core/Src/freertos.c ****     osDelay(1);
-  75              		.loc 1 227 5 discriminator 1 view .LVU8
+ 222:Core/Src/freertos.c ****   /* USER CODE BEGIN StartUsartTask */
+ 223:Core/Src/freertos.c ****   /* Infinite loop */
+ 224:Core/Src/freertos.c ****   for(;;)
+  74              		.loc 1 224 3 is_stmt 1 view .LVU7
+ 225:Core/Src/freertos.c ****   {
+ 226:Core/Src/freertos.c ****     osDelay(1);
+  75              		.loc 1 226 5 discriminator 1 view .LVU8
   76 0002 0120     		movs	r0, #1
   77 0004 FFF7FEFF 		bl	osDelay
   78              	.LVL5:
- 225:Core/Src/freertos.c ****   {
-  79              		.loc 1 225 3 view .LVU9
+ 224:Core/Src/freertos.c ****   {
+  79              		.loc 1 224 3 view .LVU9
   80 0008 FBE7     		b	.L5
   81              		.cfi_endproc
   82              	.LFE144:
@@ -332,25 +331,25 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
   89              		.thumb_func
   91              	StartcmdTask:
   92              	.LFB145:
- 228:Core/Src/freertos.c ****   }
- 229:Core/Src/freertos.c ****   /* USER CODE END StartUsartTask */
- 230:Core/Src/freertos.c **** }
- 231:Core/Src/freertos.c **** 
- 232:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartcmdTask */
- 233:Core/Src/freertos.c **** /**
- 234:Core/Src/freertos.c **** * @brief Function implementing the cmdTask thread.
- 235:Core/Src/freertos.c **** * @param argument: Not used
- 236:Core/Src/freertos.c **** * @retval None
- 237:Core/Src/freertos.c **** */
- 238:Core/Src/freertos.c **** /* USER CODE END Header_StartcmdTask */
- 239:Core/Src/freertos.c **** __weak void StartcmdTask(void *argument)
- 240:Core/Src/freertos.c **** {
-  93              		.loc 1 240 1 view -0
+ 227:Core/Src/freertos.c ****   }
+ 228:Core/Src/freertos.c ****   /* USER CODE END StartUsartTask */
+ 229:Core/Src/freertos.c **** }
+ 230:Core/Src/freertos.c **** 
+ 231:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartcmdTask */
+ 232:Core/Src/freertos.c **** /**
+ 233:Core/Src/freertos.c **** * @brief Function implementing the cmdTask thread.
+ 234:Core/Src/freertos.c **** * @param argument: Not used
+ 235:Core/Src/freertos.c **** * @retval None
+ 236:Core/Src/freertos.c **** */
+ 237:Core/Src/freertos.c **** /* USER CODE END Header_StartcmdTask */
+ 238:Core/Src/freertos.c **** __weak void StartcmdTask(void *argument)
+ 239:Core/Src/freertos.c **** {
+  93              		.loc 1 239 1 view -0
   94              		.cfi_startproc
   95              		@ args = 0, pretend = 0, frame = 0
   96              		@ frame_needed = 0, uses_anonymous_args = 0
   97              	.LVL6:
-  98              		.loc 1 240 1 is_stmt 0 view .LVU11
+  98              		.loc 1 239 1 is_stmt 0 view .LVU11
   99 0000 08B5     		push	{r3, lr}
  100              	.LCFI2:
  101              		.cfi_def_cfa_offset 8
@@ -358,21 +357,21 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
  103              		.cfi_offset 14, -4
  104              	.LVL7:
  105              	.L8:
-ARM GAS  /tmp/ccEgldQz.s 			page 7
+ 240:Core/Src/freertos.c ****   /* USER CODE BEGIN StartcmdTask */
+ARM GAS  /tmp/cc0660ps.s 			page 7
 
 
- 241:Core/Src/freertos.c ****   /* USER CODE BEGIN StartcmdTask */
- 242:Core/Src/freertos.c ****   /* Infinite loop */
- 243:Core/Src/freertos.c ****   for(;;)
- 106              		.loc 1 243 3 is_stmt 1 view .LVU12
- 244:Core/Src/freertos.c ****   {
- 245:Core/Src/freertos.c ****     osDelay(1);
- 107              		.loc 1 245 5 discriminator 1 view .LVU13
+ 241:Core/Src/freertos.c ****   /* Infinite loop */
+ 242:Core/Src/freertos.c ****   for(;;)
+ 106              		.loc 1 242 3 is_stmt 1 view .LVU12
+ 243:Core/Src/freertos.c ****   {
+ 244:Core/Src/freertos.c ****     osDelay(1);
+ 107              		.loc 1 244 5 discriminator 1 view .LVU13
  108 0002 0120     		movs	r0, #1
  109 0004 FFF7FEFF 		bl	osDelay
  110              	.LVL8:
- 243:Core/Src/freertos.c ****   {
- 111              		.loc 1 243 3 view .LVU14
+ 242:Core/Src/freertos.c ****   {
+ 111              		.loc 1 242 3 view .LVU14
  112 0008 FBE7     		b	.L8
  113              		.cfi_endproc
  114              	.LFE145:
@@ -384,25 +383,25 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
  121              		.thumb_func
  123              	StartmotorTask:
  124              	.LFB146:
- 246:Core/Src/freertos.c ****   }
- 247:Core/Src/freertos.c ****   /* USER CODE END StartcmdTask */
- 248:Core/Src/freertos.c **** }
- 249:Core/Src/freertos.c **** 
- 250:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartmotorTask */
- 251:Core/Src/freertos.c **** /**
- 252:Core/Src/freertos.c **** * @brief Function implementing the motorTask thread.
- 253:Core/Src/freertos.c **** * @param argument: Not used
- 254:Core/Src/freertos.c **** * @retval None
- 255:Core/Src/freertos.c **** */
- 256:Core/Src/freertos.c **** /* USER CODE END Header_StartmotorTask */
- 257:Core/Src/freertos.c **** __weak void StartmotorTask(void *argument)
- 258:Core/Src/freertos.c **** {
- 125              		.loc 1 258 1 view -0
+ 245:Core/Src/freertos.c ****   }
+ 246:Core/Src/freertos.c ****   /* USER CODE END StartcmdTask */
+ 247:Core/Src/freertos.c **** }
+ 248:Core/Src/freertos.c **** 
+ 249:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartmotorTask */
+ 250:Core/Src/freertos.c **** /**
+ 251:Core/Src/freertos.c **** * @brief Function implementing the motorTask thread.
+ 252:Core/Src/freertos.c **** * @param argument: Not used
+ 253:Core/Src/freertos.c **** * @retval None
+ 254:Core/Src/freertos.c **** */
+ 255:Core/Src/freertos.c **** /* USER CODE END Header_StartmotorTask */
+ 256:Core/Src/freertos.c **** __weak void StartmotorTask(void *argument)
+ 257:Core/Src/freertos.c **** {
+ 125              		.loc 1 257 1 view -0
  126              		.cfi_startproc
  127              		@ args = 0, pretend = 0, frame = 0
  128              		@ frame_needed = 0, uses_anonymous_args = 0
  129              	.LVL9:
- 130              		.loc 1 258 1 is_stmt 0 view .LVU16
+ 130              		.loc 1 257 1 is_stmt 0 view .LVU16
  131 0000 08B5     		push	{r3, lr}
  132              	.LCFI3:
  133              		.cfi_def_cfa_offset 8
@@ -410,21 +409,21 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
  135              		.cfi_offset 14, -4
  136              	.LVL10:
  137              	.L11:
- 259:Core/Src/freertos.c ****   /* USER CODE BEGIN StartmotorTask */
- 260:Core/Src/freertos.c ****   /* Infinite loop */
- 261:Core/Src/freertos.c ****   for(;;)
- 138              		.loc 1 261 3 is_stmt 1 view .LVU17
- 262:Core/Src/freertos.c ****   {
- 263:Core/Src/freertos.c ****     osDelay(1);
- 139              		.loc 1 263 5 discriminator 1 view .LVU18
- 140 0002 0120     		movs	r0, #1
-ARM GAS  /tmp/ccEgldQz.s 			page 8
-
-
- 141 0004 FFF7FEFF 		bl	osDelay
- 142              	.LVL11:
+ 258:Core/Src/freertos.c ****   /* USER CODE BEGIN StartmotorTask */
+ 259:Core/Src/freertos.c ****   /* Infinite loop */
+ 260:Core/Src/freertos.c ****   for(;;)
+ 138              		.loc 1 260 3 is_stmt 1 view .LVU17
  261:Core/Src/freertos.c ****   {
- 143              		.loc 1 261 3 view .LVU19
+ 262:Core/Src/freertos.c ****     osDelay(1);
+ 139              		.loc 1 262 5 discriminator 1 view .LVU18
+ 140 0002 0120     		movs	r0, #1
+ 141 0004 FFF7FEFF 		bl	osDelay
+ARM GAS  /tmp/cc0660ps.s 			page 8
+
+
+ 142              	.LVL11:
+ 260:Core/Src/freertos.c ****   {
+ 143              		.loc 1 260 3 view .LVU19
  144 0008 FBE7     		b	.L11
  145              		.cfi_endproc
  146              	.LFE146:
@@ -478,10 +477,10 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
  188 0014 00000000 		.word	huart3
  189              		.cfi_endproc
  190              	.LFE141:
-ARM GAS  /tmp/ccEgldQz.s 			page 9
-
-
  192              		.section	.text.MX_FREERTOS_Init,"ax",%progbits
+ARM GAS  /tmp/cc0660ps.s 			page 9
+
+
  193              		.align	1
  194              		.global	MX_FREERTOS_Init
  195              		.syntax unified
@@ -489,8 +488,8 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
  197              		.thumb_func
  199              	MX_FREERTOS_Init:
  200              	.LFB142:
- 142:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
- 201              		.loc 1 142 29 is_stmt 1 view -0
+ 141:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
+ 201              		.loc 1 141 29 is_stmt 1 view -0
  202              		.cfi_startproc
  203              		@ args = 0, pretend = 0, frame = 0
  204              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -499,109 +498,109 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
  207              		.cfi_def_cfa_offset 8
  208              		.cfi_offset 3, -8
  209              		.cfi_offset 14, -4
- 148:Core/Src/freertos.c **** 
- 210              		.loc 1 148 3 view .LVU29
- 148:Core/Src/freertos.c **** 
- 211              		.loc 1 148 22 is_stmt 0 view .LVU30
+ 147:Core/Src/freertos.c **** 
+ 210              		.loc 1 147 3 view .LVU29
+ 147:Core/Src/freertos.c **** 
+ 211              		.loc 1 147 22 is_stmt 0 view .LVU30
  212 0002 1848     		ldr	r0, .L19
  213 0004 FFF7FEFF 		bl	osMutexNew
  214              	.LVL17:
- 148:Core/Src/freertos.c **** 
- 215              		.loc 1 148 20 discriminator 1 view .LVU31
+ 147:Core/Src/freertos.c **** 
+ 215              		.loc 1 147 20 discriminator 1 view .LVU31
  216 0008 174B     		ldr	r3, .L19+4
  217 000a 1860     		str	r0, [r3]
- 164:Core/Src/freertos.c **** 
- 218              		.loc 1 164 3 is_stmt 1 view .LVU32
- 164:Core/Src/freertos.c **** 
- 219              		.loc 1 164 21 is_stmt 0 view .LVU33
+ 163:Core/Src/freertos.c **** 
+ 218              		.loc 1 163 3 is_stmt 1 view .LVU32
+ 163:Core/Src/freertos.c **** 
+ 219              		.loc 1 163 21 is_stmt 0 view .LVU33
  220 000c 174A     		ldr	r2, .L19+8
  221 000e 0821     		movs	r1, #8
  222 0010 2020     		movs	r0, #32
  223 0012 FFF7FEFF 		bl	osMessageQueueNew
  224              	.LVL18:
- 164:Core/Src/freertos.c **** 
- 225              		.loc 1 164 19 discriminator 1 view .LVU34
+ 163:Core/Src/freertos.c **** 
+ 225              		.loc 1 163 19 discriminator 1 view .LVU34
  226 0016 164B     		ldr	r3, .L19+12
  227 0018 1860     		str	r0, [r3]
- 167:Core/Src/freertos.c **** 
- 228              		.loc 1 167 3 is_stmt 1 view .LVU35
- 167:Core/Src/freertos.c **** 
- 229              		.loc 1 167 20 is_stmt 0 view .LVU36
+ 166:Core/Src/freertos.c **** 
+ 228              		.loc 1 166 3 is_stmt 1 view .LVU35
+ 166:Core/Src/freertos.c **** 
+ 229              		.loc 1 166 20 is_stmt 0 view .LVU36
  230 001a 164A     		ldr	r2, .L19+16
  231 001c 0121     		movs	r1, #1
  232 001e 2020     		movs	r0, #32
  233 0020 FFF7FEFF 		bl	osMessageQueueNew
  234              	.LVL19:
- 167:Core/Src/freertos.c **** 
- 235              		.loc 1 167 18 discriminator 1 view .LVU37
+ 166:Core/Src/freertos.c **** 
+ 235              		.loc 1 166 18 discriminator 1 view .LVU37
  236 0024 144B     		ldr	r3, .L19+20
  237 0026 1860     		str	r0, [r3]
- 175:Core/Src/freertos.c **** 
- 238              		.loc 1 175 3 is_stmt 1 view .LVU38
-ARM GAS  /tmp/ccEgldQz.s 			page 10
+ 174:Core/Src/freertos.c **** 
+ 238              		.loc 1 174 3 is_stmt 1 view .LVU38
+ 174:Core/Src/freertos.c **** 
+ARM GAS  /tmp/cc0660ps.s 			page 10
 
 
- 175:Core/Src/freertos.c **** 
- 239              		.loc 1 175 23 is_stmt 0 view .LVU39
+ 239              		.loc 1 174 23 is_stmt 0 view .LVU39
  240 0028 144A     		ldr	r2, .L19+24
  241 002a 0021     		movs	r1, #0
  242 002c 1448     		ldr	r0, .L19+28
  243 002e FFF7FEFF 		bl	osThreadNew
  244              	.LVL20:
- 175:Core/Src/freertos.c **** 
- 245              		.loc 1 175 21 discriminator 1 view .LVU40
+ 174:Core/Src/freertos.c **** 
+ 245              		.loc 1 174 21 discriminator 1 view .LVU40
  246 0032 144B     		ldr	r3, .L19+32
  247 0034 1860     		str	r0, [r3]
- 178:Core/Src/freertos.c **** 
- 248              		.loc 1 178 3 is_stmt 1 view .LVU41
- 178:Core/Src/freertos.c **** 
- 249              		.loc 1 178 21 is_stmt 0 view .LVU42
+ 177:Core/Src/freertos.c **** 
+ 248              		.loc 1 177 3 is_stmt 1 view .LVU41
+ 177:Core/Src/freertos.c **** 
+ 249              		.loc 1 177 21 is_stmt 0 view .LVU42
  250 0036 144A     		ldr	r2, .L19+36
  251 0038 0021     		movs	r1, #0
  252 003a 1448     		ldr	r0, .L19+40
  253 003c FFF7FEFF 		bl	osThreadNew
  254              	.LVL21:
- 178:Core/Src/freertos.c **** 
- 255              		.loc 1 178 19 discriminator 1 view .LVU43
+ 177:Core/Src/freertos.c **** 
+ 255              		.loc 1 177 19 discriminator 1 view .LVU43
  256 0040 134B     		ldr	r3, .L19+44
  257 0042 1860     		str	r0, [r3]
- 181:Core/Src/freertos.c **** 
- 258              		.loc 1 181 3 is_stmt 1 view .LVU44
- 181:Core/Src/freertos.c **** 
- 259              		.loc 1 181 19 is_stmt 0 view .LVU45
+ 180:Core/Src/freertos.c **** 
+ 258              		.loc 1 180 3 is_stmt 1 view .LVU44
+ 180:Core/Src/freertos.c **** 
+ 259              		.loc 1 180 19 is_stmt 0 view .LVU45
  260 0044 134A     		ldr	r2, .L19+48
  261 0046 0021     		movs	r1, #0
  262 0048 1348     		ldr	r0, .L19+52
  263 004a FFF7FEFF 		bl	osThreadNew
  264              	.LVL22:
- 181:Core/Src/freertos.c **** 
- 265              		.loc 1 181 17 discriminator 1 view .LVU46
+ 180:Core/Src/freertos.c **** 
+ 265              		.loc 1 180 17 discriminator 1 view .LVU46
  266 004e 134B     		ldr	r3, .L19+56
  267 0050 1860     		str	r0, [r3]
- 184:Core/Src/freertos.c **** 
- 268              		.loc 1 184 3 is_stmt 1 view .LVU47
- 184:Core/Src/freertos.c **** 
- 269              		.loc 1 184 21 is_stmt 0 view .LVU48
+ 183:Core/Src/freertos.c **** 
+ 268              		.loc 1 183 3 is_stmt 1 view .LVU47
+ 183:Core/Src/freertos.c **** 
+ 269              		.loc 1 183 21 is_stmt 0 view .LVU48
  270 0052 134A     		ldr	r2, .L19+60
  271 0054 0021     		movs	r1, #0
  272 0056 1348     		ldr	r0, .L19+64
  273 0058 FFF7FEFF 		bl	osThreadNew
  274              	.LVL23:
- 184:Core/Src/freertos.c **** 
- 275              		.loc 1 184 19 discriminator 1 view .LVU49
+ 183:Core/Src/freertos.c **** 
+ 275              		.loc 1 183 19 discriminator 1 view .LVU49
  276 005c 124B     		ldr	r3, .L19+68
  277 005e 1860     		str	r0, [r3]
- 194:Core/Src/freertos.c **** 
- 278              		.loc 1 194 1 view .LVU50
+ 193:Core/Src/freertos.c **** 
+ 278              		.loc 1 193 1 view .LVU50
  279 0060 08BD     		pop	{r3, pc}
  280              	.L20:
  281 0062 00BF     		.align	2
  282              	.L19:
  283 0064 00000000 		.word	robotMutex_attributes
-ARM GAS  /tmp/ccEgldQz.s 			page 11
-
-
  284 0068 00000000 		.word	robotMutexHandle
+ARM GAS  /tmp/cc0660ps.s 			page 11
+
+
  285 006c 00000000 		.word	dataQueue_attributes
  286 0070 00000000 		.word	dataQueueHandle
  287 0074 00000000 		.word	cmdQueue_attributes
@@ -629,103 +628,103 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
  311              	HAL_UART_RxCpltCallback:
  312              	.LVL24:
  313              	.LFB147:
- 264:Core/Src/freertos.c ****   }
- 265:Core/Src/freertos.c ****   /* USER CODE END StartmotorTask */
- 266:Core/Src/freertos.c **** }
- 267:Core/Src/freertos.c **** 
- 268:Core/Src/freertos.c **** /* Private application code --------------------------------------------------*/
- 269:Core/Src/freertos.c **** /* USER CODE BEGIN Application */
- 270:Core/Src/freertos.c **** /* 串口接收完成回调函数 */
- 271:Core/Src/freertos.c **** uint8_t rx_buffer_byte;
- 272:Core/Src/freertos.c **** void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
- 273:Core/Src/freertos.c **** {
- 314              		.loc 1 273 1 is_stmt 1 view -0
+ 263:Core/Src/freertos.c ****   }
+ 264:Core/Src/freertos.c ****   /* USER CODE END StartmotorTask */
+ 265:Core/Src/freertos.c **** }
+ 266:Core/Src/freertos.c **** 
+ 267:Core/Src/freertos.c **** /* Private application code --------------------------------------------------*/
+ 268:Core/Src/freertos.c **** /* USER CODE BEGIN Application */
+ 269:Core/Src/freertos.c **** /* 串口接收完成回调函数 */
+ 270:Core/Src/freertos.c **** uint8_t rx_buffer_byte;
+ 271:Core/Src/freertos.c **** void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+ 272:Core/Src/freertos.c **** {
+ 314              		.loc 1 272 1 is_stmt 1 view -0
  315              		.cfi_startproc
  316              		@ args = 0, pretend = 0, frame = 8
  317              		@ frame_needed = 0, uses_anonymous_args = 0
- 274:Core/Src/freertos.c ****     if (huart->Instance == USART3) // 确认是哪个串口
- 318              		.loc 1 274 5 view .LVU52
- 319              		.loc 1 274 14 is_stmt 0 view .LVU53
+ 273:Core/Src/freertos.c ****     if (huart->Instance == USART3) // 确认是哪个串口
+ 318              		.loc 1 273 5 view .LVU52
+ 319              		.loc 1 273 14 is_stmt 0 view .LVU53
  320 0000 0268     		ldr	r2, [r0]
- 321              		.loc 1 274 8 view .LVU54
+ 321              		.loc 1 273 8 view .LVU54
  322 0002 114B     		ldr	r3, .L29
  323 0004 9A42     		cmp	r2, r3
  324 0006 00D0     		beq	.L28
  325 0008 7047     		bx	lr
  326              	.L28:
- 273:Core/Src/freertos.c ****     if (huart->Instance == USART3) // 确认是哪个串口
- 327              		.loc 1 273 1 view .LVU55
+ 272:Core/Src/freertos.c ****     if (huart->Instance == USART3) // 确认是哪个串口
+ 327              		.loc 1 272 1 view .LVU55
  328 000a 10B5     		push	{r4, lr}
  329              	.LCFI6:
  330              		.cfi_def_cfa_offset 8
-ARM GAS  /tmp/ccEgldQz.s 			page 12
-
-
  331              		.cfi_offset 4, -8
+ARM GAS  /tmp/cc0660ps.s 			page 12
+
+
  332              		.cfi_offset 14, -4
  333 000c 82B0     		sub	sp, sp, #8
  334              	.LCFI7:
  335              		.cfi_def_cfa_offset 16
  336              	.LBB2:
- 275:Core/Src/freertos.c ****     {
- 276:Core/Src/freertos.c ****         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
- 337              		.loc 1 276 9 is_stmt 1 view .LVU56
- 338              		.loc 1 276 20 is_stmt 0 view .LVU57
+ 274:Core/Src/freertos.c ****     {
+ 275:Core/Src/freertos.c ****         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+ 337              		.loc 1 275 9 is_stmt 1 view .LVU56
+ 338              		.loc 1 275 20 is_stmt 0 view .LVU57
  339 000e 0023     		movs	r3, #0
  340 0010 0193     		str	r3, [sp, #4]
- 277:Core/Src/freertos.c **** 
- 278:Core/Src/freertos.c ****         // 把收到的这 1 个字节发送到 commandQueue
- 279:Core/Src/freertos.c ****         // 注意：这是在中断里，要用 FromISR 版本
- 280:Core/Src/freertos.c ****         xQueueSendFromISR(cmdQueueHandle, &rx_buffer_byte, &xHigherPriorityTaskWoken);
- 341              		.loc 1 280 9 is_stmt 1 view .LVU58
+ 276:Core/Src/freertos.c **** 
+ 277:Core/Src/freertos.c ****         // 把收到的这 1 个字节发送到 commandQueue
+ 278:Core/Src/freertos.c ****         // 注意：这是在中断里，要用 FromISR 版本
+ 279:Core/Src/freertos.c ****         xQueueSendFromISR(cmdQueueHandle, &rx_buffer_byte, &xHigherPriorityTaskWoken);
+ 341              		.loc 1 279 9 is_stmt 1 view .LVU58
  342 0012 0E4C     		ldr	r4, .L29+4
  343 0014 01AA     		add	r2, sp, #4
  344 0016 2146     		mov	r1, r4
  345 0018 0D48     		ldr	r0, .L29+8
  346              	.LVL25:
- 347              		.loc 1 280 9 is_stmt 0 view .LVU59
+ 347              		.loc 1 279 9 is_stmt 0 view .LVU59
  348 001a 0068     		ldr	r0, [r0]
  349 001c FFF7FEFF 		bl	xQueueGenericSendFromISR
  350              	.LVL26:
- 281:Core/Src/freertos.c **** 
- 282:Core/Src/freertos.c ****         // 重新开启中断接收下一个字节
- 283:Core/Src/freertos.c ****         HAL_UART_Receive_IT(&huart3, &rx_buffer_byte, 1);
- 351              		.loc 1 283 9 is_stmt 1 view .LVU60
+ 280:Core/Src/freertos.c **** 
+ 281:Core/Src/freertos.c ****         // 重新开启中断接收下一个字节
+ 282:Core/Src/freertos.c ****         HAL_UART_Receive_IT(&huart3, &rx_buffer_byte, 1);
+ 351              		.loc 1 282 9 is_stmt 1 view .LVU60
  352 0020 0122     		movs	r2, #1
  353 0022 2146     		mov	r1, r4
  354 0024 0B48     		ldr	r0, .L29+12
  355 0026 FFF7FEFF 		bl	HAL_UART_Receive_IT
  356              	.LVL27:
- 284:Core/Src/freertos.c **** 
- 285:Core/Src/freertos.c ****         // 如果唤醒了高优先级任务，进行上下文切换
- 286:Core/Src/freertos.c ****         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
- 357              		.loc 1 286 9 view .LVU61
+ 283:Core/Src/freertos.c **** 
+ 284:Core/Src/freertos.c ****         // 如果唤醒了高优先级任务，进行上下文切换
+ 285:Core/Src/freertos.c ****         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+ 357              		.loc 1 285 9 view .LVU61
  358 002a 019B     		ldr	r3, [sp, #4]
  359 002c 4BB1     		cbz	r3, .L21
- 360              		.loc 1 286 9 discriminator 1 view .LVU62
+ 360              		.loc 1 285 9 discriminator 1 view .LVU62
  361 002e 4FF0E023 		mov	r3, #-536813568
  362 0032 4FF08052 		mov	r2, #268435456
  363 0036 C3F8042D 		str	r2, [r3, #3332]
- 364              		.loc 1 286 9 discriminator 1 view .LVU63
+ 364              		.loc 1 285 9 discriminator 1 view .LVU63
  365              		.syntax unified
- 366              	@ 286 "Core/Src/freertos.c" 1
+ 366              	@ 285 "Core/Src/freertos.c" 1
  367 003a BFF34F8F 		dsb
  368              	@ 0 "" 2
- 369              		.loc 1 286 9 discriminator 1 view .LVU64
- 370              	@ 286 "Core/Src/freertos.c" 1
+ 369              		.loc 1 285 9 discriminator 1 view .LVU64
+ 370              	@ 285 "Core/Src/freertos.c" 1
  371 003e BFF36F8F 		isb
  372              	@ 0 "" 2
- 373              		.loc 1 286 53 discriminator 3 view .LVU65
+ 373              		.loc 1 285 53 discriminator 3 view .LVU65
  374              		.thumb
  375              		.syntax unified
-ARM GAS  /tmp/ccEgldQz.s 			page 13
-
-
  376              	.L21:
+ARM GAS  /tmp/cc0660ps.s 			page 13
+
+
  377              	.LBE2:
- 287:Core/Src/freertos.c ****     }
- 288:Core/Src/freertos.c **** }
- 378              		.loc 1 288 1 is_stmt 0 view .LVU66
+ 286:Core/Src/freertos.c ****     }
+ 287:Core/Src/freertos.c **** }
+ 378              		.loc 1 287 1 is_stmt 0 view .LVU66
  379 0042 02B0     		add	sp, sp, #8
  380              	.LCFI8:
  381              		.cfi_def_cfa_offset 8
@@ -778,10 +777,10 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
  430      00000000 
  430      00000000 
  430      00000000 
-ARM GAS  /tmp/ccEgldQz.s 			page 14
-
-
  430      00000000 
+ARM GAS  /tmp/cc0660ps.s 			page 14
+
+
  431              		.global	cmdQueueHandle
  432              		.section	.bss.cmdQueueHandle,"aw",%nobits
  433              		.align	2
@@ -838,10 +837,10 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
  482              	.LC4:
  483 0030 636D6454 		.ascii	"cmdTask\000"
  483      61736B00 
-ARM GAS  /tmp/ccEgldQz.s 			page 15
-
-
  484              		.section	.rodata.cmdTask_attributes,"a"
+ARM GAS  /tmp/cc0660ps.s 			page 15
+
+
  485              		.align	2
  488              	cmdTask_attributes:
  489 0000 30000000 		.word	.LC4
@@ -898,10 +897,10 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
  534      00000000 
  534      00000000 
  535 0014 00080000 		.word	2048
-ARM GAS  /tmp/ccEgldQz.s 			page 16
-
-
  536 0018 18000000 		.word	24
+ARM GAS  /tmp/cc0660ps.s 			page 16
+
+
  537 001c 00000000 		.space	8
  537      00000000 
  538              		.global	defaultTaskHandle
@@ -910,98 +909,92 @@ ARM GAS  /tmp/ccEgldQz.s 			page 1
  543              	defaultTaskHandle:
  544 0000 00000000 		.space	4
  545              		.global	g_robot
- 546              		.section	.bss.g_robot,"aw",%nobits
+ 546              		.section	.data.g_robot,"aw"
  547              		.align	2
  550              	g_robot:
- 551 0000 00000000 		.space	24
- 551      00000000 
- 551      00000000 
- 551      00000000 
- 551      00000000 
- 552              		.global	g_sys_ctrl
- 553              		.section	.data.g_sys_ctrl,"aw"
- 554              		.align	2
- 557              	g_sys_ctrl:
- 558 0000 01       		.byte	1
- 559 0001 000000   		.space	3
- 560 0004 32000000 		.word	50
- 561              		.text
- 562              	.Letext0:
- 563              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
- 564              		.file 3 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
- 565              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
- 566              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 567              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 568              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
- 569              		.file 8 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
- 570              		.file 9 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
- 571              		.file 10 "RobotApp/Inc/robot_sys.h"
- 572              		.file 11 "Core/Inc/usart.h"
-ARM GAS  /tmp/ccEgldQz.s 			page 17
+ 551 0000 01       		.byte	1
+ 552 0001 000000   		.space	3
+ 553 0004 32000000 		.word	50
+ 554 0008 00000000 		.word	0
+ 555 000c 00000000 		.word	0
+ 556 0010 0000803F 		.word	1065353216
+ 557 0014 00000000 		.word	0
+ 558 0018 00000000 		.word	0
+ 559              		.text
+ 560              	.Letext0:
+ 561              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 562              		.file 3 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 563              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 564              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 565              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 566              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 567              		.file 8 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 568              		.file 9 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 569              		.file 10 "RobotApp/Inc/robot_sys.h"
+ 570              		.file 11 "Core/Inc/usart.h"
+ARM GAS  /tmp/cc0660ps.s 			page 17
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 freertos.c
-     /tmp/ccEgldQz.s:21     .text.StartDefaultTask:00000000 $t
-     /tmp/ccEgldQz.s:27     .text.StartDefaultTask:00000000 StartDefaultTask
-     /tmp/ccEgldQz.s:53     .text.StartUsartTask:00000000 $t
-     /tmp/ccEgldQz.s:59     .text.StartUsartTask:00000000 StartUsartTask
-     /tmp/ccEgldQz.s:85     .text.StartcmdTask:00000000 $t
-     /tmp/ccEgldQz.s:91     .text.StartcmdTask:00000000 StartcmdTask
-     /tmp/ccEgldQz.s:117    .text.StartmotorTask:00000000 $t
-     /tmp/ccEgldQz.s:123    .text.StartmotorTask:00000000 StartmotorTask
-     /tmp/ccEgldQz.s:149    .text._write:00000000 $t
-     /tmp/ccEgldQz.s:155    .text._write:00000000 _write
-     /tmp/ccEgldQz.s:188    .text._write:00000014 $d
-     /tmp/ccEgldQz.s:193    .text.MX_FREERTOS_Init:00000000 $t
-     /tmp/ccEgldQz.s:199    .text.MX_FREERTOS_Init:00000000 MX_FREERTOS_Init
-     /tmp/ccEgldQz.s:283    .text.MX_FREERTOS_Init:00000064 $d
-     /tmp/ccEgldQz.s:409    .rodata.robotMutex_attributes:00000000 robotMutex_attributes
-     /tmp/ccEgldQz.s:417    .bss.robotMutexHandle:00000000 robotMutexHandle
-     /tmp/ccEgldQz.s:447    .rodata.dataQueue_attributes:00000000 dataQueue_attributes
-     /tmp/ccEgldQz.s:455    .bss.dataQueueHandle:00000000 dataQueueHandle
-     /tmp/ccEgldQz.s:428    .rodata.cmdQueue_attributes:00000000 cmdQueue_attributes
-     /tmp/ccEgldQz.s:436    .bss.cmdQueueHandle:00000000 cmdQueueHandle
-     /tmp/ccEgldQz.s:532    .rodata.defaultTask_attributes:00000000 defaultTask_attributes
-     /tmp/ccEgldQz.s:543    .bss.defaultTaskHandle:00000000 defaultTaskHandle
-     /tmp/ccEgldQz.s:510    .rodata.usartTask_attributes:00000000 usartTask_attributes
-     /tmp/ccEgldQz.s:521    .bss.usartTaskHandle:00000000 usartTaskHandle
-     /tmp/ccEgldQz.s:488    .rodata.cmdTask_attributes:00000000 cmdTask_attributes
-     /tmp/ccEgldQz.s:499    .bss.cmdTaskHandle:00000000 cmdTaskHandle
-     /tmp/ccEgldQz.s:466    .rodata.motorTask_attributes:00000000 motorTask_attributes
-     /tmp/ccEgldQz.s:477    .bss.motorTaskHandle:00000000 motorTaskHandle
-     /tmp/ccEgldQz.s:305    .text.HAL_UART_RxCpltCallback:00000000 $t
-     /tmp/ccEgldQz.s:311    .text.HAL_UART_RxCpltCallback:00000000 HAL_UART_RxCpltCallback
-     /tmp/ccEgldQz.s:387    .text.HAL_UART_RxCpltCallback:00000048 $d
-     /tmp/ccEgldQz.s:398    .bss.rx_buffer_byte:00000000 rx_buffer_byte
-     /tmp/ccEgldQz.s:399    .bss.rx_buffer_byte:00000000 $d
-     /tmp/ccEgldQz.s:402    .rodata.str1.4:00000000 $d
-     /tmp/ccEgldQz.s:406    .rodata.robotMutex_attributes:00000000 $d
-     /tmp/ccEgldQz.s:414    .bss.robotMutexHandle:00000000 $d
-     /tmp/ccEgldQz.s:425    .rodata.cmdQueue_attributes:00000000 $d
-     /tmp/ccEgldQz.s:433    .bss.cmdQueueHandle:00000000 $d
-     /tmp/ccEgldQz.s:444    .rodata.dataQueue_attributes:00000000 $d
-     /tmp/ccEgldQz.s:452    .bss.dataQueueHandle:00000000 $d
-     /tmp/ccEgldQz.s:463    .rodata.motorTask_attributes:00000000 $d
-     /tmp/ccEgldQz.s:474    .bss.motorTaskHandle:00000000 $d
-     /tmp/ccEgldQz.s:485    .rodata.cmdTask_attributes:00000000 $d
-     /tmp/ccEgldQz.s:496    .bss.cmdTaskHandle:00000000 $d
-     /tmp/ccEgldQz.s:507    .rodata.usartTask_attributes:00000000 $d
-     /tmp/ccEgldQz.s:518    .bss.usartTaskHandle:00000000 $d
-     /tmp/ccEgldQz.s:529    .rodata.defaultTask_attributes:00000000 $d
-     /tmp/ccEgldQz.s:540    .bss.defaultTaskHandle:00000000 $d
-     /tmp/ccEgldQz.s:550    .bss.g_robot:00000000 g_robot
-     /tmp/ccEgldQz.s:547    .bss.g_robot:00000000 $d
-     /tmp/ccEgldQz.s:557    .data.g_sys_ctrl:00000000 g_sys_ctrl
-     /tmp/ccEgldQz.s:554    .data.g_sys_ctrl:00000000 $d
+     /tmp/cc0660ps.s:21     .text.StartDefaultTask:00000000 $t
+     /tmp/cc0660ps.s:27     .text.StartDefaultTask:00000000 StartDefaultTask
+     /tmp/cc0660ps.s:53     .text.StartUsartTask:00000000 $t
+     /tmp/cc0660ps.s:59     .text.StartUsartTask:00000000 StartUsartTask
+     /tmp/cc0660ps.s:85     .text.StartcmdTask:00000000 $t
+     /tmp/cc0660ps.s:91     .text.StartcmdTask:00000000 StartcmdTask
+     /tmp/cc0660ps.s:117    .text.StartmotorTask:00000000 $t
+     /tmp/cc0660ps.s:123    .text.StartmotorTask:00000000 StartmotorTask
+     /tmp/cc0660ps.s:149    .text._write:00000000 $t
+     /tmp/cc0660ps.s:155    .text._write:00000000 _write
+     /tmp/cc0660ps.s:188    .text._write:00000014 $d
+     /tmp/cc0660ps.s:193    .text.MX_FREERTOS_Init:00000000 $t
+     /tmp/cc0660ps.s:199    .text.MX_FREERTOS_Init:00000000 MX_FREERTOS_Init
+     /tmp/cc0660ps.s:283    .text.MX_FREERTOS_Init:00000064 $d
+     /tmp/cc0660ps.s:409    .rodata.robotMutex_attributes:00000000 robotMutex_attributes
+     /tmp/cc0660ps.s:417    .bss.robotMutexHandle:00000000 robotMutexHandle
+     /tmp/cc0660ps.s:447    .rodata.dataQueue_attributes:00000000 dataQueue_attributes
+     /tmp/cc0660ps.s:455    .bss.dataQueueHandle:00000000 dataQueueHandle
+     /tmp/cc0660ps.s:428    .rodata.cmdQueue_attributes:00000000 cmdQueue_attributes
+     /tmp/cc0660ps.s:436    .bss.cmdQueueHandle:00000000 cmdQueueHandle
+     /tmp/cc0660ps.s:532    .rodata.defaultTask_attributes:00000000 defaultTask_attributes
+     /tmp/cc0660ps.s:543    .bss.defaultTaskHandle:00000000 defaultTaskHandle
+     /tmp/cc0660ps.s:510    .rodata.usartTask_attributes:00000000 usartTask_attributes
+     /tmp/cc0660ps.s:521    .bss.usartTaskHandle:00000000 usartTaskHandle
+     /tmp/cc0660ps.s:488    .rodata.cmdTask_attributes:00000000 cmdTask_attributes
+     /tmp/cc0660ps.s:499    .bss.cmdTaskHandle:00000000 cmdTaskHandle
+     /tmp/cc0660ps.s:466    .rodata.motorTask_attributes:00000000 motorTask_attributes
+     /tmp/cc0660ps.s:477    .bss.motorTaskHandle:00000000 motorTaskHandle
+     /tmp/cc0660ps.s:305    .text.HAL_UART_RxCpltCallback:00000000 $t
+     /tmp/cc0660ps.s:311    .text.HAL_UART_RxCpltCallback:00000000 HAL_UART_RxCpltCallback
+     /tmp/cc0660ps.s:387    .text.HAL_UART_RxCpltCallback:00000048 $d
+     /tmp/cc0660ps.s:398    .bss.rx_buffer_byte:00000000 rx_buffer_byte
+     /tmp/cc0660ps.s:399    .bss.rx_buffer_byte:00000000 $d
+     /tmp/cc0660ps.s:402    .rodata.str1.4:00000000 $d
+     /tmp/cc0660ps.s:406    .rodata.robotMutex_attributes:00000000 $d
+     /tmp/cc0660ps.s:414    .bss.robotMutexHandle:00000000 $d
+     /tmp/cc0660ps.s:425    .rodata.cmdQueue_attributes:00000000 $d
+     /tmp/cc0660ps.s:433    .bss.cmdQueueHandle:00000000 $d
+     /tmp/cc0660ps.s:444    .rodata.dataQueue_attributes:00000000 $d
+     /tmp/cc0660ps.s:452    .bss.dataQueueHandle:00000000 $d
+     /tmp/cc0660ps.s:463    .rodata.motorTask_attributes:00000000 $d
+     /tmp/cc0660ps.s:474    .bss.motorTaskHandle:00000000 $d
+     /tmp/cc0660ps.s:485    .rodata.cmdTask_attributes:00000000 $d
+     /tmp/cc0660ps.s:496    .bss.cmdTaskHandle:00000000 $d
+     /tmp/cc0660ps.s:507    .rodata.usartTask_attributes:00000000 $d
+     /tmp/cc0660ps.s:518    .bss.usartTaskHandle:00000000 $d
+     /tmp/cc0660ps.s:529    .rodata.defaultTask_attributes:00000000 $d
+     /tmp/cc0660ps.s:540    .bss.defaultTaskHandle:00000000 $d
+     /tmp/cc0660ps.s:550    .data.g_robot:00000000 g_robot
+     /tmp/cc0660ps.s:547    .data.g_robot:00000000 $d
 
 UNDEFINED SYMBOLS
 osDelay
-ARM GAS  /tmp/ccEgldQz.s 			page 18
-
-
 HAL_UART_Transmit
 huart3
+ARM GAS  /tmp/cc0660ps.s 			page 18
+
+
 osMutexNew
 osMessageQueueNew
 osThreadNew

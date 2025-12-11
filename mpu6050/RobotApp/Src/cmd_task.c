@@ -20,7 +20,6 @@ void Process_Command(uint8_t func, uint8_t* payload, uint8_t len)
                 // 使用 memcpy 安全地转换类型
                 memcpy(&g_robot.target_speed_L, &payload[0], 4);
                 memcpy(&g_robot.target_speed_R, &payload[4], 4);
-                printf("Set Speed: L=%.2f R=%.2f\r\n", g_robot.target_speed_L, g_robot.target_speed_R);
             }
             break;
 
@@ -29,8 +28,6 @@ void Process_Command(uint8_t func, uint8_t* payload, uint8_t len)
                 memcpy(&g_robot.pid_vel_kp, &payload[0], 4);
                 memcpy(&g_robot.pid_vel_ki, &payload[4], 4);
                 memcpy(&g_robot.pid_vel_kd, &payload[8], 4);
-                printf("PID Update: P=%.2f I=%.2f D=%.2f\r\n", 
-                        g_robot.pid_vel_kp, g_robot.pid_vel_ki, g_robot.pid_vel_kd);
             }
             break;
             
@@ -115,5 +112,7 @@ void StartcmdTask(void *argument)
                     break;
             }
         }
+        osDelay(100);
+
     }
 }

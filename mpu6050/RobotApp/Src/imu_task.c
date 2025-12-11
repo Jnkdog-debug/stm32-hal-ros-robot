@@ -14,11 +14,11 @@ void StartDefaultTask(void *argument)
   for(;;)
     {
         // 1. 读取全局变量中的采样周期
-        uint32_t delay_time = g_sys_ctrl.sample_period;
+        uint32_t delay_time = g_robot.sample_period;
         if (delay_time < 5) delay_time = 5; // 保护一下，别太快卡死
 
         // 2. 检查是否处于运行状态
-        if (g_sys_ctrl.is_running == 1)
+        if (g_robot.is_running == 1)
         {
             MPU6050DATATYPE* p_mpu_data = (MPU6050DATATYPE*) pvPortMalloc(sizeof(Mpu6050_Data));
 

@@ -70,8 +70,7 @@ return len;
 // 全局变量的定义
 
 /* 初始化默认值: 默认运行，50ms一次 */
-SystemControl_t g_sys_ctrl = {1, 50}; 
-Robot_State_t g_robot = {0, 0.0f, 0.0f};
+Robot_State_t g_robot = {1, 50, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f};
 /* 接收缓冲区 (1字节) */
 
 
