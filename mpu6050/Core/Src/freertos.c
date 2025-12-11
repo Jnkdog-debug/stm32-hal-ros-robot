@@ -82,7 +82,7 @@ osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
   .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityAboveNormal,
 };
 /* Definitions for usartTask */
 osThreadId_t usartTaskHandle;
@@ -96,14 +96,14 @@ osThreadId_t cmdTaskHandle;
 const osThreadAttr_t cmdTask_attributes = {
   .name = "cmdTask",
   .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityAboveNormal,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for motorTask */
 osThreadId_t motorTaskHandle;
 const osThreadAttr_t motorTask_attributes = {
   .name = "motorTask",
   .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for dataQueue */
 osMessageQueueId_t dataQueueHandle;

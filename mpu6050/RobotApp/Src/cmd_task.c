@@ -112,7 +112,6 @@ void StartcmdTask(void *argument)
                     break;
             }
         }
-        osDelay(100);
 
     }
 }
