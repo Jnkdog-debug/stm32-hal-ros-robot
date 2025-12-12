@@ -77,10 +77,10 @@ Robot_State_t g_robot = {1, 50, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f};
 
 
 /* USER CODE END Variables */
-/* Definitions for defaultTask */
-osThreadId_t defaultTaskHandle;
-const osThreadAttr_t defaultTask_attributes = {
-  .name = "defaultTask",
+/* Definitions for imuTask */
+osThreadId_t imuTaskHandle;
+const osThreadAttr_t imuTask_attributes = {
+  .name = "imuTask",
   .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityAboveNormal,
 };
@@ -89,14 +89,14 @@ osThreadId_t usartTaskHandle;
 const osThreadAttr_t usartTask_attributes = {
   .name = "usartTask",
   .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityAboveNormal1,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for cmdTask */
 osThreadId_t cmdTaskHandle;
 const osThreadAttr_t cmdTask_attributes = {
   .name = "cmdTask",
   .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for motorTask */
 osThreadId_t motorTaskHandle;
@@ -126,7 +126,7 @@ const osMutexAttr_t robotMutex_attributes = {
 
 /* USER CODE END FunctionPrototypes */
 
-void StartDefaultTask(void *argument);
+void StartimuTask(void *argument);
 void StartUsartTask(void *argument);
 void StartcmdTask(void *argument);
 void StartmotorTask(void *argument);
@@ -170,8 +170,8 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  /* creation of imuTask */
+  imuTaskHandle = osThreadNew(StartimuTask, NULL, &imuTask_attributes);
 
   /* creation of usartTask */
   usartTaskHandle = osThreadNew(StartUsartTask, NULL, &usartTask_attributes);
@@ -192,22 +192,22 @@ void MX_FREERTOS_Init(void) {
 
 }
 
-/* USER CODE BEGIN Header_StartDefaultTask */
+/* USER CODE BEGIN Header_StartimuTask */
 /**
-  * @brief  Function implementing the defaultTask thread.
+  * @brief  Function implementing the imuTask thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
-__weak void StartDefaultTask(void *argument)
+/* USER CODE END Header_StartimuTask */
+__weak void StartimuTask(void *argument)
 {
-  /* USER CODE BEGIN StartDefaultTask */
+  /* USER CODE BEGIN StartimuTask */
   /* Infinite loop */
   for(;;)
-    {
-      osDelay(1);
-    }
-  /* USER CODE END StartDefaultTask */
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartimuTask */
 }
 
 /* USER CODE BEGIN Header_StartUsartTask */

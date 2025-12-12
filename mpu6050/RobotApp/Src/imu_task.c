@@ -4,7 +4,7 @@
 #include "queue.h"
 
 
-void StartDefaultTask(void *argument)
+void StartimuTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   HAL_UART_Receive_IT(&huart3, &rx_buffer_byte, 1);

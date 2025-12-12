@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccfl5pb2.s 			page 1
+ARM GAS  /tmp/cchFEOFx.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccfl5pb2.s 			page 1
   46 0002 0120     		movs	r0, #1
   47 0004 FFF7FEFF 		bl	osDelay
   48              	.LVL2:
-ARM GAS  /tmp/ccfl5pb2.s 			page 2
+ARM GAS  /tmp/cchFEOFx.s 			page 2
 
 
   49              	.LBE2:
@@ -69,13 +69,13 @@ ARM GAS  /tmp/ccfl5pb2.s 			page 1
   53              	.LFE0:
   55              		.text
   56              	.Letext0:
-ARM GAS  /tmp/ccfl5pb2.s 			page 3
+ARM GAS  /tmp/cchFEOFx.s 			page 3
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 motor_task.c
-     /tmp/ccfl5pb2.s:21     .text.StartmotorTask:00000000 $t
-     /tmp/ccfl5pb2.s:27     .text.StartmotorTask:00000000 StartmotorTask
+     /tmp/cchFEOFx.s:21     .text.StartmotorTask:00000000 $t
+     /tmp/cchFEOFx.s:27     .text.StartmotorTask:00000000 StartmotorTask
 
 UNDEFINED SYMBOLS
 osDelay

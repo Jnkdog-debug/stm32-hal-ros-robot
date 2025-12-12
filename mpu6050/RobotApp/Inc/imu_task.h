@@ -2,7 +2,7 @@
 #define IMU_TASK_H
 
 // 声明任务的主体逻辑函数
-void StartDefaultTask(void *argument);
+void StartimuTask(void *argument);
 
 
 
