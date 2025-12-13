@@ -70,7 +70,7 @@ return len;
 // 全局变量的定义
 
 /* 初始化默认值: 默认运行，50ms一次 */
-Robot_State_t g_robot = {1, 50, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f};
+Robot_State_t g_robot = {1, 50};
 /* 接收缓冲区 (1字节) */
 
 
@@ -81,29 +81,29 @@ Robot_State_t g_robot = {1, 50, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f};
 osThreadId_t imuTaskHandle;
 const osThreadAttr_t imuTask_attributes = {
   .name = "imuTask",
-  .stack_size = 512 * 4,
+  .stack_size = 600 * 4,
   .priority = (osPriority_t) osPriorityAboveNormal,
 };
 /* Definitions for usartTask */
 osThreadId_t usartTaskHandle;
 const osThreadAttr_t usartTask_attributes = {
   .name = "usartTask",
-  .stack_size = 512 * 4,
+  .stack_size = 600 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for cmdTask */
 osThreadId_t cmdTaskHandle;
 const osThreadAttr_t cmdTask_attributes = {
   .name = "cmdTask",
-  .stack_size = 512 * 4,
+  .stack_size = 600 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for motorTask */
 osThreadId_t motorTaskHandle;
 const osThreadAttr_t motorTask_attributes = {
   .name = "motorTask",
-  .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityHigh,
+  .stack_size = 1024 * 4,
+  .priority = (osPriority_t) osPriorityRealtime,
 };
 /* Definitions for dataQueue */
 osMessageQueueId_t dataQueueHandle;

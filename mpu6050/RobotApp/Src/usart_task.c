@@ -3,7 +3,7 @@
 #include "mpu6050.h"
 #include "usart.h"
 #include <string.h> // 需要 memcpy
-
+//这是发送任务
 /* 辅助函数：计算简单累加和校验 */
 uint8_t Calc_Checksum(uint8_t *data, uint8_t len) {
     uint8_t sum = 0;

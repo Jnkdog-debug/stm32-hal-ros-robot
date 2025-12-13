@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccZf5J9l.s 			page 1
+ARM GAS  /tmp/ccKMpGWI.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -34,7 +34,7 @@ ARM GAS  /tmp/ccZf5J9l.s 			page 1
    3:RobotApp/Src/usart_task.c **** #include "mpu6050.h"
    4:RobotApp/Src/usart_task.c **** #include "usart.h"
    5:RobotApp/Src/usart_task.c **** #include <string.h> // 需要 memcpy
-   6:RobotApp/Src/usart_task.c **** 
+   6:RobotApp/Src/usart_task.c **** //这是发送任务
    7:RobotApp/Src/usart_task.c **** /* 辅助函数：计算简单累加和校验 */
    8:RobotApp/Src/usart_task.c **** uint8_t Calc_Checksum(uint8_t *data, uint8_t len) {
   30              		.loc 1 8 51 view -0
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccZf5J9l.s 			page 1
   45              		.loc 1 9 13 view .LVU6
   46 0004 1846     		mov	r0, r3
   47              	.LVL2:
-ARM GAS  /tmp/ccZf5J9l.s 			page 2
+ARM GAS  /tmp/ccKMpGWI.s 			page 2
 
 
   48              	.LBB3:
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccZf5J9l.s 			page 1
   98              	.LCFI1:
   99              		.cfi_def_cfa_offset 88
  100 0004 22E0     		b	.L5
-ARM GAS  /tmp/ccZf5J9l.s 			page 3
+ARM GAS  /tmp/ccKMpGWI.s 			page 3
 
 
  101              	.LVL8:
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccZf5J9l.s 			page 1
  126              	.LVL10:
  127              		.loc 1 45 21 is_stmt 0 view .LVU27
  128 001e 0393     		str	r3, [sp, #12]
-ARM GAS  /tmp/ccZf5J9l.s 			page 4
+ARM GAS  /tmp/ccKMpGWI.s 			page 4
 
 
   46:RobotApp/Src/usart_task.c ****                     
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccZf5J9l.s 			page 1
  150 002e 04F14803 		add	r3, r4, #72
  151 0032 0DEB0304 		add	r4, sp, r3
  152 0036 04F8480C 		strb	r0, [r4, #-72]
-ARM GAS  /tmp/ccZf5J9l.s 			page 5
+ARM GAS  /tmp/ccKMpGWI.s 			page 5
 
 
   79:RobotApp/Src/usart_task.c ****                 // 发送二进制流
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccZf5J9l.s 			page 1
   27:RobotApp/Src/usart_task.c ****             
  191              		.loc 1 27 23 is_stmt 0 view .LVU50
  192 0064 5523     		movs	r3, #85
-ARM GAS  /tmp/ccZf5J9l.s 			page 6
+ARM GAS  /tmp/ccKMpGWI.s 			page 6
 
 
  193 0066 8DF80130 		strb	r3, [sp, #1]
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccZf5J9l.s 			page 1
  230              		.loc 1 72 13 is_stmt 1 view .LVU67
  231 008c C8E7     		b	.L9
  232              	.L13:
-ARM GAS  /tmp/ccZf5J9l.s 			page 7
+ARM GAS  /tmp/ccKMpGWI.s 			page 7
 
 
  233 008e 00BF     		.align	2
@@ -382,16 +382,16 @@ ARM GAS  /tmp/ccZf5J9l.s 			page 1
  252              		.file 10 "RobotApp/Inc/robot_sys.h"
  253              		.file 11 "Core/Inc/usart.h"
  254              		.file 12 "Middlewares/Third_Party/FreeRTOS/Source/include/portable.h"
-ARM GAS  /tmp/ccZf5J9l.s 			page 8
+ARM GAS  /tmp/ccKMpGWI.s 			page 8
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 usart_task.c
-     /tmp/ccZf5J9l.s:21     .text.Calc_Checksum:00000000 $t
-     /tmp/ccZf5J9l.s:27     .text.Calc_Checksum:00000000 Calc_Checksum
-     /tmp/ccZf5J9l.s:77     .text.StartUsartTask:00000000 $t
-     /tmp/ccZf5J9l.s:83     .text.StartUsartTask:00000000 StartUsartTask
-     /tmp/ccZf5J9l.s:235    .text.StartUsartTask:00000090 $d
+     /tmp/ccKMpGWI.s:21     .text.Calc_Checksum:00000000 $t
+     /tmp/ccKMpGWI.s:27     .text.Calc_Checksum:00000000 Calc_Checksum
+     /tmp/ccKMpGWI.s:77     .text.StartUsartTask:00000000 $t
+     /tmp/ccKMpGWI.s:83     .text.StartUsartTask:00000000 StartUsartTask
+     /tmp/ccKMpGWI.s:235    .text.StartUsartTask:00000090 $d
 
 UNDEFINED SYMBOLS
 HAL_UART_Transmit

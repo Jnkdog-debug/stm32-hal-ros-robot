@@ -5,54 +5,67 @@ import time
 import sys
 
 # ================= 配置区 =================
-# Windows用 'COMx', Linux用 '/dev/ttyUSB0'
+# Linux 常用端口，请根据实际情况修改
 SERIAL_PORT = '/dev/ttyACM0'  
 BAUD_RATE = 115200
 
 # ================= 协议定义 =================
-# 帧头
 HEADER = b'\xAA\x55'
-
-# 功能码
-FUNC_IMU   = 0x10
-FUNC_MOTOR = 0x20
-CMD_START  = 0x01
-CMD_STOP   = 0x02
 CMD_SPEED  = 0x10
 
 # 全局状态
 running = True
-target_vx = 0.0 # 线速度
-target_vw = 0.0 # 角速度
+target_vx = 0.0 # 线速度 (前后)
+target_vw = 0.0 # 角速度 (旋转)
+
+# 限制参数
+MAX_PWM = 100.0
+STEP_VAL = 10.0
 
 # ================= CRC 校验 =================
 def calc_checksum(data_bytes):
     return sum(data_bytes) & 0xFF
 
-# ================= 发送线程 =================
+# ================= 发送线程 (含差速解算) =================
 def send_thread(ser):
     global target_vx, target_vw
-    last_vx = 0.0
-    last_vw = 0.0
     
     print("[TX] Sending thread started...")
     
     while running:
-        # 只有当速度变化时，或者每隔一定时间发送一次心跳
-        # 这里为了简单，我们每 100ms 发送一次速度指令
+        # --- 1. 差速运动学解算 (核心修改区) ---
         
-        # 1. 构建 Payload (两个 float: linear_x, angular_z)
-        # struct.pack: 'f' 代表 float (4字节), '<' 代表小端模式
-        payload = struct.pack('<ff', target_vx, target_vw)
+        # 原始计算：假设两个电机同向安装
+        # 左轮 = 线速度 - 角速度
+        # 右轮 = 线速度 + 角速度
         
-        # 2. 构建完整帧
-        # 头(2) + 功能(1) + 长度(1) + Payload + 校验(1)
-        # ID = 0x10 (设置速度)
+        raw_l = target_vx - target_vw
+        raw_r = target_vx + target_vw
+        
+        # --- 【这里修改了！】适配你的镜像电机 ---
+        # 左轮保持不变
+        motor_l = raw_l
+        
+        # 右轮取反！(因为你的右轮装反了，正数代表后退，负数代表前进)
+        motor_r = -raw_r  
+        
+        # 结果验证：
+        # 如果前进 (vx=10, vw=0) -> raw_l=10, raw_r=10 -> 发送 L=10, R=-10 (符合你的要求)
+        # 如果左转 (vx=0, vw=10) -> raw_l=-10, raw_r=10 -> 发送 L=-10, R=-10 
+        #   (左轮-10后退，右轮-10前进 -> 也就是顺时针/逆时针 原地旋转)
+        
+        # --- 2. 限幅 ---
+        motor_l = max(-MAX_PWM, min(MAX_PWM, motor_l))
+        motor_r = max(-MAX_PWM, min(MAX_PWM, motor_r))
+        
+        # --- 3. 打包 ---
+        payload = struct.pack('<ff', motor_l, motor_r)
+        
+        # 构建完整帧
         frame_header = b'\xAA\x55'
         frame_func = bytes([CMD_SPEED])
         frame_len = bytes([len(payload)])
         
-        # 计算校验 (Func + Len + Payload)
         data_to_check = frame_func + frame_len + payload
         checksum = bytes([calc_checksum(data_to_check)])
         
@@ -60,18 +73,17 @@ def send_thread(ser):
         
         try:
             ser.write(packet)
-            # print(f"Sent Speed: X={target_vx:.2f} Z={target_vw:.2f}")
         except Exception as e:
             print(f"Serial Write Error: {e}")
             break
             
-        time.sleep(0.1) # 10Hz 发送频率
+        time.sleep(0.1)
 
 # ================= 接收解析线程 =================
 def receive_thread(ser):
     print("[RX] Receiving thread started...")
     
-    state = 0 # 0:WaitAA, 1:Wait55, 2:WaitID, 3:WaitLen, 4:WaitPayload, 5:WaitCRC
+    state = 0 
     frame_func = 0
     frame_len = 0
     payload_buffer = b''
@@ -79,68 +91,61 @@ def receive_thread(ser):
     
     while running:
         try:
-            # 读取 1 个字节
             byte = ser.read(1)
             if not byte: continue
+            val = ord(byte)
             
-            val = ord(byte) # 转成整数
-            
-            # --- 状态机 ---
-            if state == 0: # Wait Header 1
+            # --- 状态机 (校验和不含头) ---
+            if state == 0: 
                 if val == 0xAA: state = 1
-                
-            elif state == 1: # Wait Header 2
+            elif state == 1: 
                 if val == 0x55: 
                     state = 2
-                    check_sum_calc = 0 # 重置校验和
-                elif val == 0xAA: state = 1 # 特殊情况 AA AA
+                    check_sum_calc = 0 
+                elif val == 0xAA: state = 1 
                 else: state = 0
-                
-            elif state == 2: # Wait Func ID
+            elif state == 2: 
                 frame_func = val
                 check_sum_calc += val
                 state = 3
-                
-            elif state == 3: # Wait Len
+            elif state == 3: 
                 frame_len = val
                 check_sum_calc += val
                 payload_buffer = b''
-                if frame_len == 0: state = 5 # 无 Payload，直接校验
+                if frame_len == 0: state = 5 
                 else: state = 4
-                
-            elif state == 4: # Read Payload
+            elif state == 4: 
                 payload_buffer += byte
                 check_sum_calc += val
                 if len(payload_buffer) == frame_len:
                     state = 5
-                    
-            elif state == 5: # Check CRC
+            elif state == 5: 
                 received_crc = val
                 final_crc = check_sum_calc & 0xFF
                 
                 if received_crc == final_crc:
-                    # --- 校验通过，开始解包 ---
                     parse_packet(frame_func, payload_buffer)
-                else:
-                    print(f"CRC Error! Calc:{final_crc:02X} Recv:{received_crc:02X}")
+                # else:
+                #     print(f"CRC Error!", flush=True) # 调试时可打开
                 
-                state = 0 # 回到开头
+                state = 0 
                 
         except Exception as e:
             print(f"Serial Read Error: {e}")
             break
 
 def parse_packet(func, data):
-    # 根据你的 usart_task.c 里的协议解包
-    if func == 0x10: # IMU 数据 (3 floats: ax, ay, az)
+    # 记得加 flush=True 防止卡死
+    if func == 0x10: 
         if len(data) == 12:
             ax, ay, az = struct.unpack('<fff', data)
-            print(f"\r[IMU] Accel: X={ax:6.2f} Y={ay:6.2f} Z={az:6.2f}", end='')
+            print(f"\r[IMU] Z={az:4.2f}", end='', flush=True)
             
-    elif func == 0x20: # 电机数据 (2 floats: L, R)
+    elif func == 0x20: 
         if len(data) == 8:
             sp_l, sp_r = struct.unpack('<ff', data)
-            print(f" | [Motor] L={sp_l:6.2f} R={sp_r:6.2f}", end='')
+            # 只显示一位小数，看起来清爽点
+            print(f" | [M] L={sp_l:6.0f} R={sp_r:6.0f}", end='', flush=True)
 
 # ================= 主程序 =================
 def main():
@@ -148,57 +153,47 @@ def main():
     
     try:
         ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=0.1)
-        print(f"Connected to {SERIAL_PORT} at {BAUD_RATE}")
+        print(f"Connected to {SERIAL_PORT}")
     except Exception as e:
-        print(f"Could not open port: {e}")
+        print(f"Error: {e}")
         return
 
-    # 启动收发线程
     t_rx = threading.Thread(target=receive_thread, args=(ser,))
     t_tx = threading.Thread(target=send_thread, args=(ser,))
     t_rx.start()
     t_tx.start()
     
-    print("\n=== Robot Control Panel ===")
-    print(" [W] Accelerate")
-    print(" [S] Decelerate / Reverse")
-    print(" [A] Turn Left")
-    print(" [D] Turn Right")
-    print(" [Space] STOP")
-    print(" [Q] Quit")
+    print("\n=== Linux Robot Control ===")
+    print(" Enter command and press ENTER:")
+    print(" w: Forward (+10)")
+    print(" s: Backward (-10)")
+    print(" a: Left (+10 spin)")
+    print(" d: Right (-10 spin)")
+    print(" x: STOP (0,0)")
+    print(" q: Quit")
     print("===========================\n")
 
-    # 简单的键盘监听循环 (Windows/Linux 通用性较差，这里用 input 模拟简单指令)
-    # 为了更好的交互，可以使用 keyboard 库，但这里为了不依赖库，使用简易版
-    try:
-        import msvcrt # Windows Only for key detection
-        while running:
-            if msvcrt.kbhit():
-                key = msvcrt.getch().decode('utf-8').lower()
-                
-                if key == 'w': target_vx += 0.1
-                elif key == 's': target_vx -= 0.1
-                elif key == 'a': target_vw += 0.5
-                elif key == 'd': target_vw -= 0.5
-                elif key == ' ': target_vx = 0; target_vw = 0
-                elif key == 'q': running = False
-                
-                # 限制幅度
-                target_vx = max(-2.0, min(2.0, target_vx))
-                
-                print(f"\n>> Cmd: Vx={target_vx:.1f}, Vw={target_vw:.1f}")
-                
-            time.sleep(0.05)
+    # Linux 简易输入循环
+    while running:
+        try:
+            cmd = input().lower().strip() # 等待用户输入并回车
             
-    except ImportError:
-        # Linux / Mac 用户如果没有 msvcrt
-        print("Non-Windows system detected. Input mode:")
-        while running:
-            cmd = input("Enter (w/s/a/d/q): ")
-            if cmd == 'w': target_vx += 0.5
-            elif cmd == 's': target_vx -= 0.5
+            if cmd == 'w': target_vx += STEP_VAL
+            elif cmd == 's': target_vx -= STEP_VAL
+            elif cmd == 'a': target_vw += STEP_VAL # 左转增加角速度
+            elif cmd == 'd': target_vw -= STEP_VAL # 右转减小角速度
+            elif cmd == 'x': target_vx = 0; target_vw = 0
             elif cmd == 'q': running = False
-            # ...
+            
+            # 限制幅度
+            target_vx = max(-MAX_PWM, min(MAX_PWM, target_vx))
+            target_vw = max(-MAX_PWM, min(MAX_PWM, target_vw))
+            
+            # 打印当前目标状态
+            print(f"\n[SET] Vx={target_vx} Vw={target_vw}")
+            
+        except EOFError:
+            break
 
     running = False
     ser.close()

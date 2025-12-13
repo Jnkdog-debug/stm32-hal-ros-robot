@@ -25,11 +25,7 @@ typedef struct {
     float pid_integral;
     float pid_last_error;
 } MotorControl_t;
-
 extern MotorControl_t Motor_A ;
-extern MotorControl_t Motor_B;
-extern MotorControl_t Motor_C;
-extern MotorControl_t Motor_D;
 
 void Motor_Init(MotorControl_t* motor);
 void Motor_SetPWM(MotorControl_t* motor, int16_t duty);

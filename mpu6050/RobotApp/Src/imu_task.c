@@ -2,7 +2,7 @@
 #include "mpu6050.h"
 #include "robot_sys.h"
 #include "queue.h"
-
+#include <stdio.h>
 
 void StartimuTask(void *argument)
 {

@@ -2,7 +2,7 @@
 #include "robot_sys.h"
 #include "stdio.h" 
 #include <string.h> // 用于 memcpy 
-
+//这是接收任务
 //命令解析函数
 void Process_Command(uint8_t func, uint8_t* payload, uint8_t len)
 {
@@ -18,16 +18,16 @@ void Process_Command(uint8_t func, uint8_t* payload, uint8_t len)
         case 0x10: // 设置目标速度 (2个 float = 8字节)
             if (len == 8) {
                 // 使用 memcpy 安全地转换类型
-                memcpy(&g_robot.target_speed_L, &payload[0], 4);
-                memcpy(&g_robot.target_speed_R, &payload[4], 4);
+                memcpy(&g_robot.speed_L, &payload[0], 4);
+                memcpy(&g_robot.speed_R, &payload[4], 4);
             }
             break;
 
         case 0x11: // 设置 PID (3个 float = 12字节)
             if (len == 12) {
-                memcpy(&g_robot.pid_vel_kp, &payload[0], 4);
-                memcpy(&g_robot.pid_vel_ki, &payload[4], 4);
-                memcpy(&g_robot.pid_vel_kd, &payload[8], 4);
+                // memcpy(&g_robot.pid_vel_kp, &payload[0], 4);
+                // memcpy(&g_robot.pid_vel_ki, &payload[4], 4);
+                // memcpy(&g_robot.pid_vel_kd, &payload[8], 4);
             }
             break;
             

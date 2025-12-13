@@ -35,11 +35,20 @@ typedef struct {
 typedef struct {
     uint8_t is_running;
     uint32_t sample_period;  // 采样周期 (ms)
-    float target_speed_L;
-    float target_speed_R;
-    float pid_vel_kp;
-    float pid_vel_ki;
-    float pid_vel_kd;
+    
+    float speed_L;
+    float speed_R;
+    int32_t encoder_L;
+    int32_t encoder_R;
+    // float target_speed_L;
+    // float target_speed_R;
+    // float current_speed_L;
+    // float current_speed_R;
+
+    
+    // float pid_vel_kp;
+    // float pid_vel_ki;
+    // float pid_vel_kd;
     // ... 其他变量
 } Robot_State_t;
 
