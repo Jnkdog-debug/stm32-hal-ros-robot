@@ -8,36 +8,15 @@ MotorControl_t Motor_A = {
     .pwm_channel1 = TIM_CHANNEL_1,
     .pwm_timo2 = &htim11,
     .pwm_channel2 = TIM_CHANNEL_1,
-    .encoder_tim = &htim2,
-    .kp = 0.5f,
-    .ki = 0.2f,
-    .kd = 0.05f
+    .encoder_tim = &htim3,
+    .encoder_direction = 1,   // Motor_A 编码器正向
+    .kp = 5.0f,
+    .ki = 0.05f,
+    .kd = 0.1f
 };
 
 
-// 电机 B: PWM (TIM9_CH1/CH2), 编码器 (TIM3)
-MotorControl_t Motor_B = {
-    .pwm_timo1 = &htim9, 
-    .pwm_channel1 = TIM_CHANNEL_1,
-    .pwm_timo2 = &htim9, 
-    .pwm_channel2 = TIM_CHANNEL_2,
-    .encoder_tim = &htim3, 
-    .kp = 0.5f,
-    .ki = 0.2f,
-    .kd = 0.05f
-};
 
-// 电机 C: PWM (TIM1_CH1/CH2), 编码器 (TIM4)
-MotorControl_t Motor_C = {
-    .pwm_timo1 = &htim1, 
-    .pwm_channel1 = TIM_CHANNEL_1,
-    .pwm_timo2 = &htim1, 
-    .pwm_channel2 = TIM_CHANNEL_2,
-    .encoder_tim = &htim4, 
-    .kp = 0.5f,
-    .ki = 0.2f,
-    .kd = 0.05f
-};
 
 // 电机 D: PWM (TIM1_CH3/CH4), 编码器 (TIM5)
 MotorControl_t Motor_D = {
@@ -46,9 +25,10 @@ MotorControl_t Motor_D = {
     .pwm_timo2 = &htim1, 
     .pwm_channel2 = TIM_CHANNEL_4,
     .encoder_tim = &htim5, 
-    .kp = 0.5f,
-    .ki = 0.2f,
-    .kd = 0.05f
+    .encoder_direction = 1,  // Motor_D 编码器反向（需要取反）
+    .kp = 5.0f,
+    .ki = 0.05f,
+    .kd = 0.1f
 };
 
 
@@ -60,6 +40,7 @@ void Motor_Init(MotorControl_t* motor)
 
     __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+    motor->last_raw_value = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
 }
 
 
@@ -85,44 +66,78 @@ void Motor_Encoder_Init(MotorControl_t* motor) {
     motor->encoder_last = 0;
     motor->duty_rpm = 0;
     motor->target_rpm = 0;
-    motor->pid_integral = 0.0f;
+    motor->pid_prev_error = 0.0f;
     motor->pid_last_error = 0.0f;
+    motor->pid_integral = 0.0f;
+    motor->pid_out = 0.0f;
 
     HAL_TIM_Encoder_Start(motor->encoder_tim, TIM_CHANNEL_ALL);
 }
 
-/*读取编码器数值*/
-int32_t Motor_Encoder_Read(MotorControl_t* motor) {
-    int32_t encoder_value = __HAL_TIM_GET_COUNTER(motor->encoder_tim);
-    return encoder_value;    
-    // int32_t delta = encoder_value - motor->encoder_last;
-    // motor->encoder_last = encoder_value;
 
-    // // 计算当前速度（RPM）
-    // motor->duty_rpm = delta;  // 根据编码器的计数值计算速度
-    // return motor->duty_rpm;
+
+
+
+
+// 修正后的配置参数
+#define ENCODER_PPR       13.0f   
+#define MULTIPLIER        4.0f    
+#define GEAR_RATIO        20.0f   
+#define SAMPLE_TIME_S     0.01f   // 必须与 Task 的 10ms 匹配！
+
+int32_t Motor_Encoder_Update(MotorControl_t* motor) {
+    // 1. 获取硬件原始值
+    uint16_t now = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
+    
+    // 2. 计算差值
+    int16_t delta = (int16_t)(now - motor->last_raw_value);
+    
+    // 3. 根据编码器方向调整脉冲值
+    delta *= motor->encoder_direction;
+    
+    // 4. 更新总脉冲
+    motor->total_count += delta;
+    
+    // 5. 计算当前 RPM
+    // 逻辑：(脉冲数 / 每转总脉冲) / 时间 = 转/秒，再 * 60 = 转/分
+    // 别忘了除以减速比才是轮子的输出转速
+    float pulses_per_rev = ENCODER_PPR * MULTIPLIER * GEAR_RATIO;
+    motor->duty_rpm = ((float)delta / pulses_per_rev) * (60.0f / SAMPLE_TIME_S);
+
+    // 6. 更新旧值
+    motor->last_raw_value = now;
+    
+    return motor->total_count;
 }
 
 
+int16_t Incremental_PID(MotorControl_t* motor, float target) {
+    if (target == 0 && motor->duty_rpm == 0) {
+        motor->pid_out = 0;
+        motor->pid_last_error = 0;
+        motor->pid_prev_error = 0;
+        motor->pid_integral = 0;
+        return 0;
+    }
 
-// 配置参数
-#define ENCODER_PPR      13       // 编码器原始 PPR
-#define MULTIPLIER       4        // 倍频数（你现在是 TIM_ENCODERMODE_TI12）
-#define GEAR_RATIO       20.0f    // 减速比
-#define SAMPLE_TIME_S    0.1f     // 采样时间，单位秒
-
-void Motor_Encoder_SpeedUpdate(MotorControl_t* motor)
-{
-    uint32_t now = __HAL_TIM_GET_COUNTER(motor->encoder_tim);
-    int32_t delta = (int32_t)(now - motor->encoder_last);
-    motor->encoder_last = now;
-
-    // 一圈多少个计数？
-    const  float pulses_per_rev = ENCODER_PPR * MULTIPLIER;  // 13 * 4 = 52
-    float rpm = (delta / pulses_per_rev) * (60.0f / SAMPLE_TIME_S);  // 电机原轴 RPM
-
-    // 如果想要的是减速后的输出轴速度，需除以减速比
-    motor->duty_rpm = rpm / GEAR_RATIO;
-
+    float error = target - motor->duty_rpm;
+    
+    // 增量式PID计算：Δu(k) = Kp*[e(k)-e(k-1)] + Ki*e(k) + Kd*[e(k)-2*e(k-1)+e(k-2)]
+    // 注意：积分项直接用 error，不要累积！
+    // ✅ 正确：积分项只乘以当前误差，不累积
+    float increment = motor->kp * (error - motor->pid_last_error) + 
+                      motor->ki * error +  // ← 只是 error，不是 pid_integral
+                      motor->kd * (error - 2 * motor->pid_last_error + motor->pid_prev_error);
+                      
+    motor->pid_out += increment;
+    
+    // 更新误差历史
+    motor->pid_prev_error = motor->pid_last_error;
+    motor->pid_last_error = error;
+    
+    // --- 限幅对应 ARR=999 ---
+    if (motor->pid_out > 950)  motor->pid_out = 950;
+    if (motor->pid_out < -950) motor->pid_out = -950;
+    
+    return (int16_t)motor->pid_out;
 }
-

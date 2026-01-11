@@ -16,22 +16,29 @@ typedef struct {
 
 
     TIM_HandleTypeDef* encoder_tim;
+    int8_t encoder_direction;  // 编码器方向标志: 1=正向, -1=反向
 
     int32_t encoder_last;
+    int32_t total_count;    // 自开机以来的总脉冲数（考虑正反转）
+    int16_t last_raw_value; // 记录上一次定时器的原始计数值
     float duty_rpm;     // 当前速度
     float target_rpm;    // 目标速度
 
     float kp, ki, kd;
     float pid_integral;
     float pid_last_error;
+    float pid_prev_error;
+    float pid_out;
+
 } MotorControl_t;
-extern MotorControl_t Motor_A ;
+
+
+
 
 void Motor_Init(MotorControl_t* motor);
 void Motor_SetPWM(MotorControl_t* motor, int16_t duty);
 void Motor_Encoder_Init(MotorControl_t* motor);
-int32_t Motor_Encoder_Read(MotorControl_t* motor);
-void Motor_Encoder_SpeedUpdate(MotorControl_t* motor);
-void Motor_PID_Control(MotorControl_t* motor);
+int32_t Motor_Encoder_Update(MotorControl_t* motor);
+int16_t Incremental_PID(MotorControl_t* motor, float target);
 
 #endif

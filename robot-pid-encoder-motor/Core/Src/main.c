@@ -117,7 +117,7 @@ int last_cnt = 0;
   /*正反转测试*/
    Motor_SetPWM(&Motor_A, 100);
    HAL_Delay(2000);
-   Motor_SetPWM(&Motor_A, -10);
+   Motor_SetPWM(&Motor_A, -100);
    HAL_Delay(2000);
 
   /*编码器数值读取测试*/

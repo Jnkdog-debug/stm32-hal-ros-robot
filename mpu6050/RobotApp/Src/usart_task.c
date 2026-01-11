@@ -37,30 +37,46 @@ void StartUsartTask(void *argument)
                     MPU6050DATATYPE* p_imu = (MPU6050DATATYPE*)recv_msg.p_data;
                     
                     tx_buf[2] = 0x10; // 功能码: IMU
-                    tx_buf[3] = 12;   // 长度: 3个float
                     
-                    // 打包 payload
-                    memcpy(&tx_buf[4], &p_imu->Accel_X, 4);
-                    memcpy(&tx_buf[8], &p_imu->Accel_Y, 4);
+                    // 【修改点 1】长度改为 24 (6个 float * 4字节)
+                    // 原来只发加速度是 12，现在加上角速度是 24
+                    tx_buf[3] = 24;   
+                    
+                    // --- 打包加速度 (Accel) ---
+                    memcpy(&tx_buf[4],  &p_imu->Accel_X, 4);
+                    memcpy(&tx_buf[8],  &p_imu->Accel_Y, 4);
                     memcpy(&tx_buf[12], &p_imu->Accel_Z, 4);
                     
-                    payload_len = 12;
+                    // --- 【修改点 2】打包角速度 (Gyro) ---
+                    // 紧接着加速度后面存放
+                    memcpy(&tx_buf[16], &p_imu->Gyro_X, 4);
+                    memcpy(&tx_buf[20], &p_imu->Gyro_Y, 4);
+                    memcpy(&tx_buf[24], &p_imu->Gyro_Z, 4);
+                    
+                    payload_len = 24;
                     break;
                 }
                 
                 case MSG_TYPE_MOTOR:
                 {
-                    // 把 void* 强转回 电机 指针
                     MotorData_t* p_motor = (MotorData_t*)recv_msg.p_data;
                     
-                    tx_buf[2] = 0x20; // 功能码: 电机
-                    tx_buf[3] = 8;    // 长度: 2个float
+                    tx_buf[2] = 0x20; // 功能码
                     
-                    // 打包 payload
-                    memcpy(&tx_buf[4], &p_motor->speed_L, 4);
-                    memcpy(&tx_buf[8], &p_motor->speed_R, 4);
+                    // 【修改点1】长度改为 16 字节 (4个变量 * 4字节)
+                    tx_buf[3] = 16;   
                     
-                    payload_len = 8;
+                    // 【修改点2】依次打包 4 个数据
+                    // 偏移 4: 左脉冲 (int)
+                    memcpy(&tx_buf[4],  &p_motor->count_L, 4);
+                    // 偏移 8: 右脉冲 (int)
+                    memcpy(&tx_buf[8],  &p_motor->count_R, 4);
+                    // 偏移 12: 左速度 (float)
+                    memcpy(&tx_buf[12], &p_motor->speed_L,   4);
+                    // 偏移 16: 右速度 (float)
+                    memcpy(&tx_buf[16], &p_motor->speed_R,   4);
+                    
+                    payload_len = 16;
                     break;
                 }
                 

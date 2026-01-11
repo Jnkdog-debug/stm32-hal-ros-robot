@@ -17,65 +17,86 @@ extern MotorControl_t Motor_D;
 
 void StartmotorTask(void *argument)
 {
-    // --- 1. 初始化阶段 ---
-    // 确保 Motor_Encoder_Init 函数已包含 HAL_TIM_Encoder_Start()
+    // --- 1. 初始化 ---
     Motor_Init(&Motor_A);
     Motor_Init(&Motor_D); 
-
     Motor_Encoder_Init(&Motor_A);
     Motor_Encoder_Init(&Motor_D);
 
-
-
     uint8_t debug_counter = 0;
-    
-    TickType_t xLastWakeTime;
-    xLastWakeTime = xTaskGetTickCount();
-    float speed_L = 0.0f;
-    float speed_R = 0.0f;
+    TickType_t xLastWakeTime = xTaskGetTickCount();
 
-    int32_t encoder_count_L = 0;
-    int32_t encoder_count_R = 0;
+    // 局部变量：目标速度
+    float target_L = 0.0f;
+    float target_R = 0.0f;
 
     for(;;)
     {
-        // 从全局命令中读取目标速度（上位机通过 cmdTask 写入 g_robot.speed_*）
+        // --- 2. 获取上位机下方的目标速度 (RPM) ---
         osMutexAcquire(robotMutexHandle, osWaitForever);
         {
-            speed_L = g_robot.speed_L;
-            speed_R = g_robot.speed_R;
+            target_L = g_robot.speed_L; // 假设上位机发来的是目标 RPM
+            target_R = g_robot.speed_R;
         }
         osMutexRelease(robotMutexHandle);
-        
-        
-        
-    
-        Motor_SetPWM(&Motor_A, speed_L);
-        Motor_SetPWM(&Motor_D, speed_R);
-        encoder_count_L = Motor_Encoder_Read(&Motor_A);
-        encoder_count_R = Motor_Encoder_Read(&Motor_D);
 
-        // 更新全局编码器值，供其他任务使用（例如上位机查询或日志）
+        // --- 3. 刷新编码器数据 (计算位移 + 当前转速) ---
+        // 注意：这里调用你重构后的函数，它会更新 total_count 和 duty_rpm
+        Motor_Encoder_Update(&Motor_A); 
+        Motor_Encoder_Update(&Motor_D);
+    
+
+        // --- 4. PID 闭环计算 ---
+        int16_t out_pwm_L = 0;
+        int16_t out_pwm_R = 0;
+
+        if (target_L == 0 && target_R == 0) {
+            // 停机逻辑：如果目标是0，直接关断输出并清空PID，防止电机震荡
+            out_pwm_L = 0;
+            out_pwm_R = 0;
+            Motor_A.pid_out = 0; Motor_A.pid_last_error = 0; Motor_A.pid_prev_error = 0;
+            Motor_D.pid_out = 0; Motor_D.pid_last_error = 0; Motor_D.pid_prev_error = 0;
+        } else {
+            // 运行 PID
+            out_pwm_L = Incremental_PID(&Motor_A, target_L);
+            out_pwm_R = Incremental_PID(&Motor_D, target_R);
+        }
+
+         // --- 5. 执行硬件控制 ---
+        Motor_SetPWM(&Motor_A, out_pwm_L);
+        Motor_SetPWM(&Motor_D, out_pwm_R);
+
+              // --- 5. 执行硬件控制 ---
+        //Motor_SetPWM(&Motor_A, 1000);
+        //Motor_SetPWM(&Motor_D, 1000);
+
+
+
+        // --- 6. 更新全局状态 (给串口发送任务使用) ---
         osMutexAcquire(robotMutexHandle, osWaitForever);
         {
-            g_robot.encoder_L = encoder_count_L;
-            g_robot.encoder_R = encoder_count_R;
+            g_robot.encoder_L = Motor_A.total_count; // 发送总脉冲，上位机算里程
+            g_robot.encoder_R = Motor_D.total_count;
+            // 顺便记录一下当前实际速度，方便在香橙派上 debug PID 曲线
+            g_robot.current_speed_L = Motor_A.duty_rpm; 
+            g_robot.current_speed_R = Motor_D.duty_rpm;
         }
         osMutexRelease(robotMutexHandle);
         
-        
-        
-        if (++debug_counter >= 10) 
+        // --- 7. 发送调试数据到串口 ---
+        if (++debug_counter >= 10) // 100ms 发送一次
         {
             debug_counter = 0;
-
             MotorData_t* p_data = pvPortMalloc(sizeof(MotorData_t));
             if (p_data != NULL)
             {
-                // 这里使用编码器计数作为反馈（以 float 形式发送）
-                p_data->speed_L = encoder_count_L;
-                p_data->speed_R = encoder_count_R;
+                p_data->speed_L = Motor_A. duty_rpm;// 给上位机发脉冲总数
+                p_data->speed_R = Motor_D.duty_rpm;
                 
+                p_data->count_L   = Motor_A.total_count;
+                p_data->count_R   = Motor_D.total_count;
+
+
                 TxMessage_t msg;
                 msg.type = MSG_TYPE_MOTOR;
                 msg.p_data = p_data;
@@ -86,7 +107,7 @@ void StartmotorTask(void *argument)
             }
          }
 
-        // --- 6. 精准控制周期 ---
+        // --- 8. 等待下一个 10ms 周期 ---
         vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(MOTOR_CTRL_PERIOD_MS));
     }
 }

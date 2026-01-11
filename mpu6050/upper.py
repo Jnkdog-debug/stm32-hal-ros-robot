@@ -1,205 +1,193 @@
 import serial
 import struct
-import threading
 import time
+import threading
 import sys
+import math
 
-# ================= 配置区 =================
-# Linux 常用端口，请根据实际情况修改
+# ================= 🤖 机器人物理参数配置 =================
+# 轮子直径 (米)
+WHEEL_DIAMETER = 0.047  
+# 两个轮子中心的间距 (米)
+WHEEL_BASE = 0.150      
+# 右轮是否需要反向？ (True: 直行时 右轮给负数 / False: 直行时 右轮给正数)
+# 因为你是相对安装，如果左轮向前是正，右轮向前通常需要是负
+RIGHT_WHEEL_INVERSE = True 
+
+# ================= 串口配置 =================
 SERIAL_PORT = '/dev/ttyACM0'  
 BAUD_RATE = 115200
+# ===========================================
 
-# ================= 协议定义 =================
-HEADER = b'\xAA\x55'
-CMD_SPEED  = 0x10
+class RobotKinematics:
+    """ 运动学解算类：负责将 m/s 转换为 RPM """
+    def __init__(self, diameter, base, right_inverse=False):
+        self.d = diameter
+        self.l = base
+        self.right_inverse = right_inverse
 
-# 全局状态
-running = True
-target_vx = 0.0 # 线速度 (前后)
-target_vw = 0.0 # 角速度 (旋转)
+    def inverse_kinematics(self, linear_vel, angular_vel):
+        """
+        输入: 线速度(m/s), 角速度(rad/s)
+        输出: 左轮RPM, 右轮RPM
+        """
+        # 1. 计算左右轮的线速度 (m/s)
+        # v_left  = v - (w * L) / 2
+        # v_right = v + (w * L) / 2
+        vel_l = linear_vel - (angular_vel * self.l) / 2.0
+        vel_r = linear_vel + (angular_vel * self.l) / 2.0
 
-# 限制参数
-MAX_PWM = 100.0
-STEP_VAL = 10.0
+        # 2. 将线速度转换为 RPM
+        # RPM = (Vel / (PI * D)) * 60
+        rpm_l = (vel_l / (math.pi * self.d)) * 60.0
+        rpm_r = (vel_r / (math.pi * self.d)) * 60.0
 
-# ================= CRC 校验 =================
-def calc_checksum(data_bytes):
-    return sum(data_bytes) & 0xFF
+        # 3. 处理右轮反向问题
+        if self.right_inverse:
+            rpm_r = -rpm_r
 
-# ================= 发送线程 (含差速解算) =================
-def send_thread(ser):
-    global target_vx, target_vw
-    
-    print("[TX] Sending thread started...")
-    
-    while running:
-        # --- 1. 差速运动学解算 (核心修改区) ---
-        
-        # 原始计算：假设两个电机同向安装
-        # 左轮 = 线速度 - 角速度
-        # 右轮 = 线速度 + 角速度
-        
-        raw_l = target_vx - target_vw
-        raw_r = target_vx + target_vw
-        
-        # --- 【这里修改了！】适配你的镜像电机 ---
-        # 左轮保持不变
-        motor_l = raw_l
-        
-        # 右轮取反！(因为你的右轮装反了，正数代表后退，负数代表前进)
-        motor_r = -raw_r  
-        
-        # 结果验证：
-        # 如果前进 (vx=10, vw=0) -> raw_l=10, raw_r=10 -> 发送 L=10, R=-10 (符合你的要求)
-        # 如果左转 (vx=0, vw=10) -> raw_l=-10, raw_r=10 -> 发送 L=-10, R=-10 
-        #   (左轮-10后退，右轮-10前进 -> 也就是顺时针/逆时针 原地旋转)
-        
-        # --- 2. 限幅 ---
-        motor_l = max(-MAX_PWM, min(MAX_PWM, motor_l))
-        motor_r = max(-MAX_PWM, min(MAX_PWM, motor_r))
-        
-        # --- 3. 打包 ---
-        payload = struct.pack('<ff', motor_l, motor_r)
-        
-        # 构建完整帧
-        frame_header = b'\xAA\x55'
-        frame_func = bytes([CMD_SPEED])
-        frame_len = bytes([len(payload)])
-        
-        data_to_check = frame_func + frame_len + payload
-        checksum = bytes([calc_checksum(data_to_check)])
-        
-        packet = frame_header + data_to_check + checksum
+        return rpm_l, rpm_r
+
+class RobotDashboard:
+    def __init__(self, port, baud):
+        self.running = True
+        self.ser = None
+        self.kinematics = RobotKinematics(WHEEL_DIAMETER, WHEEL_BASE, RIGHT_WHEEL_INVERSE)
         
         try:
-            ser.write(packet)
+            self.ser = serial.Serial(port, baud, timeout=0.02)
+            print(f"✅ 串口已打开: {port} @ {baud}")
+            print(f"⚙️  参数加载: 轮径={WHEEL_DIAMETER}m, 轮距={WHEEL_BASE}m")
+            if RIGHT_WHEEL_INVERSE:
+                print("⚠️  注意: 已启用右轮反向模式 (Right Wheel Inverted)")
         except Exception as e:
-            print(f"Serial Write Error: {e}")
-            break
-            
-        time.sleep(0.1)
+            print(f"❌ 串口打开失败: {e}")
+            sys.exit(1)
 
-# ================= 接收解析线程 =================
-def receive_thread(ser):
-    print("[RX] Receiving thread started...")
-    
-    state = 0 
-    frame_func = 0
-    frame_len = 0
-    payload_buffer = b''
-    check_sum_calc = 0
-    
-    while running:
+        self.t_recv = threading.Thread(target=self._receive_loop, daemon=True)
+        self.t_recv.start()
+
+    def _receive_loop(self):
+        buffer = b''
+        while self.running:
+            try:
+                if self.ser.in_waiting:
+                    buffer += self.ser.read(self.ser.in_waiting)
+                
+                while b'\xAA\x55' in buffer:
+                    idx = buffer.find(b'\xAA\x55')
+                    buffer = buffer[idx:]
+                    if len(buffer) < 4: break 
+                    
+                    func = buffer[2]
+                    length = buffer[3]
+                    total_frame_len = 4 + length + 1
+                    if len(buffer) < total_frame_len: break 
+                    
+                    payload = buffer[4 : 4+length]
+                    checksum_recv = buffer[4+length]
+                    checksum_calc = (func + length + sum(payload)) & 0xFF
+                    
+                    if checksum_calc == checksum_recv:
+                        self._parse_payload(func, payload)
+                        
+                    buffer = buffer[total_frame_len:]
+                time.sleep(0.005)
+            except Exception as e:
+                print(f"\n[串口错误] {e}")
+                time.sleep(1)
+
+    def _parse_payload(self, func, data):
+        """ 解析具体的数据包 """
+        
+        # --- 1. IMU 数据解析 (功能码 0x10) ---
+        # 长度必须是 24 字节 (6个 float)
+        if func == 0x10 and len(data) == 24:
+            try:
+                # 解析 6 个浮点数
+                # ax, ay, az: 加速度
+                # gx, gy, gz: 角速度
+                ax, ay, az, gx, gy, gz = struct.unpack('<ffffff', data)
+                
+                # 打印显示 (只显示 Z轴角速度，因为这是机器人航向角最关键的数据)
+                print(f"\r🧭 [IMU] Acc_X:{ax:>5.2f} | Gyro_Z:{gz:>6.2f} rad/s ", end='', flush=True)
+            except struct.error:
+                pass
+
+        # --- 2. 电机数据解析 (功能码 0x20) ---
+        elif func == 0x20 and len(data) == 16:
+            try:
+                cnt_l, cnt_r, rpm_l, rpm_r = struct.unpack('<iiff', data)
+                print(f" | 🏎️ [L] {rpm_l:>5.1f} [R] {rpm_r:>5.1f} RPM   ", end='', flush=True)
+            except struct.error:
+                pass
+
+    def send_target_rpm(self, l_rpm, r_rpm):
+        """ 发送计算好的 RPM 给下位机 """
         try:
-            byte = ser.read(1)
-            if not byte: continue
-            val = ord(byte)
-            
-            # --- 状态机 (校验和不含头) ---
-            if state == 0: 
-                if val == 0xAA: state = 1
-            elif state == 1: 
-                if val == 0x55: 
-                    state = 2
-                    check_sum_calc = 0 
-                elif val == 0xAA: state = 1 
-                else: state = 0
-            elif state == 2: 
-                frame_func = val
-                check_sum_calc += val
-                state = 3
-            elif state == 3: 
-                frame_len = val
-                check_sum_calc += val
-                payload_buffer = b''
-                if frame_len == 0: state = 5 
-                else: state = 4
-            elif state == 4: 
-                payload_buffer += byte
-                check_sum_calc += val
-                if len(payload_buffer) == frame_len:
-                    state = 5
-            elif state == 5: 
-                received_crc = val
-                final_crc = check_sum_calc & 0xFF
-                
-                if received_crc == final_crc:
-                    parse_packet(frame_func, payload_buffer)
-                # else:
-                #     print(f"CRC Error!", flush=True) # 调试时可打开
-                
-                state = 0 
-                
+            header = b'\xAA\x55'
+            func = 0x10
+            payload = struct.pack('<ff', float(l_rpm), float(r_rpm))
+            length = len(payload)
+            checksum = (func + length + sum(payload)) & 0xFF
+            packet = header + bytes([func, length]) + payload + bytes([checksum])
+            self.ser.write(packet)
         except Exception as e:
-            print(f"Serial Read Error: {e}")
-            break
+            print(f"\n❌ 发送失败: {e}")
 
-def parse_packet(func, data):
-    # 记得加 flush=True 防止卡死
-    if func == 0x10: 
-        if len(data) == 12:
-            ax, ay, az = struct.unpack('<fff', data)
-            print(f"\r[IMU] Z={az:4.2f}", end='', flush=True)
-            
-    elif func == 0x20: 
-        if len(data) == 8:
-            sp_l, sp_r = struct.unpack('<ff', data)
-            # 只显示一位小数，看起来清爽点
-            print(f" | [M] L={sp_l:6.0f} R={sp_r:6.0f}", end='', flush=True)
+    def send_motion_command(self, v, w):
+        """ 发送运动学命令 (m/s, rad/s) """
+        rpm_l, rpm_r = self.kinematics.inverse_kinematics(v, w)
+        # 限制最大 RPM 防止飞车 (假设最大 400 RPM)
+        MAX_RPM = 900.0
+        rpm_l = max(min(rpm_l, MAX_RPM), -MAX_RPM)
+        rpm_r = max(min(rpm_r, MAX_RPM), -MAX_RPM)
+        
+        self.send_target_rpm(rpm_l, rpm_r)
+        print(f"\n>>> 运动指令: v={v} m/s, w={w} rad/s  -->  L={rpm_l:.1f}, R={rpm_r:.1f} RPM")
+
+    def close(self):
+        self.running = False
+        if self.ser:
+            self.ser.close()
 
 # ================= 主程序 =================
-def main():
-    global running, target_vx, target_vw
-    
-    try:
-        ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=0.1)
-        print(f"Connected to {SERIAL_PORT}")
-    except Exception as e:
-        print(f"Error: {e}")
-        return
-
-    t_rx = threading.Thread(target=receive_thread, args=(ser,))
-    t_tx = threading.Thread(target=send_thread, args=(ser,))
-    t_rx.start()
-    t_tx.start()
-    
-    print("\n=== Linux Robot Control ===")
-    print(" Enter command and press ENTER:")
-    print(" w: Forward (+10)")
-    print(" s: Backward (-10)")
-    print(" a: Left (+10 spin)")
-    print(" d: Right (-10 spin)")
-    print(" x: STOP (0,0)")
-    print(" q: Quit")
-    print("===========================\n")
-
-    # Linux 简易输入循环
-    while running:
-        try:
-            cmd = input().lower().strip() # 等待用户输入并回车
-            
-            if cmd == 'w': target_vx += STEP_VAL
-            elif cmd == 's': target_vx -= STEP_VAL
-            elif cmd == 'a': target_vw += STEP_VAL # 左转增加角速度
-            elif cmd == 'd': target_vw -= STEP_VAL # 右转减小角速度
-            elif cmd == 'x': target_vx = 0; target_vw = 0
-            elif cmd == 'q': running = False
-            
-            # 限制幅度
-            target_vx = max(-MAX_PWM, min(MAX_PWM, target_vx))
-            target_vw = max(-MAX_PWM, min(MAX_PWM, target_vw))
-            
-            # 打印当前目标状态
-            print(f"\n[SET] Vx={target_vx} Vw={target_vw}")
-            
-        except EOFError:
-            break
-
-    running = False
-    ser.close()
-    t_rx.join()
-    t_tx.join()
-    print("Bye!")
-
 if __name__ == "__main__":
-    main()
+    dashboard = RobotDashboard(SERIAL_PORT, BAUD_RATE)
+    
+    print("\n" + "="*60)
+    print("   🏎️  机器人运动学控制终端")
+    print("   [输入格式] v w")
+    print("   例如: 0.2 0    (前进 0.2m/s)")
+    print("         0 1.0    (原地左转 1.0rad/s)")
+    print("         0.2 0.5  (边走边转)")
+    print("   [退出] q")
+    print("="*60 + "\n")
+
+    try:
+        while True:
+            user_input = input() 
+            if user_input.lower() == 'q':
+                break
+            
+            try:
+                parts = user_input.split()
+                if len(parts) >= 2:
+                    v = float(parts[0])
+                    w = float(parts[1])
+                    dashboard.send_motion_command(v, w)
+                elif len(parts) == 1:
+                    # 如果只输入一个数，默认是直行
+                    v = float(parts[0])
+                    dashboard.send_motion_command(v, 0.0)
+                else:
+                    print("请输入: 线速度 角速度")
+            except ValueError:
+                print("\n❌ 格式错误，请输入数字")
+                
+    except KeyboardInterrupt:
+        pass
+    finally:
+        dashboard.send_target_rpm(0, 0)
+        dashboard.close()
+        print("\n👋 安全停车")

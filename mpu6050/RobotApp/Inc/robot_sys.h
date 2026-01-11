@@ -24,7 +24,9 @@ typedef struct {
 /* 3. 定义电机数据结构体 (举例) */
 typedef struct {
     float speed_L;
-    float speed_R;
+    float speed_R; 
+    int32_t count_L;   // 左轮总脉冲 (用于 SLAM 里程计)
+    int32_t count_R;   // 右轮总脉冲
 } MotorData_t;
 
 
@@ -40,10 +42,11 @@ typedef struct {
     float speed_R;
     int32_t encoder_L;
     int32_t encoder_R;
-    // float target_speed_L;
-    // float target_speed_R;
-    // float current_speed_L;
-    // float current_speed_R;
+
+     float target_speed_L;
+     float target_speed_R;
+     float current_speed_L;
+     float current_speed_R;
 
     
     // float pid_vel_kp;
