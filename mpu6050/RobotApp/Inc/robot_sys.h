@@ -49,14 +49,8 @@ typedef struct {
      float current_speed_R;
 
     
-    // float pid_vel_kp;
-    // float pid_vel_ki;
-    // float pid_vel_kd;
-    // ... 其他变量
+
 } Robot_State_t;
-
-
-
 
 
 

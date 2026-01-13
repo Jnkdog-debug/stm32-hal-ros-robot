@@ -1,4 +1,4 @@
-ARM GAS  /tmp/cc9Nm7CH.s 			page 1
+ARM GAS  /tmp/ccXd0mkD.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -53,77 +53,74 @@ ARM GAS  /tmp/cc9Nm7CH.s 			page 1
   32              		@ args = 0, pretend = 0, frame = 16
   33              		@ frame_needed = 0, uses_anonymous_args = 0
   34              		.loc 1 19 1 is_stmt 0 view .LVU1
-  35 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  35 0000 70B5     		push	{r4, r5, r6, lr}
   36              	.LCFI0:
-  37              		.cfi_def_cfa_offset 20
-  38              		.cfi_offset 4, -20
-  39              		.cfi_offset 5, -16
-ARM GAS  /tmp/cc9Nm7CH.s 			page 2
+  37              		.cfi_def_cfa_offset 16
+  38              		.cfi_offset 4, -16
+  39              		.cfi_offset 5, -12
+ARM GAS  /tmp/ccXd0mkD.s 			page 2
 
 
-  40              		.cfi_offset 6, -12
-  41              		.cfi_offset 7, -8
-  42              		.cfi_offset 14, -4
-  43 0002 2DED028B 		vpush.64	{d8}
-  44              	.LCFI1:
-  45              		.cfi_def_cfa_offset 28
-  46              		.cfi_offset 80, -28
-  47              		.cfi_offset 81, -24
-  48 0006 85B0     		sub	sp, sp, #20
-  49              	.LCFI2:
-  50              		.cfi_def_cfa_offset 48
+  40              		.cfi_offset 6, -8
+  41              		.cfi_offset 14, -4
+  42 0002 2DED028B 		vpush.64	{d8}
+  43              	.LCFI1:
+  44              		.cfi_def_cfa_offset 24
+  45              		.cfi_offset 80, -24
+  46              		.cfi_offset 81, -20
+  47 0006 84B0     		sub	sp, sp, #16
+  48              	.LCFI2:
+  49              		.cfi_def_cfa_offset 40
   20:RobotApp/Src/motor_task.c ****     // --- 1. 初始化 ---
   21:RobotApp/Src/motor_task.c ****     Motor_Init(&Motor_A);
-  51              		.loc 1 21 5 is_stmt 1 view .LVU2
-  52 0008 474D     		ldr	r5, .L10
-  53 000a 2846     		mov	r0, r5
-  54              	.LVL1:
-  55              		.loc 1 21 5 is_stmt 0 view .LVU3
-  56 000c FFF7FEFF 		bl	Motor_Init
-  57              	.LVL2:
+  50              		.loc 1 21 5 is_stmt 1 view .LVU2
+  51 0008 434D     		ldr	r5, .L9
+  52 000a 2846     		mov	r0, r5
+  53              	.LVL1:
+  54              		.loc 1 21 5 is_stmt 0 view .LVU3
+  55 000c FFF7FEFF 		bl	Motor_Init
+  56              	.LVL2:
   22:RobotApp/Src/motor_task.c ****     Motor_Init(&Motor_D); 
-  58              		.loc 1 22 5 is_stmt 1 view .LVU4
-  59 0010 464C     		ldr	r4, .L10+4
-  60 0012 2046     		mov	r0, r4
-  61 0014 FFF7FEFF 		bl	Motor_Init
-  62              	.LVL3:
+  57              		.loc 1 22 5 is_stmt 1 view .LVU4
+  58 0010 424C     		ldr	r4, .L9+4
+  59 0012 2046     		mov	r0, r4
+  60 0014 FFF7FEFF 		bl	Motor_Init
+  61              	.LVL3:
   23:RobotApp/Src/motor_task.c ****     Motor_Encoder_Init(&Motor_A);
-  63              		.loc 1 23 5 view .LVU5
-  64 0018 2846     		mov	r0, r5
-  65 001a FFF7FEFF 		bl	Motor_Encoder_Init
-  66              	.LVL4:
+  62              		.loc 1 23 5 view .LVU5
+  63 0018 2846     		mov	r0, r5
+  64 001a FFF7FEFF 		bl	Motor_Encoder_Init
+  65              	.LVL4:
   24:RobotApp/Src/motor_task.c ****     Motor_Encoder_Init(&Motor_D);
-  67              		.loc 1 24 5 view .LVU6
-  68 001e 2046     		mov	r0, r4
-  69 0020 FFF7FEFF 		bl	Motor_Encoder_Init
-  70              	.LVL5:
+  66              		.loc 1 24 5 view .LVU6
+  67 001e 2046     		mov	r0, r4
+  68 0020 FFF7FEFF 		bl	Motor_Encoder_Init
+  69              	.LVL5:
   25:RobotApp/Src/motor_task.c **** 
   26:RobotApp/Src/motor_task.c ****     uint8_t debug_counter = 0;
-  71              		.loc 1 26 5 view .LVU7
+  70              		.loc 1 26 5 view .LVU7
   27:RobotApp/Src/motor_task.c ****     TickType_t xLastWakeTime = xTaskGetTickCount();
-  72              		.loc 1 27 5 view .LVU8
-  73              		.loc 1 27 32 is_stmt 0 view .LVU9
-  74 0024 FFF7FEFF 		bl	xTaskGetTickCount
-  75              	.LVL6:
-  76              		.loc 1 27 16 discriminator 1 view .LVU10
-  77 0028 0390     		str	r0, [sp, #12]
+  71              		.loc 1 27 5 view .LVU8
+  72              		.loc 1 27 32 is_stmt 0 view .LVU9
+  73 0024 FFF7FEFF 		bl	xTaskGetTickCount
+  74              	.LVL6:
+  75              		.loc 1 27 16 discriminator 1 view .LVU10
+  76 0028 0390     		str	r0, [sp, #12]
   28:RobotApp/Src/motor_task.c **** 
   29:RobotApp/Src/motor_task.c ****     // 局部变量：目标速度
   30:RobotApp/Src/motor_task.c ****     float target_L = 0.0f;
-  78              		.loc 1 30 5 is_stmt 1 view .LVU11
-  79              	.LVL7:
+  77              		.loc 1 30 5 is_stmt 1 view .LVU11
+  78              	.LVL7:
   31:RobotApp/Src/motor_task.c ****     float target_R = 0.0f;
-  80              		.loc 1 31 5 view .LVU12
-  26:RobotApp/Src/motor_task.c ****     TickType_t xLastWakeTime = xTaskGetTickCount();
-  81              		.loc 1 26 13 is_stmt 0 view .LVU13
-  82 002a 0024     		movs	r4, #0
-  83 002c 4BE0     		b	.L6
-ARM GAS  /tmp/cc9Nm7CH.s 			page 3
+  79              		.loc 1 31 5 view .LVU12
+  80              		.loc 1 31 5 is_stmt 0 view .LVU13
+  81 002a 46E0     		b	.L6
+  82              	.LVL8:
+  83              	.L2:
+  84              	.LBB2:
+ARM GAS  /tmp/ccXd0mkD.s 			page 3
 
 
-  84              	.LVL8:
-  85              	.L2:
-  86              	.LBB2:
   32:RobotApp/Src/motor_task.c **** 
   33:RobotApp/Src/motor_task.c ****     for(;;)
   34:RobotApp/Src/motor_task.c ****     {
@@ -154,46 +151,46 @@ ARM GAS  /tmp/cc9Nm7CH.s 			page 1
   59:RobotApp/Src/motor_task.c ****         } else {
   60:RobotApp/Src/motor_task.c ****             // 运行 PID
   61:RobotApp/Src/motor_task.c ****             out_pwm_L = Incremental_PID(&Motor_A, target_L);
-  87              		.loc 1 61 13 is_stmt 1 view .LVU14
-  88              		.loc 1 61 25 is_stmt 0 view .LVU15
-  89 002e B0EE480A 		vmov.f32	s0, s16
-  90 0032 3D48     		ldr	r0, .L10
-  91 0034 FFF7FEFF 		bl	Incremental_PID
-  92              	.LVL9:
-  93 0038 0546     		mov	r5, r0
-  94              	.LVL10:
+  85              		.loc 1 61 13 is_stmt 1 view .LVU14
+  86              		.loc 1 61 25 is_stmt 0 view .LVU15
+  87 002c B0EE480A 		vmov.f32	s0, s16
+  88 0030 3948     		ldr	r0, .L9
+  89 0032 FFF7FEFF 		bl	Incremental_PID
+  90              	.LVL9:
+  91 0036 0446     		mov	r4, r0
+  92              	.LVL10:
   62:RobotApp/Src/motor_task.c ****             out_pwm_R = Incremental_PID(&Motor_D, target_R);
-  95              		.loc 1 62 13 is_stmt 1 view .LVU16
-  96              		.loc 1 62 25 is_stmt 0 view .LVU17
-  97 003a B0EE680A 		vmov.f32	s0, s17
-  98 003e 3B48     		ldr	r0, .L10+4
-  99 0040 FFF7FEFF 		bl	Incremental_PID
- 100              	.LVL11:
- 101 0044 0746     		mov	r7, r0
- 102              	.LVL12:
- 103              	.L3:
+  93              		.loc 1 62 13 is_stmt 1 view .LVU16
+  94              		.loc 1 62 25 is_stmt 0 view .LVU17
+  95 0038 B0EE680A 		vmov.f32	s0, s17
+  96 003c 3748     		ldr	r0, .L9+4
+  97 003e FFF7FEFF 		bl	Incremental_PID
+  98              	.LVL11:
+  99 0042 0646     		mov	r6, r0
+ 100              	.LVL12:
+ 101              	.L3:
   63:RobotApp/Src/motor_task.c ****         }
   64:RobotApp/Src/motor_task.c **** 
   65:RobotApp/Src/motor_task.c ****          // --- 5. 执行硬件控制 ---
   66:RobotApp/Src/motor_task.c ****         Motor_SetPWM(&Motor_A, out_pwm_L);
- 104              		.loc 1 66 9 is_stmt 1 view .LVU18
- 105 0046 384E     		ldr	r6, .L10
-ARM GAS  /tmp/cc9Nm7CH.s 			page 4
+ 102              		.loc 1 66 9 is_stmt 1 view .LVU18
+ 103 0044 344D     		ldr	r5, .L9
+ 104 0046 2146     		mov	r1, r4
+ 105 0048 2846     		mov	r0, r5
+ 106 004a FFF7FEFF 		bl	Motor_SetPWM
+ARM GAS  /tmp/ccXd0mkD.s 			page 4
 
 
- 106 0048 2946     		mov	r1, r5
- 107 004a 3046     		mov	r0, r6
- 108 004c FFF7FEFF 		bl	Motor_SetPWM
- 109              	.LVL13:
+ 107              	.LVL13:
   67:RobotApp/Src/motor_task.c ****         Motor_SetPWM(&Motor_D, out_pwm_R);
- 110              		.loc 1 67 9 view .LVU19
- 111 0050 364D     		ldr	r5, .L10+4
- 112              	.LVL14:
- 113              		.loc 1 67 9 is_stmt 0 view .LVU20
- 114 0052 3946     		mov	r1, r7
- 115 0054 2846     		mov	r0, r5
- 116 0056 FFF7FEFF 		bl	Motor_SetPWM
- 117              	.LVL15:
+ 108              		.loc 1 67 9 view .LVU19
+ 109 004e 334C     		ldr	r4, .L9+4
+ 110              	.LVL14:
+ 111              		.loc 1 67 9 is_stmt 0 view .LVU20
+ 112 0050 3146     		mov	r1, r6
+ 113 0052 2046     		mov	r0, r4
+ 114 0054 FFF7FEFF 		bl	Motor_SetPWM
+ 115              	.LVL15:
   68:RobotApp/Src/motor_task.c **** 
   69:RobotApp/Src/motor_task.c ****               // --- 5. 执行硬件控制 ---
   70:RobotApp/Src/motor_task.c ****         //Motor_SetPWM(&Motor_A, 1000);
@@ -203,149 +200,133 @@ ARM GAS  /tmp/cc9Nm7CH.s 			page 1
   74:RobotApp/Src/motor_task.c **** 
   75:RobotApp/Src/motor_task.c ****         // --- 6. 更新全局状态 (给串口发送任务使用) ---
   76:RobotApp/Src/motor_task.c ****         osMutexAcquire(robotMutexHandle, osWaitForever);
- 118              		.loc 1 76 9 is_stmt 1 view .LVU21
- 119 005a 354F     		ldr	r7, .L10+8
- 120              	.LVL16:
- 121              		.loc 1 76 9 is_stmt 0 view .LVU22
- 122 005c 4FF0FF31 		mov	r1, #-1
- 123 0060 3868     		ldr	r0, [r7]
- 124 0062 FFF7FEFF 		bl	osMutexAcquire
- 125              	.LVL17:
+ 116              		.loc 1 76 9 is_stmt 1 view .LVU21
+ 117 0058 314E     		ldr	r6, .L9+8
+ 118              	.LVL16:
+ 119              		.loc 1 76 9 is_stmt 0 view .LVU22
+ 120 005a 4FF0FF31 		mov	r1, #-1
+ 121 005e 3068     		ldr	r0, [r6]
+ 122 0060 FFF7FEFF 		bl	osMutexAcquire
+ 123              	.LVL17:
   77:RobotApp/Src/motor_task.c ****         {
   78:RobotApp/Src/motor_task.c ****             g_robot.encoder_L = Motor_A.total_count; // 发送总脉冲，上位机算里程
- 126              		.loc 1 78 13 is_stmt 1 view .LVU23
- 127              		.loc 1 78 40 is_stmt 0 view .LVU24
- 128 0066 F269     		ldr	r2, [r6, #28]
- 129              		.loc 1 78 31 view .LVU25
- 130 0068 324B     		ldr	r3, .L10+12
- 131 006a 1A61     		str	r2, [r3, #16]
+ 124              		.loc 1 78 13 is_stmt 1 view .LVU23
+ 125              		.loc 1 78 40 is_stmt 0 view .LVU24
+ 126 0064 EA69     		ldr	r2, [r5, #28]
+ 127              		.loc 1 78 31 view .LVU25
+ 128 0066 2F4B     		ldr	r3, .L9+12
+ 129 0068 1A61     		str	r2, [r3, #16]
   79:RobotApp/Src/motor_task.c ****             g_robot.encoder_R = Motor_D.total_count;
- 132              		.loc 1 79 13 is_stmt 1 view .LVU26
- 133              		.loc 1 79 40 is_stmt 0 view .LVU27
- 134 006c EA69     		ldr	r2, [r5, #28]
- 135              		.loc 1 79 31 view .LVU28
- 136 006e 5A61     		str	r2, [r3, #20]
+ 130              		.loc 1 79 13 is_stmt 1 view .LVU26
+ 131              		.loc 1 79 40 is_stmt 0 view .LVU27
+ 132 006a E269     		ldr	r2, [r4, #28]
+ 133              		.loc 1 79 31 view .LVU28
+ 134 006c 5A61     		str	r2, [r3, #20]
   80:RobotApp/Src/motor_task.c ****             // 顺便记录一下当前实际速度，方便在香橙派上 debug PID 曲线
   81:RobotApp/Src/motor_task.c ****             g_robot.current_speed_L = Motor_A.duty_rpm; 
- 137              		.loc 1 81 13 is_stmt 1 view .LVU29
- 138              		.loc 1 81 46 is_stmt 0 view .LVU30
- 139 0070 726A     		ldr	r2, [r6, #36]	@ float
- 140              		.loc 1 81 37 view .LVU31
- 141 0072 1A62     		str	r2, [r3, #32]	@ float
+ 135              		.loc 1 81 13 is_stmt 1 view .LVU29
+ 136              		.loc 1 81 46 is_stmt 0 view .LVU30
+ 137 006e 6A6A     		ldr	r2, [r5, #36]	@ float
+ 138              		.loc 1 81 37 view .LVU31
+ 139 0070 1A62     		str	r2, [r3, #32]	@ float
   82:RobotApp/Src/motor_task.c ****             g_robot.current_speed_R = Motor_D.duty_rpm;
- 142              		.loc 1 82 13 is_stmt 1 view .LVU32
- 143              		.loc 1 82 46 is_stmt 0 view .LVU33
- 144 0074 6A6A     		ldr	r2, [r5, #36]	@ float
- 145              		.loc 1 82 37 view .LVU34
- 146 0076 5A62     		str	r2, [r3, #36]	@ float
-ARM GAS  /tmp/cc9Nm7CH.s 			page 5
-
-
+ 140              		.loc 1 82 13 is_stmt 1 view .LVU32
+ 141              		.loc 1 82 46 is_stmt 0 view .LVU33
+ 142 0072 626A     		ldr	r2, [r4, #36]	@ float
+ 143              		.loc 1 82 37 view .LVU34
+ 144 0074 5A62     		str	r2, [r3, #36]	@ float
   83:RobotApp/Src/motor_task.c ****         }
   84:RobotApp/Src/motor_task.c ****         osMutexRelease(robotMutexHandle);
- 147              		.loc 1 84 9 is_stmt 1 view .LVU35
- 148 0078 3868     		ldr	r0, [r7]
- 149 007a FFF7FEFF 		bl	osMutexRelease
- 150              	.LVL18:
+ 145              		.loc 1 84 9 is_stmt 1 view .LVU35
+ARM GAS  /tmp/ccXd0mkD.s 			page 5
+
+
+ 146 0076 3068     		ldr	r0, [r6]
+ 147 0078 FFF7FEFF 		bl	osMutexRelease
+ 148              	.LVL18:
   85:RobotApp/Src/motor_task.c ****         
   86:RobotApp/Src/motor_task.c ****         // --- 7. 发送调试数据到串口 ---
-  87:RobotApp/Src/motor_task.c ****         if (++debug_counter >= 10) // 100ms 发送一次
- 151              		.loc 1 87 9 view .LVU36
- 152              		.loc 1 87 12 is_stmt 0 view .LVU37
- 153 007e 0134     		adds	r4, r4, #1
- 154              	.LVL19:
- 155              		.loc 1 87 12 view .LVU38
- 156 0080 E4B2     		uxtb	r4, r4
- 157              	.LVL20:
- 158              		.loc 1 87 12 view .LVU39
- 159 0082 092C     		cmp	r4, #9
- 160 0084 1BD9     		bls	.L4
- 161              	.LBB3:
+  87:RobotApp/Src/motor_task.c ****         if (++debug_counter >= 1) // 100ms 发送一次
+ 149              		.loc 1 87 9 view .LVU36
+ 150              	.LBB3:
   88:RobotApp/Src/motor_task.c ****         {
   89:RobotApp/Src/motor_task.c ****             debug_counter = 0;
- 162              		.loc 1 89 13 is_stmt 1 view .LVU40
- 163              	.LVL21:
+ 151              		.loc 1 89 13 view .LVU37
   90:RobotApp/Src/motor_task.c ****             MotorData_t* p_data = pvPortMalloc(sizeof(MotorData_t));
- 164              		.loc 1 90 13 view .LVU41
- 165              		.loc 1 90 35 is_stmt 0 view .LVU42
- 166 0086 1020     		movs	r0, #16
- 167 0088 FFF7FEFF 		bl	pvPortMalloc
- 168              	.LVL22:
+ 152              		.loc 1 90 13 view .LVU38
+ 153              		.loc 1 90 35 is_stmt 0 view .LVU39
+ 154 007c 1020     		movs	r0, #16
+ 155 007e FFF7FEFF 		bl	pvPortMalloc
+ 156              	.LVL19:
   91:RobotApp/Src/motor_task.c ****             if (p_data != NULL)
- 169              		.loc 1 91 13 is_stmt 1 view .LVU43
- 170              		.loc 1 91 16 is_stmt 0 view .LVU44
- 171 008c 0446     		mov	r4, r0
- 172 008e 0028     		cmp	r0, #0
- 173 0090 47D0     		beq	.L7
- 174              	.LBB4:
+ 157              		.loc 1 91 13 is_stmt 1 view .LVU40
+ 158              		.loc 1 91 16 is_stmt 0 view .LVU41
+ 159 0082 0446     		mov	r4, r0
+ 160 0084 A8B1     		cbz	r0, .L4
+ 161              	.LBB4:
   92:RobotApp/Src/motor_task.c ****             {
   93:RobotApp/Src/motor_task.c ****                 p_data->speed_L = Motor_A. duty_rpm;// 给上位机发脉冲总数
- 175              		.loc 1 93 17 is_stmt 1 view .LVU45
- 176              		.loc 1 93 42 is_stmt 0 view .LVU46
- 177 0092 736A     		ldr	r3, [r6, #36]	@ float
- 178              		.loc 1 93 33 view .LVU47
- 179 0094 0360     		str	r3, [r0]	@ float
+ 162              		.loc 1 93 17 is_stmt 1 view .LVU42
+ 163              		.loc 1 93 42 is_stmt 0 view .LVU43
+ 164 0086 6B6A     		ldr	r3, [r5, #36]	@ float
+ 165              		.loc 1 93 33 view .LVU44
+ 166 0088 0360     		str	r3, [r0]	@ float
   94:RobotApp/Src/motor_task.c ****                 p_data->speed_R = Motor_D.duty_rpm;
- 180              		.loc 1 94 17 is_stmt 1 view .LVU48
- 181              		.loc 1 94 42 is_stmt 0 view .LVU49
- 182 0096 696A     		ldr	r1, [r5, #36]	@ float
- 183              		.loc 1 94 33 view .LVU50
- 184 0098 4160     		str	r1, [r0, #4]	@ float
+ 167              		.loc 1 94 17 is_stmt 1 view .LVU45
+ 168              		.loc 1 94 42 is_stmt 0 view .LVU46
+ 169 008a 244B     		ldr	r3, .L9+4
+ 170 008c 596A     		ldr	r1, [r3, #36]	@ float
+ 171              		.loc 1 94 33 view .LVU47
+ 172 008e 4160     		str	r1, [r0, #4]	@ float
   95:RobotApp/Src/motor_task.c ****                 
   96:RobotApp/Src/motor_task.c ****                 p_data->count_L   = Motor_A.total_count;
- 185              		.loc 1 96 17 is_stmt 1 view .LVU51
- 186              		.loc 1 96 44 is_stmt 0 view .LVU52
- 187 009a F269     		ldr	r2, [r6, #28]
- 188              		.loc 1 96 35 view .LVU53
- 189 009c 8260     		str	r2, [r0, #8]
-ARM GAS  /tmp/cc9Nm7CH.s 			page 6
-
-
+ 173              		.loc 1 96 17 is_stmt 1 view .LVU48
+ 174              		.loc 1 96 44 is_stmt 0 view .LVU49
+ 175 0090 EA69     		ldr	r2, [r5, #28]
+ 176              		.loc 1 96 35 view .LVU50
+ 177 0092 8260     		str	r2, [r0, #8]
   97:RobotApp/Src/motor_task.c ****                 p_data->count_R   = Motor_D.total_count;
- 190              		.loc 1 97 17 is_stmt 1 view .LVU54
- 191              		.loc 1 97 44 is_stmt 0 view .LVU55
- 192 009e EB69     		ldr	r3, [r5, #28]
- 193              		.loc 1 97 35 view .LVU56
- 194 00a0 C360     		str	r3, [r0, #12]
+ 178              		.loc 1 97 17 is_stmt 1 view .LVU51
+ 179              		.loc 1 97 44 is_stmt 0 view .LVU52
+ 180 0094 DB69     		ldr	r3, [r3, #28]
+ 181              		.loc 1 97 35 view .LVU53
+ 182 0096 C360     		str	r3, [r0, #12]
   98:RobotApp/Src/motor_task.c **** 
   99:RobotApp/Src/motor_task.c **** 
  100:RobotApp/Src/motor_task.c ****                 TxMessage_t msg;
- 195              		.loc 1 100 17 is_stmt 1 view .LVU57
+ 183              		.loc 1 100 17 is_stmt 1 view .LVU54
  101:RobotApp/Src/motor_task.c ****                 msg.type = MSG_TYPE_MOTOR;
- 196              		.loc 1 101 17 view .LVU58
- 197              		.loc 1 101 26 is_stmt 0 view .LVU59
- 198 00a2 0123     		movs	r3, #1
- 199 00a4 8DF80430 		strb	r3, [sp, #4]
+ 184              		.loc 1 101 17 view .LVU55
+ 185              		.loc 1 101 26 is_stmt 0 view .LVU56
+ARM GAS  /tmp/ccXd0mkD.s 			page 6
+
+
+ 186 0098 0123     		movs	r3, #1
+ 187 009a 8DF80430 		strb	r3, [sp, #4]
  102:RobotApp/Src/motor_task.c ****                 msg.p_data = p_data;
- 200              		.loc 1 102 17 is_stmt 1 view .LVU60
- 201              		.loc 1 102 28 is_stmt 0 view .LVU61
- 202 00a8 0290     		str	r0, [sp, #8]
+ 188              		.loc 1 102 17 is_stmt 1 view .LVU57
+ 189              		.loc 1 102 28 is_stmt 0 view .LVU58
+ 190 009e 0290     		str	r0, [sp, #8]
  103:RobotApp/Src/motor_task.c ****                 
  104:RobotApp/Src/motor_task.c ****                 if (xQueueSend(dataQueueHandle, &msg, 0) != pdPASS) {
- 203              		.loc 1 104 17 is_stmt 1 view .LVU62
- 204              		.loc 1 104 21 is_stmt 0 view .LVU63
- 205 00aa 0023     		movs	r3, #0
- 206 00ac 1A46     		mov	r2, r3
- 207 00ae 01A9     		add	r1, sp, #4
- 208 00b0 2148     		ldr	r0, .L10+16
- 209              	.LVL23:
- 210              		.loc 1 104 21 view .LVU64
- 211 00b2 0068     		ldr	r0, [r0]
- 212 00b4 FFF7FEFF 		bl	xQueueGenericSend
- 213              	.LVL24:
- 214              		.loc 1 104 20 discriminator 1 view .LVU65
- 215 00b8 0128     		cmp	r0, #1
- 216 00ba 2ED1     		bne	.L9
- 217              	.L5:
- 218              	.LBE4:
-  89:RobotApp/Src/motor_task.c ****             MotorData_t* p_data = pvPortMalloc(sizeof(MotorData_t));
- 219              		.loc 1 89 27 view .LVU66
- 220 00bc 0024     		movs	r4, #0
- 221              	.LVL25:
- 222              	.L4:
-  89:RobotApp/Src/motor_task.c ****             MotorData_t* p_data = pvPortMalloc(sizeof(MotorData_t));
- 223              		.loc 1 89 27 view .LVU67
- 224              	.LBE3:
+ 191              		.loc 1 104 17 is_stmt 1 view .LVU59
+ 192              		.loc 1 104 21 is_stmt 0 view .LVU60
+ 193 00a0 0023     		movs	r3, #0
+ 194 00a2 1A46     		mov	r2, r3
+ 195 00a4 01A9     		add	r1, sp, #4
+ 196 00a6 2048     		ldr	r0, .L9+16
+ 197              	.LVL20:
+ 198              		.loc 1 104 21 view .LVU61
+ 199 00a8 0068     		ldr	r0, [r0]
+ 200 00aa FFF7FEFF 		bl	xQueueGenericSend
+ 201              	.LVL21:
+ 202              		.loc 1 104 20 discriminator 1 view .LVU62
+ 203 00ae 0128     		cmp	r0, #1
+ 204 00b0 2DD1     		bne	.L8
+ 205              	.L4:
+ 206              		.loc 1 104 20 discriminator 1 view .LVU63
+ 207              	.LBE4:
+ 208              	.LBE3:
  105:RobotApp/Src/motor_task.c ****                     vPortFree(p_data);
  106:RobotApp/Src/motor_task.c ****                 }
  107:RobotApp/Src/motor_task.c ****             }
@@ -353,178 +334,170 @@ ARM GAS  /tmp/cc9Nm7CH.s 			page 1
  109:RobotApp/Src/motor_task.c **** 
  110:RobotApp/Src/motor_task.c ****         // --- 8. 等待下一个 10ms 周期 ---
  111:RobotApp/Src/motor_task.c ****         vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(MOTOR_CTRL_PERIOD_MS));
- 225              		.loc 1 111 9 is_stmt 1 view .LVU68
- 226 00be 0A21     		movs	r1, #10
- 227 00c0 03A8     		add	r0, sp, #12
- 228 00c2 FFF7FEFF 		bl	vTaskDelayUntil
- 229              	.LVL26:
-ARM GAS  /tmp/cc9Nm7CH.s 			page 7
-
-
- 230              	.LBE2:
+ 209              		.loc 1 111 9 is_stmt 1 view .LVU64
+ 210 00b2 0A21     		movs	r1, #10
+ 211 00b4 03A8     		add	r0, sp, #12
+ 212 00b6 FFF7FEFF 		bl	vTaskDelayUntil
+ 213              	.LVL22:
+ 214              	.LBE2:
   33:RobotApp/Src/motor_task.c ****     {
- 231              		.loc 1 33 5 view .LVU69
- 232              	.L6:
+ 215              		.loc 1 33 5 view .LVU65
+ 216              	.L6:
   33:RobotApp/Src/motor_task.c ****     {
- 233              		.loc 1 33 5 view .LVU70
- 234              	.LBB7:
+ 217              		.loc 1 33 5 view .LVU66
+ 218              	.LBB7:
   36:RobotApp/Src/motor_task.c ****         {
- 235              		.loc 1 36 9 view .LVU71
- 236 00c6 1A4D     		ldr	r5, .L10+8
- 237 00c8 4FF0FF31 		mov	r1, #-1
- 238 00cc 2868     		ldr	r0, [r5]
- 239 00ce FFF7FEFF 		bl	osMutexAcquire
- 240              	.LVL27:
+ 219              		.loc 1 36 9 view .LVU67
+ 220 00ba 194C     		ldr	r4, .L9+8
+ 221 00bc 4FF0FF31 		mov	r1, #-1
+ 222 00c0 2068     		ldr	r0, [r4]
+ 223 00c2 FFF7FEFF 		bl	osMutexAcquire
+ 224              	.LVL23:
   38:RobotApp/Src/motor_task.c ****             target_R = g_robot.speed_R;
- 241              		.loc 1 38 13 view .LVU72
+ 225              		.loc 1 38 13 view .LVU68
   38:RobotApp/Src/motor_task.c ****             target_R = g_robot.speed_R;
- 242              		.loc 1 38 22 is_stmt 0 view .LVU73
- 243 00d2 184B     		ldr	r3, .L10+12
- 244 00d4 93ED028A 		vldr.32	s16, [r3, #8]
- 245              	.LVL28:
+ 226              		.loc 1 38 22 is_stmt 0 view .LVU69
+ 227 00c6 174B     		ldr	r3, .L9+12
+ARM GAS  /tmp/ccXd0mkD.s 			page 7
+
+
+ 228 00c8 93ED028A 		vldr.32	s16, [r3, #8]
+ 229              	.LVL24:
   39:RobotApp/Src/motor_task.c ****         }
- 246              		.loc 1 39 13 is_stmt 1 view .LVU74
+ 230              		.loc 1 39 13 is_stmt 1 view .LVU70
   39:RobotApp/Src/motor_task.c ****         }
- 247              		.loc 1 39 22 is_stmt 0 view .LVU75
- 248 00d8 D3ED038A 		vldr.32	s17, [r3, #12]
- 249              	.LVL29:
+ 231              		.loc 1 39 22 is_stmt 0 view .LVU71
+ 232 00cc D3ED038A 		vldr.32	s17, [r3, #12]
+ 233              	.LVL25:
   41:RobotApp/Src/motor_task.c **** 
- 250              		.loc 1 41 9 is_stmt 1 view .LVU76
- 251 00dc 2868     		ldr	r0, [r5]
- 252 00de FFF7FEFF 		bl	osMutexRelease
- 253              	.LVL30:
+ 234              		.loc 1 41 9 is_stmt 1 view .LVU72
+ 235 00d0 2068     		ldr	r0, [r4]
+ 236 00d2 FFF7FEFF 		bl	osMutexRelease
+ 237              	.LVL26:
   45:RobotApp/Src/motor_task.c ****         Motor_Encoder_Update(&Motor_D);
- 254              		.loc 1 45 9 view .LVU77
- 255 00e2 1148     		ldr	r0, .L10
- 256 00e4 FFF7FEFF 		bl	Motor_Encoder_Update
- 257              	.LVL31:
+ 238              		.loc 1 45 9 view .LVU73
+ 239 00d6 1048     		ldr	r0, .L9
+ 240 00d8 FFF7FEFF 		bl	Motor_Encoder_Update
+ 241              	.LVL27:
   46:RobotApp/Src/motor_task.c ****     
- 258              		.loc 1 46 9 view .LVU78
- 259 00e8 1048     		ldr	r0, .L10+4
- 260 00ea FFF7FEFF 		bl	Motor_Encoder_Update
- 261              	.LVL32:
+ 242              		.loc 1 46 9 view .LVU74
+ 243 00dc 0F48     		ldr	r0, .L9+4
+ 244 00de FFF7FEFF 		bl	Motor_Encoder_Update
+ 245              	.LVL28:
   50:RobotApp/Src/motor_task.c ****         int16_t out_pwm_R = 0;
- 262              		.loc 1 50 9 view .LVU79
+ 246              		.loc 1 50 9 view .LVU75
   51:RobotApp/Src/motor_task.c **** 
- 263              		.loc 1 51 9 view .LVU80
+ 247              		.loc 1 51 9 view .LVU76
   53:RobotApp/Src/motor_task.c ****             // 停机逻辑：如果目标是0，直接关断输出并清空PID，防止电机震�
- 264              		.loc 1 53 9 view .LVU81
+ 248              		.loc 1 53 9 view .LVU77
   53:RobotApp/Src/motor_task.c ****             // 停机逻辑：如果目标是0，直接关断输出并清空PID，防止电机震�
- 265              		.loc 1 53 12 is_stmt 0 view .LVU82
- 266 00ee B5EE408A 		vcmp.f32	s16, #0
- 267 00f2 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
- 268 00f6 9AD1     		bne	.L2
+ 249              		.loc 1 53 12 is_stmt 0 view .LVU78
+ 250 00e2 B5EE408A 		vcmp.f32	s16, #0
+ 251 00e6 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 252 00ea 9FD1     		bne	.L2
   53:RobotApp/Src/motor_task.c ****             // 停机逻辑：如果目标是0，直接关断输出并清空PID，防止电机震�
- 269              		.loc 1 53 27 discriminator 1 view .LVU83
- 270 00f8 F5EE408A 		vcmp.f32	s17, #0
- 271 00fc F1EE10FA 		vmrs	APSR_nzcv, FPSCR
-ARM GAS  /tmp/cc9Nm7CH.s 			page 8
-
-
- 272 0100 95D1     		bne	.L2
+ 253              		.loc 1 53 27 discriminator 1 view .LVU79
+ 254 00ec F5EE408A 		vcmp.f32	s17, #0
+ 255 00f0 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 256 00f4 9AD1     		bne	.L2
   55:RobotApp/Src/motor_task.c ****             out_pwm_R = 0;
- 273              		.loc 1 55 13 is_stmt 1 view .LVU84
+ 257              		.loc 1 55 13 is_stmt 1 view .LVU80
   56:RobotApp/Src/motor_task.c ****             Motor_A.pid_out = 0; Motor_A.pid_last_error = 0; Motor_A.pid_prev_error = 0;
- 274              		.loc 1 56 13 view .LVU85
+ 258              		.loc 1 56 13 view .LVU81
   57:RobotApp/Src/motor_task.c ****             Motor_D.pid_out = 0; Motor_D.pid_last_error = 0; Motor_D.pid_prev_error = 0;
- 275              		.loc 1 57 13 view .LVU86
+ 259              		.loc 1 57 13 view .LVU82
   57:RobotApp/Src/motor_task.c ****             Motor_D.pid_out = 0; Motor_D.pid_last_error = 0; Motor_D.pid_prev_error = 0;
- 276              		.loc 1 57 29 is_stmt 0 view .LVU87
- 277 0102 094A     		ldr	r2, .L10
- 278 0104 0023     		movs	r3, #0
- 279 0106 5364     		str	r3, [r2, #68]	@ float
+ 260              		.loc 1 57 29 is_stmt 0 view .LVU83
+ 261 00f6 084A     		ldr	r2, .L9
+ 262 00f8 0023     		movs	r3, #0
+ 263 00fa 5364     		str	r3, [r2, #68]	@ float
   57:RobotApp/Src/motor_task.c ****             Motor_D.pid_out = 0; Motor_D.pid_last_error = 0; Motor_D.pid_prev_error = 0;
- 280              		.loc 1 57 34 is_stmt 1 view .LVU88
+ 264              		.loc 1 57 34 is_stmt 1 view .LVU84
   57:RobotApp/Src/motor_task.c ****             Motor_D.pid_out = 0; Motor_D.pid_last_error = 0; Motor_D.pid_prev_error = 0;
- 281              		.loc 1 57 57 is_stmt 0 view .LVU89
- 282 0108 D363     		str	r3, [r2, #60]	@ float
+ 265              		.loc 1 57 57 is_stmt 0 view .LVU85
+ 266 00fc D363     		str	r3, [r2, #60]	@ float
   57:RobotApp/Src/motor_task.c ****             Motor_D.pid_out = 0; Motor_D.pid_last_error = 0; Motor_D.pid_prev_error = 0;
- 283              		.loc 1 57 62 is_stmt 1 view .LVU90
+ 267              		.loc 1 57 62 is_stmt 1 view .LVU86
+ARM GAS  /tmp/ccXd0mkD.s 			page 8
+
+
   57:RobotApp/Src/motor_task.c ****             Motor_D.pid_out = 0; Motor_D.pid_last_error = 0; Motor_D.pid_prev_error = 0;
- 284              		.loc 1 57 85 is_stmt 0 view .LVU91
- 285 010a 1364     		str	r3, [r2, #64]	@ float
+ 268              		.loc 1 57 85 is_stmt 0 view .LVU87
+ 269 00fe 1364     		str	r3, [r2, #64]	@ float
   58:RobotApp/Src/motor_task.c ****         } else {
- 286              		.loc 1 58 13 is_stmt 1 view .LVU92
+ 270              		.loc 1 58 13 is_stmt 1 view .LVU88
   58:RobotApp/Src/motor_task.c ****         } else {
- 287              		.loc 1 58 29 is_stmt 0 view .LVU93
- 288 010c 074A     		ldr	r2, .L10+4
- 289 010e 5364     		str	r3, [r2, #68]	@ float
+ 271              		.loc 1 58 29 is_stmt 0 view .LVU89
+ 272 0100 064A     		ldr	r2, .L9+4
+ 273 0102 5364     		str	r3, [r2, #68]	@ float
   58:RobotApp/Src/motor_task.c ****         } else {
- 290              		.loc 1 58 34 is_stmt 1 view .LVU94
+ 274              		.loc 1 58 34 is_stmt 1 view .LVU90
   58:RobotApp/Src/motor_task.c ****         } else {
- 291              		.loc 1 58 57 is_stmt 0 view .LVU95
- 292 0110 D363     		str	r3, [r2, #60]	@ float
+ 275              		.loc 1 58 57 is_stmt 0 view .LVU91
+ 276 0104 D363     		str	r3, [r2, #60]	@ float
   58:RobotApp/Src/motor_task.c ****         } else {
- 293              		.loc 1 58 62 is_stmt 1 view .LVU96
+ 277              		.loc 1 58 62 is_stmt 1 view .LVU92
   58:RobotApp/Src/motor_task.c ****         } else {
- 294              		.loc 1 58 85 is_stmt 0 view .LVU97
- 295 0112 1364     		str	r3, [r2, #64]	@ float
+ 278              		.loc 1 58 85 is_stmt 0 view .LVU93
+ 279 0106 1364     		str	r3, [r2, #64]	@ float
   56:RobotApp/Src/motor_task.c ****             Motor_A.pid_out = 0; Motor_A.pid_last_error = 0; Motor_A.pid_prev_error = 0;
- 296              		.loc 1 56 23 view .LVU98
- 297 0114 0027     		movs	r7, #0
+ 280              		.loc 1 56 23 view .LVU94
+ 281 0108 0026     		movs	r6, #0
   55:RobotApp/Src/motor_task.c ****             out_pwm_R = 0;
- 298              		.loc 1 55 23 view .LVU99
- 299 0116 3D46     		mov	r5, r7
+ 282              		.loc 1 55 23 view .LVU95
+ 283 010a 3446     		mov	r4, r6
   58:RobotApp/Src/motor_task.c ****         } else {
- 300              		.loc 1 58 85 view .LVU100
- 301 0118 95E7     		b	.L3
- 302              	.LVL33:
- 303              	.L9:
- 304              	.LBB6:
- 305              	.LBB5:
+ 284              		.loc 1 58 85 view .LVU96
+ 285 010c 9AE7     		b	.L3
+ 286              	.LVL29:
+ 287              	.L8:
+ 288              	.LBB6:
+ 289              	.LBB5:
  105:RobotApp/Src/motor_task.c ****                 }
- 306              		.loc 1 105 21 is_stmt 1 view .LVU101
- 307 011a 2046     		mov	r0, r4
- 308 011c FFF7FEFF 		bl	vPortFree
- 309              	.LVL34:
- 310 0120 CCE7     		b	.L5
-ARM GAS  /tmp/cc9Nm7CH.s 			page 9
+ 290              		.loc 1 105 21 is_stmt 1 view .LVU97
+ 291 010e 2046     		mov	r0, r4
+ 292 0110 FFF7FEFF 		bl	vPortFree
+ 293              	.LVL30:
+ 294 0114 CDE7     		b	.L4
+ 295              	.L10:
+ 296 0116 00BF     		.align	2
+ 297              	.L9:
+ 298 0118 00000000 		.word	Motor_A
+ 299 011c 00000000 		.word	Motor_D
+ 300 0120 00000000 		.word	robotMutexHandle
+ 301 0124 00000000 		.word	g_robot
+ 302 0128 00000000 		.word	dataQueueHandle
+ 303              	.LBE5:
+ 304              	.LBE6:
+ 305              	.LBE7:
+ 306              		.cfi_endproc
+ 307              	.LFE138:
+ 309              		.text
+ 310              	.Letext0:
+ 311              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 312              		.file 3 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 313              		.file 4 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stddef.h"
+ 314              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ARM GAS  /tmp/ccXd0mkD.s 			page 9
 
 
- 311              	.LVL35:
- 312              	.L7:
- 105:RobotApp/Src/motor_task.c ****                 }
- 313              		.loc 1 105 21 is_stmt 0 view .LVU102
- 314              	.LBE5:
-  89:RobotApp/Src/motor_task.c ****             MotorData_t* p_data = pvPortMalloc(sizeof(MotorData_t));
- 315              		.loc 1 89 27 view .LVU103
- 316 0122 0024     		movs	r4, #0
- 317 0124 CBE7     		b	.L4
- 318              	.L11:
- 319 0126 00BF     		.align	2
- 320              	.L10:
- 321 0128 00000000 		.word	Motor_A
- 322 012c 00000000 		.word	Motor_D
- 323 0130 00000000 		.word	robotMutexHandle
- 324 0134 00000000 		.word	g_robot
- 325 0138 00000000 		.word	dataQueueHandle
- 326              	.LBE6:
- 327              	.LBE7:
- 328              		.cfi_endproc
- 329              	.LFE138:
- 331              		.text
- 332              	.Letext0:
- 333              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
- 334              		.file 3 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
- 335              		.file 4 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stddef.h"
- 336              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 337              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 338              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
- 339              		.file 8 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
- 340              		.file 9 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
- 341              		.file 10 "RobotApp/Inc/robot_sys.h"
- 342              		.file 11 "BSP/EncoderMotor/encodermotor.h"
- 343              		.file 12 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
- 344              		.file 13 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
- 345              		.file 14 "Middlewares/Third_Party/FreeRTOS/Source/include/portable.h"
-ARM GAS  /tmp/cc9Nm7CH.s 			page 10
+ 315              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 316              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 317              		.file 8 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 318              		.file 9 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 319              		.file 10 "RobotApp/Inc/robot_sys.h"
+ 320              		.file 11 "BSP/EncoderMotor/encodermotor.h"
+ 321              		.file 12 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 322              		.file 13 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 323              		.file 14 "Middlewares/Third_Party/FreeRTOS/Source/include/portable.h"
+ARM GAS  /tmp/ccXd0mkD.s 			page 10
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 motor_task.c
-     /tmp/cc9Nm7CH.s:21     .text.StartmotorTask:00000000 $t
-     /tmp/cc9Nm7CH.s:27     .text.StartmotorTask:00000000 StartmotorTask
-     /tmp/cc9Nm7CH.s:321    .text.StartmotorTask:00000128 $d
+     /tmp/ccXd0mkD.s:21     .text.StartmotorTask:00000000 $t
+     /tmp/ccXd0mkD.s:27     .text.StartmotorTask:00000000 StartmotorTask
+     /tmp/ccXd0mkD.s:298    .text.StartmotorTask:00000118 $d
 
 UNDEFINED SYMBOLS
 Motor_Init

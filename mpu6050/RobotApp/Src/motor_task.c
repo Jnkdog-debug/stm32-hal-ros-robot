@@ -84,7 +84,7 @@ void StartmotorTask(void *argument)
         osMutexRelease(robotMutexHandle);
         
         // --- 7. 发送调试数据到串口 ---
-        if (++debug_counter >= 10) // 100ms 发送一次
+        if (++debug_counter >= 1) // 100ms 发送一次
         {
             debug_counter = 0;
             MotorData_t* p_data = pvPortMalloc(sizeof(MotorData_t));

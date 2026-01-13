@@ -70,7 +70,7 @@ return len;
 // 全局变量的定义
 
 /* 初始化默认值: 默认运行，50ms一次 */
-Robot_State_t g_robot = {1, 50};
+Robot_State_t g_robot = {1, 20};
 /* 接收缓冲区 (1字节) */
 
 

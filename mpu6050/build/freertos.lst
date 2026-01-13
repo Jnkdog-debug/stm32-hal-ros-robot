@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccKe4OEN.s 			page 1
+ARM GAS  /tmp/ccg9T11O.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
   28:Core/Src/freertos.c **** 
   29:Core/Src/freertos.c **** #include <stdio.h>
   30:Core/Src/freertos.c **** #include "usart.h"
-ARM GAS  /tmp/ccKe4OEN.s 			page 2
+ARM GAS  /tmp/ccg9T11O.s 			page 2
 
 
   31:Core/Src/freertos.c **** #include "queue.h"
@@ -103,7 +103,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
   70:Core/Src/freertos.c **** // 全局变量的定义
   71:Core/Src/freertos.c **** 
   72:Core/Src/freertos.c **** /* 初始化默认值: 默认运行，50ms一次 */
-  73:Core/Src/freertos.c **** Robot_State_t g_robot = {1, 50};
+  73:Core/Src/freertos.c **** Robot_State_t g_robot = {1, 20};
   74:Core/Src/freertos.c **** /* 接收缓冲区 (1字节) */
   75:Core/Src/freertos.c **** 
   76:Core/Src/freertos.c **** 
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
   85:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityAboveNormal,
   86:Core/Src/freertos.c **** };
   87:Core/Src/freertos.c **** /* Definitions for usartTask */
-ARM GAS  /tmp/ccKe4OEN.s 			page 3
+ARM GAS  /tmp/ccg9T11O.s 			page 3
 
 
   88:Core/Src/freertos.c **** osThreadId_t usartTaskHandle;
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
  142:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
  143:Core/Src/freertos.c **** 
  144:Core/Src/freertos.c ****   /* USER CODE END Init */
-ARM GAS  /tmp/ccKe4OEN.s 			page 4
+ARM GAS  /tmp/ccg9T11O.s 			page 4
 
 
  145:Core/Src/freertos.c ****   /* Create the mutex(es) */
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
  199:Core/Src/freertos.c ****   * @retval None
  200:Core/Src/freertos.c ****   */
  201:Core/Src/freertos.c **** /* USER CODE END Header_StartimuTask */
-ARM GAS  /tmp/ccKe4OEN.s 			page 5
+ARM GAS  /tmp/ccg9T11O.s 			page 5
 
 
  202:Core/Src/freertos.c **** __weak void StartimuTask(void *argument)
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
   64              		@ frame_needed = 0, uses_anonymous_args = 0
   65              	.LVL3:
   66              		.loc 1 221 1 is_stmt 0 view .LVU6
-ARM GAS  /tmp/ccKe4OEN.s 			page 6
+ARM GAS  /tmp/ccg9T11O.s 			page 6
 
 
   67 0000 08B5     		push	{r3, lr}
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
  104              	.LVL7:
  105              	.L8:
  240:Core/Src/freertos.c ****   /* USER CODE BEGIN StartcmdTask */
-ARM GAS  /tmp/ccKe4OEN.s 			page 7
+ARM GAS  /tmp/ccg9T11O.s 			page 7
 
 
  241:Core/Src/freertos.c ****   /* Infinite loop */
@@ -418,7 +418,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
  139              		.loc 1 262 5 discriminator 1 view .LVU18
  140 0002 0120     		movs	r0, #1
  141 0004 FFF7FEFF 		bl	osDelay
-ARM GAS  /tmp/ccKe4OEN.s 			page 8
+ARM GAS  /tmp/ccg9T11O.s 			page 8
 
 
  142              	.LVL11:
@@ -478,7 +478,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
  189              		.cfi_endproc
  190              	.LFE141:
  192              		.section	.text.MX_FREERTOS_Init,"ax",%progbits
-ARM GAS  /tmp/ccKe4OEN.s 			page 9
+ARM GAS  /tmp/ccg9T11O.s 			page 9
 
 
  193              		.align	1
@@ -538,7 +538,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
  174:Core/Src/freertos.c **** 
  238              		.loc 1 174 3 is_stmt 1 view .LVU38
  174:Core/Src/freertos.c **** 
-ARM GAS  /tmp/ccKe4OEN.s 			page 10
+ARM GAS  /tmp/ccg9T11O.s 			page 10
 
 
  239              		.loc 1 174 19 is_stmt 0 view .LVU39
@@ -598,7 +598,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
  282              	.L19:
  283 0064 00000000 		.word	robotMutex_attributes
  284 0068 00000000 		.word	robotMutexHandle
-ARM GAS  /tmp/ccKe4OEN.s 			page 11
+ARM GAS  /tmp/ccg9T11O.s 			page 11
 
 
  285 006c 00000000 		.word	dataQueue_attributes
@@ -658,7 +658,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
  329              	.LCFI6:
  330              		.cfi_def_cfa_offset 8
  331              		.cfi_offset 4, -8
-ARM GAS  /tmp/ccKe4OEN.s 			page 12
+ARM GAS  /tmp/ccg9T11O.s 			page 12
 
 
  332              		.cfi_offset 14, -4
@@ -718,7 +718,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
  374              		.thumb
  375              		.syntax unified
  376              	.L21:
-ARM GAS  /tmp/ccKe4OEN.s 			page 13
+ARM GAS  /tmp/ccg9T11O.s 			page 13
 
 
  377              	.LBE2:
@@ -778,7 +778,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
  430      00000000 
  430      00000000 
  430      00000000 
-ARM GAS  /tmp/ccKe4OEN.s 			page 14
+ARM GAS  /tmp/ccg9T11O.s 			page 14
 
 
  431              		.global	cmdQueueHandle
@@ -838,7 +838,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
  483 0030 636D6454 		.ascii	"cmdTask\000"
  483      61736B00 
  484              		.section	.rodata.cmdTask_attributes,"a"
-ARM GAS  /tmp/ccKe4OEN.s 			page 15
+ARM GAS  /tmp/ccg9T11O.s 			page 15
 
 
  485              		.align	2
@@ -898,7 +898,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
  535 0014 60090000 		.word	2400
  536 0018 20000000 		.word	32
  537 001c 00000000 		.space	8
-ARM GAS  /tmp/ccKe4OEN.s 			page 16
+ARM GAS  /tmp/ccg9T11O.s 			page 16
 
 
  537      00000000 
@@ -913,7 +913,7 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
  550              	g_robot:
  551 0000 01       		.byte	1
  552 0001 000000   		.space	3
- 553 0004 32000000 		.word	50
+ 553 0004 14000000 		.word	20
  554 0008 00000000 		.space	32
  554      00000000 
  554      00000000 
@@ -931,67 +931,67 @@ ARM GAS  /tmp/ccKe4OEN.s 			page 1
  564              		.file 9 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
  565              		.file 10 "RobotApp/Inc/robot_sys.h"
  566              		.file 11 "Core/Inc/usart.h"
-ARM GAS  /tmp/ccKe4OEN.s 			page 17
+ARM GAS  /tmp/ccg9T11O.s 			page 17
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 freertos.c
-     /tmp/ccKe4OEN.s:21     .text.StartimuTask:00000000 $t
-     /tmp/ccKe4OEN.s:27     .text.StartimuTask:00000000 StartimuTask
-     /tmp/ccKe4OEN.s:53     .text.StartUsartTask:00000000 $t
-     /tmp/ccKe4OEN.s:59     .text.StartUsartTask:00000000 StartUsartTask
-     /tmp/ccKe4OEN.s:85     .text.StartcmdTask:00000000 $t
-     /tmp/ccKe4OEN.s:91     .text.StartcmdTask:00000000 StartcmdTask
-     /tmp/ccKe4OEN.s:117    .text.StartmotorTask:00000000 $t
-     /tmp/ccKe4OEN.s:123    .text.StartmotorTask:00000000 StartmotorTask
-     /tmp/ccKe4OEN.s:149    .text._write:00000000 $t
-     /tmp/ccKe4OEN.s:155    .text._write:00000000 _write
-     /tmp/ccKe4OEN.s:188    .text._write:00000014 $d
-     /tmp/ccKe4OEN.s:193    .text.MX_FREERTOS_Init:00000000 $t
-     /tmp/ccKe4OEN.s:199    .text.MX_FREERTOS_Init:00000000 MX_FREERTOS_Init
-     /tmp/ccKe4OEN.s:283    .text.MX_FREERTOS_Init:00000064 $d
-     /tmp/ccKe4OEN.s:409    .rodata.robotMutex_attributes:00000000 robotMutex_attributes
-     /tmp/ccKe4OEN.s:417    .bss.robotMutexHandle:00000000 robotMutexHandle
-     /tmp/ccKe4OEN.s:447    .rodata.dataQueue_attributes:00000000 dataQueue_attributes
-     /tmp/ccKe4OEN.s:455    .bss.dataQueueHandle:00000000 dataQueueHandle
-     /tmp/ccKe4OEN.s:428    .rodata.cmdQueue_attributes:00000000 cmdQueue_attributes
-     /tmp/ccKe4OEN.s:436    .bss.cmdQueueHandle:00000000 cmdQueueHandle
-     /tmp/ccKe4OEN.s:532    .rodata.imuTask_attributes:00000000 imuTask_attributes
-     /tmp/ccKe4OEN.s:543    .bss.imuTaskHandle:00000000 imuTaskHandle
-     /tmp/ccKe4OEN.s:510    .rodata.usartTask_attributes:00000000 usartTask_attributes
-     /tmp/ccKe4OEN.s:521    .bss.usartTaskHandle:00000000 usartTaskHandle
-     /tmp/ccKe4OEN.s:488    .rodata.cmdTask_attributes:00000000 cmdTask_attributes
-     /tmp/ccKe4OEN.s:499    .bss.cmdTaskHandle:00000000 cmdTaskHandle
-     /tmp/ccKe4OEN.s:466    .rodata.motorTask_attributes:00000000 motorTask_attributes
-     /tmp/ccKe4OEN.s:477    .bss.motorTaskHandle:00000000 motorTaskHandle
-     /tmp/ccKe4OEN.s:305    .text.HAL_UART_RxCpltCallback:00000000 $t
-     /tmp/ccKe4OEN.s:311    .text.HAL_UART_RxCpltCallback:00000000 HAL_UART_RxCpltCallback
-     /tmp/ccKe4OEN.s:387    .text.HAL_UART_RxCpltCallback:00000048 $d
-     /tmp/ccKe4OEN.s:398    .bss.rx_buffer_byte:00000000 rx_buffer_byte
-     /tmp/ccKe4OEN.s:399    .bss.rx_buffer_byte:00000000 $d
-     /tmp/ccKe4OEN.s:402    .rodata.str1.4:00000000 $d
-     /tmp/ccKe4OEN.s:406    .rodata.robotMutex_attributes:00000000 $d
-     /tmp/ccKe4OEN.s:414    .bss.robotMutexHandle:00000000 $d
-     /tmp/ccKe4OEN.s:425    .rodata.cmdQueue_attributes:00000000 $d
-     /tmp/ccKe4OEN.s:433    .bss.cmdQueueHandle:00000000 $d
-     /tmp/ccKe4OEN.s:444    .rodata.dataQueue_attributes:00000000 $d
-     /tmp/ccKe4OEN.s:452    .bss.dataQueueHandle:00000000 $d
-     /tmp/ccKe4OEN.s:463    .rodata.motorTask_attributes:00000000 $d
-     /tmp/ccKe4OEN.s:474    .bss.motorTaskHandle:00000000 $d
-     /tmp/ccKe4OEN.s:485    .rodata.cmdTask_attributes:00000000 $d
-     /tmp/ccKe4OEN.s:496    .bss.cmdTaskHandle:00000000 $d
-     /tmp/ccKe4OEN.s:507    .rodata.usartTask_attributes:00000000 $d
-     /tmp/ccKe4OEN.s:518    .bss.usartTaskHandle:00000000 $d
-     /tmp/ccKe4OEN.s:529    .rodata.imuTask_attributes:00000000 $d
-     /tmp/ccKe4OEN.s:540    .bss.imuTaskHandle:00000000 $d
-     /tmp/ccKe4OEN.s:550    .data.g_robot:00000000 g_robot
-     /tmp/ccKe4OEN.s:547    .data.g_robot:00000000 $d
+     /tmp/ccg9T11O.s:21     .text.StartimuTask:00000000 $t
+     /tmp/ccg9T11O.s:27     .text.StartimuTask:00000000 StartimuTask
+     /tmp/ccg9T11O.s:53     .text.StartUsartTask:00000000 $t
+     /tmp/ccg9T11O.s:59     .text.StartUsartTask:00000000 StartUsartTask
+     /tmp/ccg9T11O.s:85     .text.StartcmdTask:00000000 $t
+     /tmp/ccg9T11O.s:91     .text.StartcmdTask:00000000 StartcmdTask
+     /tmp/ccg9T11O.s:117    .text.StartmotorTask:00000000 $t
+     /tmp/ccg9T11O.s:123    .text.StartmotorTask:00000000 StartmotorTask
+     /tmp/ccg9T11O.s:149    .text._write:00000000 $t
+     /tmp/ccg9T11O.s:155    .text._write:00000000 _write
+     /tmp/ccg9T11O.s:188    .text._write:00000014 $d
+     /tmp/ccg9T11O.s:193    .text.MX_FREERTOS_Init:00000000 $t
+     /tmp/ccg9T11O.s:199    .text.MX_FREERTOS_Init:00000000 MX_FREERTOS_Init
+     /tmp/ccg9T11O.s:283    .text.MX_FREERTOS_Init:00000064 $d
+     /tmp/ccg9T11O.s:409    .rodata.robotMutex_attributes:00000000 robotMutex_attributes
+     /tmp/ccg9T11O.s:417    .bss.robotMutexHandle:00000000 robotMutexHandle
+     /tmp/ccg9T11O.s:447    .rodata.dataQueue_attributes:00000000 dataQueue_attributes
+     /tmp/ccg9T11O.s:455    .bss.dataQueueHandle:00000000 dataQueueHandle
+     /tmp/ccg9T11O.s:428    .rodata.cmdQueue_attributes:00000000 cmdQueue_attributes
+     /tmp/ccg9T11O.s:436    .bss.cmdQueueHandle:00000000 cmdQueueHandle
+     /tmp/ccg9T11O.s:532    .rodata.imuTask_attributes:00000000 imuTask_attributes
+     /tmp/ccg9T11O.s:543    .bss.imuTaskHandle:00000000 imuTaskHandle
+     /tmp/ccg9T11O.s:510    .rodata.usartTask_attributes:00000000 usartTask_attributes
+     /tmp/ccg9T11O.s:521    .bss.usartTaskHandle:00000000 usartTaskHandle
+     /tmp/ccg9T11O.s:488    .rodata.cmdTask_attributes:00000000 cmdTask_attributes
+     /tmp/ccg9T11O.s:499    .bss.cmdTaskHandle:00000000 cmdTaskHandle
+     /tmp/ccg9T11O.s:466    .rodata.motorTask_attributes:00000000 motorTask_attributes
+     /tmp/ccg9T11O.s:477    .bss.motorTaskHandle:00000000 motorTaskHandle
+     /tmp/ccg9T11O.s:305    .text.HAL_UART_RxCpltCallback:00000000 $t
+     /tmp/ccg9T11O.s:311    .text.HAL_UART_RxCpltCallback:00000000 HAL_UART_RxCpltCallback
+     /tmp/ccg9T11O.s:387    .text.HAL_UART_RxCpltCallback:00000048 $d
+     /tmp/ccg9T11O.s:398    .bss.rx_buffer_byte:00000000 rx_buffer_byte
+     /tmp/ccg9T11O.s:399    .bss.rx_buffer_byte:00000000 $d
+     /tmp/ccg9T11O.s:402    .rodata.str1.4:00000000 $d
+     /tmp/ccg9T11O.s:406    .rodata.robotMutex_attributes:00000000 $d
+     /tmp/ccg9T11O.s:414    .bss.robotMutexHandle:00000000 $d
+     /tmp/ccg9T11O.s:425    .rodata.cmdQueue_attributes:00000000 $d
+     /tmp/ccg9T11O.s:433    .bss.cmdQueueHandle:00000000 $d
+     /tmp/ccg9T11O.s:444    .rodata.dataQueue_attributes:00000000 $d
+     /tmp/ccg9T11O.s:452    .bss.dataQueueHandle:00000000 $d
+     /tmp/ccg9T11O.s:463    .rodata.motorTask_attributes:00000000 $d
+     /tmp/ccg9T11O.s:474    .bss.motorTaskHandle:00000000 $d
+     /tmp/ccg9T11O.s:485    .rodata.cmdTask_attributes:00000000 $d
+     /tmp/ccg9T11O.s:496    .bss.cmdTaskHandle:00000000 $d
+     /tmp/ccg9T11O.s:507    .rodata.usartTask_attributes:00000000 $d
+     /tmp/ccg9T11O.s:518    .bss.usartTaskHandle:00000000 $d
+     /tmp/ccg9T11O.s:529    .rodata.imuTask_attributes:00000000 $d
+     /tmp/ccg9T11O.s:540    .bss.imuTaskHandle:00000000 $d
+     /tmp/ccg9T11O.s:550    .data.g_robot:00000000 g_robot
+     /tmp/ccg9T11O.s:547    .data.g_robot:00000000 $d
 
 UNDEFINED SYMBOLS
 osDelay
 HAL_UART_Transmit
 huart3
-ARM GAS  /tmp/ccKe4OEN.s 			page 18
+ARM GAS  /tmp/ccg9T11O.s 			page 18
 
 
 osMutexNew
