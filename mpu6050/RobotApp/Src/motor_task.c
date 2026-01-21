@@ -4,6 +4,7 @@
 #include "encodermotor.h"
 #include "queue.h"
 #include "cmsis_os.h" // 确保包含 RTOS 头文件
+#include "adc.h"
 
 // 引入外部定义的电机实例
 extern MotorControl_t Motor_A;
@@ -13,7 +14,53 @@ extern MotorControl_t Motor_D;
 // 10ms 控制周期 (100Hz)
 #define MOTOR_CTRL_PERIOD_MS 10
 
+// ADC 电池电压采样相关定义
+#define ADC_REF_VOLTAGE 3.3f        // ADC 参考电压 (V)
+#define ADC_RESOLUTION 4095.0f      // 12位ADC分辨率 (2^12 - 1)
+#define VOLTAGE_DIVIDER_RATIO 11.0f  // 分压比 (如果用分压电路: R1+R2/R2，例如10K+20K/10K=3)
+#define ADC_SAMPLE_COUNT 10         // 采样次数（滤波用）
 
+
+/**
+ * @brief ADC 采样电池电压（带滤波）
+ * @return 电池电压 (V)
+ */
+static float ADC_GetBatteryVoltage(void)
+{
+    uint32_t adc_sum = 0;
+    uint32_t adc_value = 0;
+    
+    // 采集多次样本进行平均滤波
+    for (int i = 0; i < ADC_SAMPLE_COUNT; i++) {
+        // 启动 ADC 转换
+        if (HAL_ADC_Start(&hadc1) != HAL_OK) {
+            return 0.0f;  // 启动失败
+        }
+        
+        // 等待转换完成（超时时间1000ms）
+        if (HAL_ADC_PollForConversion(&hadc1, 1000) != HAL_OK) {
+            return 0.0f;  // 转换超时
+        }
+        
+        // 获取转换结果
+        adc_value = HAL_ADC_GetValue(&hadc1);
+        adc_sum += adc_value;
+        
+        // 停止 ADC
+        HAL_ADC_Stop(&hadc1);
+    }
+    
+    // 求平均值
+    uint32_t adc_avg = adc_sum / ADC_SAMPLE_COUNT;
+    
+    // ADC值转换为电压
+    // 公式：V_measured = (ADC_AVG / ADC_RESOLUTION) * ADC_REF_VOLTAGE
+    //      V_battery = V_measured * VOLTAGE_DIVIDER_RATIO (如有分压)
+    float measured_voltage = (adc_avg / ADC_RESOLUTION) * ADC_REF_VOLTAGE;
+    float battery_voltage = measured_voltage * VOLTAGE_DIVIDER_RATIO;
+    
+    return battery_voltage;
+}
 
 void StartmotorTask(void *argument)
 {
@@ -24,11 +71,13 @@ void StartmotorTask(void *argument)
     Motor_Encoder_Init(&Motor_D);
 
     uint8_t debug_counter = 0;
+    uint8_t adc_sample_counter = 0;
     TickType_t xLastWakeTime = xTaskGetTickCount();
 
-    // 局部变量：目标速度
+    // 局部变量：目标速度和电池电压
     float target_L = 0.0f;
     float target_R = 0.0f;
+    float battery_voltage = 0.0f;
 
     for(;;)
     {
@@ -45,6 +94,18 @@ void StartmotorTask(void *argument)
         Motor_Encoder_Update(&Motor_A); 
         Motor_Encoder_Update(&Motor_D);
     
+        // --- 3.5 每隔5个周期（50ms）采样一次电池电压 ---
+        if (++adc_sample_counter >= 5) {
+            adc_sample_counter = 0;
+            battery_voltage = ADC_GetBatteryVoltage();
+            
+            // 更新全局变量中的电池电压
+            osMutexAcquire(robotMutexHandle, osWaitForever);
+            {
+                g_robot.battery_voltage = battery_voltage;
+            }
+            osMutexRelease(robotMutexHandle);
+        }
 
         // --- 4. PID 闭环计算 ---
         int16_t out_pwm_L = 0;
@@ -95,6 +156,7 @@ void StartmotorTask(void *argument)
                 
                 p_data->count_L   = Motor_A.total_count;
                 p_data->count_R   = Motor_D.total_count;
+                p_data->battery_voltage = battery_voltage;  // 上报电池电压
 
 
                 TxMessage_t msg;

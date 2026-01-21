@@ -1,4 +1,4 @@
-ARM GAS  /tmp/cclPTD5S.s 			page 1
+ARM GAS  /tmp/ccErDkZj.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -28,7 +28,7 @@ ARM GAS  /tmp/cclPTD5S.s 			page 1
   25              		.thumb_func
   27              	Process_Command:
   28              	.LVL0:
-  29              	.LFB141:
+  29              	.LFB246:
    1:RobotApp/Src/cmd_task.c **** #include "cmd_task.h"
    2:RobotApp/Src/cmd_task.c **** #include "robot_sys.h"
    3:RobotApp/Src/cmd_task.c **** #include "stdio.h" 
@@ -58,7 +58,7 @@ ARM GAS  /tmp/cclPTD5S.s 			page 1
   46 0008 4FF0FF31 		mov	r1, #-1
   47              	.LVL1:
   48              		.loc 1 10 5 is_stmt 0 view .LVU3
-ARM GAS  /tmp/cclPTD5S.s 			page 2
+ARM GAS  /tmp/ccErDkZj.s 			page 2
 
 
   49 000c 0B4B     		ldr	r3, .L6
@@ -118,7 +118,7 @@ ARM GAS  /tmp/cclPTD5S.s 			page 1
   29:RobotApp/Src/cmd_task.c ****                 // memcpy(&g_robot.pid_vel_ki, &payload[4], 4);
   30:RobotApp/Src/cmd_task.c ****                 // memcpy(&g_robot.pid_vel_kd, &payload[8], 4);
   31:RobotApp/Src/cmd_task.c ****             }
-ARM GAS  /tmp/cclPTD5S.s 			page 3
+ARM GAS  /tmp/ccErDkZj.s 			page 3
 
 
   32:RobotApp/Src/cmd_task.c ****             break;
@@ -144,7 +144,7 @@ ARM GAS  /tmp/cclPTD5S.s 			page 1
   93 003c 00000000 		.word	robotMutexHandle
   94 0040 00000000 		.word	g_robot
   95              		.cfi_endproc
-  96              	.LFE141:
+  96              	.LFE246:
   98              		.section	.rodata.StartcmdTask.str1.4,"aMS",%progbits,1
   99              		.align	2
  100              	.LC0:
@@ -161,7 +161,7 @@ ARM GAS  /tmp/cclPTD5S.s 			page 1
  107              		.thumb_func
  109              	StartcmdTask:
  110              	.LVL6:
- 111              	.LFB142:
+ 111              	.LFB247:
   40:RobotApp/Src/cmd_task.c **** 
   41:RobotApp/Src/cmd_task.c **** 
   42:RobotApp/Src/cmd_task.c **** 
@@ -178,7 +178,7 @@ ARM GAS  /tmp/cclPTD5S.s 			page 1
  119              		.cfi_def_cfa_offset 24
  120              		.cfi_offset 4, -24
  121              		.cfi_offset 5, -20
-ARM GAS  /tmp/cclPTD5S.s 			page 4
+ARM GAS  /tmp/ccErDkZj.s 			page 4
 
 
  122              		.cfi_offset 6, -16
@@ -238,7 +238,7 @@ ARM GAS  /tmp/cclPTD5S.s 			page 1
   67:RobotApp/Src/cmd_task.c ****                     if (rx_byte == 0x55) {
   68:RobotApp/Src/cmd_task.c ****                         state = STATE_WAIT_FUNC;
   69:RobotApp/Src/cmd_task.c ****                         calc_crc = 0; // 重置校验和计算
-ARM GAS  /tmp/cclPTD5S.s 			page 5
+ARM GAS  /tmp/ccErDkZj.s 			page 5
 
 
  151              		.loc 1 69 34 view .LVU31
@@ -298,7 +298,7 @@ ARM GAS  /tmp/cclPTD5S.s 			page 1
   95:RobotApp/Src/cmd_task.c **** 
   96:RobotApp/Src/cmd_task.c ****                 case STATE_WAIT_PAYLOAD:
   97:RobotApp/Src/cmd_task.c ****                     payload_buf[payload_count++] = rx_byte;
-ARM GAS  /tmp/cclPTD5S.s 			page 6
+ARM GAS  /tmp/ccErDkZj.s 			page 6
 
 
  178              		.loc 1 97 46 view .LVU39
@@ -358,7 +358,7 @@ ARM GAS  /tmp/cclPTD5S.s 			page 1
   78:RobotApp/Src/cmd_task.c ****                     calc_crc += rx_byte; // 累加校验
  217              		.loc 1 78 21 is_stmt 1 view .LVU54
   78:RobotApp/Src/cmd_task.c ****                     calc_crc += rx_byte; // 累加校验
-ARM GAS  /tmp/cclPTD5S.s 			page 7
+ARM GAS  /tmp/ccErDkZj.s 			page 7
 
 
  218              		.loc 1 78 32 is_stmt 0 view .LVU55
@@ -418,7 +418,7 @@ ARM GAS  /tmp/cclPTD5S.s 			page 1
  260 007c 99000000 		.word	.L13+1
  261 0080 B9000000 		.word	.L11+1
  262              		.p2align 1
-ARM GAS  /tmp/cclPTD5S.s 			page 8
+ARM GAS  /tmp/ccErDkZj.s 			page 8
 
 
  263              	.L14:
@@ -478,7 +478,7 @@ ARM GAS  /tmp/cclPTD5S.s 			page 1
  301              		.loc 1 98 30 is_stmt 0 view .LVU83
  302 00ac 2A44     		add	r2, r2, r5
  303 00ae D5B2     		uxtb	r5, r2
-ARM GAS  /tmp/cclPTD5S.s 			page 9
+ARM GAS  /tmp/ccErDkZj.s 			page 9
 
 
  304              	.LVL34:
@@ -538,13 +538,13 @@ ARM GAS  /tmp/cclPTD5S.s 			page 1
  343              		.align	2
  344              	.L28:
  345 00d8 00000000 		.word	cmdQueueHandle
-ARM GAS  /tmp/cclPTD5S.s 			page 10
+ARM GAS  /tmp/ccErDkZj.s 			page 10
 
 
  346 00dc 00000000 		.word	.LC0
  347              	.LBE3:
  348              		.cfi_endproc
- 349              	.LFE142:
+ 349              	.LFE247:
  351              		.text
  352              	.Letext0:
  353              		.file 2 "RobotApp/Inc/cmd_task.h"
@@ -553,20 +553,20 @@ ARM GAS  /tmp/cclPTD5S.s 			page 1
  356              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
  357              		.file 6 "RobotApp/Inc/robot_sys.h"
  358              		.file 7 "<built-in>"
-ARM GAS  /tmp/cclPTD5S.s 			page 11
+ARM GAS  /tmp/ccErDkZj.s 			page 11
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 cmd_task.c
-     /tmp/cclPTD5S.s:21     .text.Process_Command:00000000 $t
-     /tmp/cclPTD5S.s:27     .text.Process_Command:00000000 Process_Command
-     /tmp/cclPTD5S.s:93     .text.Process_Command:0000003c $d
-     /tmp/cclPTD5S.s:99     .rodata.StartcmdTask.str1.4:00000000 $d
-     /tmp/cclPTD5S.s:103    .text.StartcmdTask:00000000 $t
-     /tmp/cclPTD5S.s:109    .text.StartcmdTask:00000000 StartcmdTask
-     /tmp/cclPTD5S.s:256    .text.StartcmdTask:0000006c $d
-     /tmp/cclPTD5S.s:262    .text.StartcmdTask:00000084 $t
-     /tmp/cclPTD5S.s:345    .text.StartcmdTask:000000d8 $d
+     /tmp/ccErDkZj.s:21     .text.Process_Command:00000000 $t
+     /tmp/ccErDkZj.s:27     .text.Process_Command:00000000 Process_Command
+     /tmp/ccErDkZj.s:93     .text.Process_Command:0000003c $d
+     /tmp/ccErDkZj.s:99     .rodata.StartcmdTask.str1.4:00000000 $d
+     /tmp/ccErDkZj.s:103    .text.StartcmdTask:00000000 $t
+     /tmp/ccErDkZj.s:109    .text.StartcmdTask:00000000 StartcmdTask
+     /tmp/ccErDkZj.s:256    .text.StartcmdTask:0000006c $d
+     /tmp/ccErDkZj.s:262    .text.StartcmdTask:00000084 $t
+     /tmp/ccErDkZj.s:345    .text.StartcmdTask:000000d8 $d
 
 UNDEFINED SYMBOLS
 osMutexAcquire

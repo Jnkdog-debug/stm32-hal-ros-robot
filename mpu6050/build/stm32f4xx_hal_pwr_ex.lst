@@ -1,4 +1,4 @@
-ARM GAS  /tmp/cc3qEBkP.s 			page 1
+ARM GAS  /tmp/ccSWfM8L.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -27,7 +27,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
   24              		.thumb
   25              		.thumb_func
   27              	HAL_PWREx_EnableBkUpReg:
-  28              	.LFB134:
+  28              	.LFB239:
    1:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** /**
    2:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   ******************************************************************************
    3:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   * @file    stm32f4xx_hal_pwr_ex.c
@@ -58,7 +58,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
   28:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** 
   29:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** /** @defgroup PWREx PWREx
   30:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   * @brief PWR HAL module driver
-ARM GAS  /tmp/cc3qEBkP.s 			page 2
+ARM GAS  /tmp/ccSWfM8L.s 			page 2
 
 
   31:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   * @{
@@ -118,7 +118,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
   85:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****           level 0 is requested. 
   86:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****       -@- Refer to the description of Read protection (RDP) in the Flash 
   87:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****           programming manual.
-ARM GAS  /tmp/cc3qEBkP.s 			page 3
+ARM GAS  /tmp/ccSWfM8L.s 			page 3
 
 
   88:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** 
@@ -178,7 +178,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
  142:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** {
   29              		.loc 1 142 1 view -0
   30              		.cfi_startproc
-ARM GAS  /tmp/cc3qEBkP.s 			page 4
+ARM GAS  /tmp/ccSWfM8L.s 			page 4
 
 
   31              		@ args = 0, pretend = 0, frame = 0
@@ -238,7 +238,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
   72              	.L7:
  156:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****     } 
  157:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   }
-ARM GAS  /tmp/cc3qEBkP.s 			page 5
+ARM GAS  /tmp/ccSWfM8L.s 			page 5
 
 
  158:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   return HAL_OK;
@@ -256,7 +256,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
   83 0030 00000E42 		.word	1108213760
   84 0034 00700040 		.word	1073770496
   85              		.cfi_endproc
-  86              	.LFE134:
+  86              	.LFE239:
   88              		.section	.text.HAL_PWREx_DisableBkUpReg,"ax",%progbits
   89              		.align	1
   90              		.global	HAL_PWREx_DisableBkUpReg
@@ -264,7 +264,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
   92              		.thumb
   93              		.thumb_func
   95              	HAL_PWREx_DisableBkUpReg:
-  96              	.LFB135:
+  96              	.LFB240:
  160:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** 
  161:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** /**
  162:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   * @brief Disables the Backup Regulator.
@@ -298,7 +298,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
  114              		.loc 1 172 15 is_stmt 0 view .LVU23
  115 000a FFF7FEFF 		bl	HAL_GetTick
  116              	.LVL6:
-ARM GAS  /tmp/cc3qEBkP.s 			page 6
+ARM GAS  /tmp/ccSWfM8L.s 			page 6
 
 
  117 000e 0446     		mov	r4, r0
@@ -349,7 +349,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
  151 0030 00000E42 		.word	1108213760
  152 0034 00700040 		.word	1073770496
  153              		.cfi_endproc
- 154              	.LFE135:
+ 154              	.LFE240:
  156              		.section	.text.HAL_PWREx_EnableFlashPowerDown,"ax",%progbits
  157              		.align	1
  158              		.global	HAL_PWREx_EnableFlashPowerDown
@@ -357,8 +357,8 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
  160              		.thumb
  161              		.thumb_func
  163              	HAL_PWREx_EnableFlashPowerDown:
- 164              	.LFB136:
-ARM GAS  /tmp/cc3qEBkP.s 			page 7
+ 164              	.LFB241:
+ARM GAS  /tmp/ccSWfM8L.s 			page 7
 
 
  184:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** 
@@ -387,7 +387,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
  179              	.L20:
  180 0008 00000E42 		.word	1108213760
  181              		.cfi_endproc
- 182              	.LFE136:
+ 182              	.LFE241:
  184              		.section	.text.HAL_PWREx_DisableFlashPowerDown,"ax",%progbits
  185              		.align	1
  186              		.global	HAL_PWREx_DisableFlashPowerDown
@@ -395,7 +395,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
  188              		.thumb
  189              		.thumb_func
  191              	HAL_PWREx_DisableFlashPowerDown:
- 192              	.LFB137:
+ 192              	.LFB242:
  193:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** 
  194:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** /**
  195:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   * @brief Disables the Flash Power Down in Stop mode.
@@ -418,14 +418,14 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
  203              		.loc 1 201 1 view .LVU43
  204 0006 7047     		bx	lr
  205              	.L24:
-ARM GAS  /tmp/cc3qEBkP.s 			page 8
+ARM GAS  /tmp/ccSWfM8L.s 			page 8
 
 
  206              		.align	2
  207              	.L23:
  208 0008 00000E42 		.word	1108213760
  209              		.cfi_endproc
- 210              	.LFE137:
+ 210              	.LFE242:
  212              		.section	.text.HAL_PWREx_GetVoltageRange,"ax",%progbits
  213              		.align	1
  214              		.global	HAL_PWREx_GetVoltageRange
@@ -433,7 +433,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
  216              		.thumb
  217              		.thumb_func
  219              	HAL_PWREx_GetVoltageRange:
- 220              	.LFB138:
+ 220              	.LFB243:
  202:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** 
  203:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** /**
  204:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   * @brief Return Voltage Scaling Range.
@@ -464,7 +464,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
  235              	.L26:
  236 000c 00700040 		.word	1073770496
  237              		.cfi_endproc
- 238              	.LFE138:
+ 238              	.LFE243:
  240              		.section	.text.HAL_PWREx_ControlVoltageScaling,"ax",%progbits
  241              		.align	1
  242              		.global	HAL_PWREx_ControlVoltageScaling
@@ -473,12 +473,12 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
  245              		.thumb_func
  247              	HAL_PWREx_ControlVoltageScaling:
  248              	.LVL10:
- 249              	.LFB139:
+ 249              	.LFB244:
  215:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** 
  216:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** #if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx)
  217:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c **** /**
  218:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   * @brief Configures the main internal regulator output voltage.
-ARM GAS  /tmp/cc3qEBkP.s 			page 9
+ARM GAS  /tmp/ccSWfM8L.s 			page 9
 
 
  219:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   * @param  VoltageScaling specifies the regulator output voltage to achieve
@@ -538,7 +538,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
  283              		.loc 1 239 3 view .LVU57
  240:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   
  241:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   /* Set Range */
-ARM GAS  /tmp/cc3qEBkP.s 			page 10
+ARM GAS  /tmp/ccSWfM8L.s 			page 10
 
 
  242:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(VoltageScaling);
@@ -598,7 +598,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
  329 0052 00E0     		b	.L30
  330              	.L34:
  251:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****     } 
-ARM GAS  /tmp/cc3qEBkP.s 			page 11
+ARM GAS  /tmp/ccSWfM8L.s 			page 11
 
 
  252:Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c ****   }
@@ -622,7 +622,7 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
  345 005c 00380240 		.word	1073887232
  346 0060 00700040 		.word	1073770496
  347              		.cfi_endproc
- 348              	.LFE139:
+ 348              	.LFE244:
  350              		.text
  351              	.Letext0:
  352              		.file 2 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
@@ -630,29 +630,29 @@ ARM GAS  /tmp/cc3qEBkP.s 			page 1
  354              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h"
  355              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
  356              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
-ARM GAS  /tmp/cc3qEBkP.s 			page 12
+ARM GAS  /tmp/ccSWfM8L.s 			page 12
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 stm32f4xx_hal_pwr_ex.c
-     /tmp/cc3qEBkP.s:21     .text.HAL_PWREx_EnableBkUpReg:00000000 $t
-     /tmp/cc3qEBkP.s:27     .text.HAL_PWREx_EnableBkUpReg:00000000 HAL_PWREx_EnableBkUpReg
-     /tmp/cc3qEBkP.s:83     .text.HAL_PWREx_EnableBkUpReg:00000030 $d
-     /tmp/cc3qEBkP.s:89     .text.HAL_PWREx_DisableBkUpReg:00000000 $t
-     /tmp/cc3qEBkP.s:95     .text.HAL_PWREx_DisableBkUpReg:00000000 HAL_PWREx_DisableBkUpReg
-     /tmp/cc3qEBkP.s:151    .text.HAL_PWREx_DisableBkUpReg:00000030 $d
-     /tmp/cc3qEBkP.s:157    .text.HAL_PWREx_EnableFlashPowerDown:00000000 $t
-     /tmp/cc3qEBkP.s:163    .text.HAL_PWREx_EnableFlashPowerDown:00000000 HAL_PWREx_EnableFlashPowerDown
-     /tmp/cc3qEBkP.s:180    .text.HAL_PWREx_EnableFlashPowerDown:00000008 $d
-     /tmp/cc3qEBkP.s:185    .text.HAL_PWREx_DisableFlashPowerDown:00000000 $t
-     /tmp/cc3qEBkP.s:191    .text.HAL_PWREx_DisableFlashPowerDown:00000000 HAL_PWREx_DisableFlashPowerDown
-     /tmp/cc3qEBkP.s:208    .text.HAL_PWREx_DisableFlashPowerDown:00000008 $d
-     /tmp/cc3qEBkP.s:213    .text.HAL_PWREx_GetVoltageRange:00000000 $t
-     /tmp/cc3qEBkP.s:219    .text.HAL_PWREx_GetVoltageRange:00000000 HAL_PWREx_GetVoltageRange
-     /tmp/cc3qEBkP.s:236    .text.HAL_PWREx_GetVoltageRange:0000000c $d
-     /tmp/cc3qEBkP.s:241    .text.HAL_PWREx_ControlVoltageScaling:00000000 $t
-     /tmp/cc3qEBkP.s:247    .text.HAL_PWREx_ControlVoltageScaling:00000000 HAL_PWREx_ControlVoltageScaling
-     /tmp/cc3qEBkP.s:345    .text.HAL_PWREx_ControlVoltageScaling:0000005c $d
+     /tmp/ccSWfM8L.s:21     .text.HAL_PWREx_EnableBkUpReg:00000000 $t
+     /tmp/ccSWfM8L.s:27     .text.HAL_PWREx_EnableBkUpReg:00000000 HAL_PWREx_EnableBkUpReg
+     /tmp/ccSWfM8L.s:83     .text.HAL_PWREx_EnableBkUpReg:00000030 $d
+     /tmp/ccSWfM8L.s:89     .text.HAL_PWREx_DisableBkUpReg:00000000 $t
+     /tmp/ccSWfM8L.s:95     .text.HAL_PWREx_DisableBkUpReg:00000000 HAL_PWREx_DisableBkUpReg
+     /tmp/ccSWfM8L.s:151    .text.HAL_PWREx_DisableBkUpReg:00000030 $d
+     /tmp/ccSWfM8L.s:157    .text.HAL_PWREx_EnableFlashPowerDown:00000000 $t
+     /tmp/ccSWfM8L.s:163    .text.HAL_PWREx_EnableFlashPowerDown:00000000 HAL_PWREx_EnableFlashPowerDown
+     /tmp/ccSWfM8L.s:180    .text.HAL_PWREx_EnableFlashPowerDown:00000008 $d
+     /tmp/ccSWfM8L.s:185    .text.HAL_PWREx_DisableFlashPowerDown:00000000 $t
+     /tmp/ccSWfM8L.s:191    .text.HAL_PWREx_DisableFlashPowerDown:00000000 HAL_PWREx_DisableFlashPowerDown
+     /tmp/ccSWfM8L.s:208    .text.HAL_PWREx_DisableFlashPowerDown:00000008 $d
+     /tmp/ccSWfM8L.s:213    .text.HAL_PWREx_GetVoltageRange:00000000 $t
+     /tmp/ccSWfM8L.s:219    .text.HAL_PWREx_GetVoltageRange:00000000 HAL_PWREx_GetVoltageRange
+     /tmp/ccSWfM8L.s:236    .text.HAL_PWREx_GetVoltageRange:0000000c $d
+     /tmp/ccSWfM8L.s:241    .text.HAL_PWREx_ControlVoltageScaling:00000000 $t
+     /tmp/ccSWfM8L.s:247    .text.HAL_PWREx_ControlVoltageScaling:00000000 HAL_PWREx_ControlVoltageScaling
+     /tmp/ccSWfM8L.s:345    .text.HAL_PWREx_ControlVoltageScaling:0000005c $d
 
 UNDEFINED SYMBOLS
 HAL_GetTick

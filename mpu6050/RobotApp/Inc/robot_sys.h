@@ -27,6 +27,7 @@ typedef struct {
     float speed_R; 
     int32_t count_L;   // 左轮总脉冲 (用于 SLAM 里程计)
     int32_t count_R;   // 右轮总脉冲
+    float battery_voltage;  // 电池电压 (V)
 } MotorData_t;
 
 
@@ -47,6 +48,8 @@ typedef struct {
      float target_speed_R;
      float current_speed_L;
      float current_speed_R;
+
+     float battery_voltage;  // 电池电压 (V)
 
     
 

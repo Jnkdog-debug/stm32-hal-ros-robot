@@ -1,4 +1,4 @@
-ARM GAS  /tmp/cc8BnTeD.s 			page 1
+ARM GAS  /tmp/ccCJeowr.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -27,7 +27,7 @@ ARM GAS  /tmp/cc8BnTeD.s 			page 1
   24              		.thumb
   25              		.thumb_func
   27              	MX_GPIO_Init:
-  28              	.LFB134:
+  28              	.LFB239:
    1:Core/Src/gpio.c **** /* USER CODE BEGIN Header */
    2:Core/Src/gpio.c **** /**
    3:Core/Src/gpio.c ****   ******************************************************************************
@@ -58,7 +58,7 @@ ARM GAS  /tmp/cc8BnTeD.s 			page 1
   28:Core/Src/gpio.c **** /*----------------------------------------------------------------------------*/
   29:Core/Src/gpio.c **** /* Configure GPIO                                                             */
   30:Core/Src/gpio.c **** /*----------------------------------------------------------------------------*/
-ARM GAS  /tmp/cc8BnTeD.s 			page 2
+ARM GAS  /tmp/ccCJeowr.s 			page 2
 
 
   31:Core/Src/gpio.c **** /* USER CODE BEGIN 1 */
@@ -118,40 +118,40 @@ ARM GAS  /tmp/cc8BnTeD.s 			page 1
   66 002a 0291     		str	r1, [sp, #8]
   67              		.loc 1 47 3 view .LVU11
   68 002c 0299     		ldr	r1, [sp, #8]
-ARM GAS  /tmp/cc8BnTeD.s 			page 3
+ARM GAS  /tmp/ccCJeowr.s 			page 3
 
 
   69              	.LBE3:
   70              		.loc 1 47 3 view .LVU12
-  48:Core/Src/gpio.c ****   __HAL_RCC_GPIOE_CLK_ENABLE();
+  48:Core/Src/gpio.c ****   __HAL_RCC_GPIOB_CLK_ENABLE();
   71              		.loc 1 48 3 view .LVU13
   72              	.LBB4:
   73              		.loc 1 48 3 view .LVU14
   74 002e 0392     		str	r2, [sp, #12]
   75              		.loc 1 48 3 view .LVU15
   76 0030 196B     		ldr	r1, [r3, #48]
-  77 0032 41F01001 		orr	r1, r1, #16
+  77 0032 41F00201 		orr	r1, r1, #2
   78 0036 1963     		str	r1, [r3, #48]
   79              		.loc 1 48 3 view .LVU16
   80 0038 196B     		ldr	r1, [r3, #48]
-  81 003a 01F01001 		and	r1, r1, #16
+  81 003a 01F00201 		and	r1, r1, #2
   82 003e 0391     		str	r1, [sp, #12]
   83              		.loc 1 48 3 view .LVU17
   84 0040 0399     		ldr	r1, [sp, #12]
   85              	.LBE4:
   86              		.loc 1 48 3 view .LVU18
-  49:Core/Src/gpio.c ****   __HAL_RCC_GPIOB_CLK_ENABLE();
+  49:Core/Src/gpio.c ****   __HAL_RCC_GPIOE_CLK_ENABLE();
   87              		.loc 1 49 3 view .LVU19
   88              	.LBB5:
   89              		.loc 1 49 3 view .LVU20
   90 0042 0492     		str	r2, [sp, #16]
   91              		.loc 1 49 3 view .LVU21
   92 0044 196B     		ldr	r1, [r3, #48]
-  93 0046 41F00201 		orr	r1, r1, #2
+  93 0046 41F01001 		orr	r1, r1, #16
   94 004a 1963     		str	r1, [r3, #48]
   95              		.loc 1 49 3 view .LVU22
   96 004c 196B     		ldr	r1, [r3, #48]
-  97 004e 01F00201 		and	r1, r1, #2
+  97 004e 01F01001 		and	r1, r1, #16
   98 0052 0491     		str	r1, [sp, #16]
   99              		.loc 1 49 3 view .LVU23
  100 0054 0499     		ldr	r1, [sp, #16]
@@ -178,7 +178,7 @@ ARM GAS  /tmp/cc8BnTeD.s 			page 1
   52:Core/Src/gpio.c **** }
  119              		.loc 1 52 1 is_stmt 0 view .LVU31
  120 006a 06B0     		add	sp, sp, #24
-ARM GAS  /tmp/cc8BnTeD.s 			page 4
+ARM GAS  /tmp/ccCJeowr.s 			page 4
 
 
  121              	.LCFI1:
@@ -190,18 +190,18 @@ ARM GAS  /tmp/cc8BnTeD.s 			page 1
  127              	.L3:
  128 0070 00380240 		.word	1073887232
  129              		.cfi_endproc
- 130              	.LFE134:
+ 130              	.LFE239:
  132              		.text
  133              	.Letext0:
  134              		.file 2 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
  135              		.file 3 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
-ARM GAS  /tmp/cc8BnTeD.s 			page 5
+ARM GAS  /tmp/ccCJeowr.s 			page 5
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 gpio.c
-     /tmp/cc8BnTeD.s:21     .text.MX_GPIO_Init:00000000 $t
-     /tmp/cc8BnTeD.s:27     .text.MX_GPIO_Init:00000000 MX_GPIO_Init
-     /tmp/cc8BnTeD.s:128    .text.MX_GPIO_Init:00000070 $d
+     /tmp/ccCJeowr.s:21     .text.MX_GPIO_Init:00000000 $t
+     /tmp/ccCJeowr.s:27     .text.MX_GPIO_Init:00000000 MX_GPIO_Init
+     /tmp/ccCJeowr.s:128    .text.MX_GPIO_Init:00000070 $d
 
 NO UNDEFINED SYMBOLS

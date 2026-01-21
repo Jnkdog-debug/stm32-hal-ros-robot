@@ -115,6 +115,24 @@ class RobotDashboard:
                 pass
 
         # --- 2. 电机数据解析 (功能码 0x20) ---
+        # 新格式: 4 + 4 + 4 + 4 + 4 = 20 字节 (cnt_L, cnt_R, rpm_L, rpm_R, battery_voltage)
+        elif func == 0x20 and len(data) == 20:
+            try:
+                cnt_l, cnt_r, rpm_l, rpm_r, battery_voltage = struct.unpack('<iiff f', data)
+                
+                # 电压显示：根据电压值显示不同的颜色/符号
+                if battery_voltage > 12.0:
+                    voltage_indicator = "🟢"  # 绿色：正常
+                elif battery_voltage > 11.0:
+                    voltage_indicator = "🟡"  # 黄色：警告
+                else:
+                    voltage_indicator = "🔴"  # 红色：低电压
+                
+                print(f" | 🏎️ [L] {rpm_l:>5.1f} [R] {rpm_r:>5.1f} RPM | {voltage_indicator} 电池: {battery_voltage:.2f}V ", end='', flush=True)
+            except struct.error:
+                pass
+        
+        # --- 2b. 电机数据解析 (旧格式兼容 - 功能码 0x20，仅16字节) ---
         elif func == 0x20 and len(data) == 16:
             try:
                 cnt_l, cnt_r, rpm_l, rpm_r = struct.unpack('<iiff', data)

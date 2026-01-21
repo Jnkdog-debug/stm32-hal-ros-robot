@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccd6oC3p.s 			page 1
+ARM GAS  /tmp/ccfPOsqu.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -28,7 +28,7 @@ ARM GAS  /tmp/ccd6oC3p.s 			page 1
   25              		.thumb_func
   27              	HAL_InitTick:
   28              	.LVL0:
-  29              	.LFB134:
+  29              	.LFB239:
    1:Core/Src/stm32f4xx_hal_timebase_tim.c **** /* USER CODE BEGIN Header */
    2:Core/Src/stm32f4xx_hal_timebase_tim.c **** /**
    3:Core/Src/stm32f4xx_hal_timebase_tim.c ****   ******************************************************************************
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccd6oC3p.s 			page 1
   27:Core/Src/stm32f4xx_hal_timebase_tim.c **** /* Private variables ---------------------------------------------------------*/
   28:Core/Src/stm32f4xx_hal_timebase_tim.c **** TIM_HandleTypeDef        htim14;
   29:Core/Src/stm32f4xx_hal_timebase_tim.c **** /* Private function prototypes -----------------------------------------------*/
-ARM GAS  /tmp/ccd6oC3p.s 			page 2
+ARM GAS  /tmp/ccfPOsqu.s 			page 2
 
 
   30:Core/Src/stm32f4xx_hal_timebase_tim.c **** /* Private functions ---------------------------------------------------------*/
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccd6oC3p.s 			page 1
   61              		.loc 1 52 3 view .LVU10
   62 0014 1B6C     		ldr	r3, [r3, #64]
   63 0016 03F48073 		and	r3, r3, #256
-ARM GAS  /tmp/ccd6oC3p.s 			page 3
+ARM GAS  /tmp/ccfPOsqu.s 			page 3
 
 
   64 001a 0193     		str	r3, [sp, #4]
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccd6oC3p.s 			page 1
  100              	.LVL8:
   71:Core/Src/stm32f4xx_hal_timebase_tim.c **** 
   72:Core/Src/stm32f4xx_hal_timebase_tim.c ****   /* Initialize TIM14 */
-ARM GAS  /tmp/ccd6oC3p.s 			page 4
+ARM GAS  /tmp/ccfPOsqu.s 			page 4
 
 
   73:Core/Src/stm32f4xx_hal_timebase_tim.c ****   htim14.Instance = TIM14;
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccd6oC3p.s 			page 1
   93:Core/Src/stm32f4xx_hal_timebase_tim.c ****     {
   94:Core/Src/stm32f4xx_hal_timebase_tim.c ****     /* Enable the TIM14 global Interrupt */
   95:Core/Src/stm32f4xx_hal_timebase_tim.c ****         HAL_NVIC_EnableIRQ(TIM8_TRG_COM_TIM14_IRQn);
-ARM GAS  /tmp/ccd6oC3p.s 			page 5
+ARM GAS  /tmp/ccfPOsqu.s 			page 5
 
 
   96:Core/Src/stm32f4xx_hal_timebase_tim.c ****       /* Configure the SysTick IRQ priority */
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccd6oC3p.s 			page 1
  165              	.LVL17:
   92:Core/Src/stm32f4xx_hal_timebase_tim.c ****     {
  166              		.loc 1 92 5 is_stmt 1 view .LVU52
-ARM GAS  /tmp/ccd6oC3p.s 			page 6
+ARM GAS  /tmp/ccfPOsqu.s 			page 6
 
 
   92:Core/Src/stm32f4xx_hal_timebase_tim.c ****     {
@@ -352,18 +352,18 @@ ARM GAS  /tmp/ccd6oC3p.s 			page 1
  205 009c 00200040 		.word	1073750016
  206 00a0 00000000 		.word	uwTickPrio
  207              		.cfi_endproc
- 208              	.LFE134:
+ 208              	.LFE239:
  210              		.section	.text.HAL_SuspendTick,"ax",%progbits
  211              		.align	1
  212              		.global	HAL_SuspendTick
  213              		.syntax unified
  214              		.thumb
-ARM GAS  /tmp/ccd6oC3p.s 			page 7
+ARM GAS  /tmp/ccfPOsqu.s 			page 7
 
 
  215              		.thumb_func
  217              	HAL_SuspendTick:
- 218              	.LFB135:
+ 218              	.LFB240:
  113:Core/Src/stm32f4xx_hal_timebase_tim.c **** 
  114:Core/Src/stm32f4xx_hal_timebase_tim.c **** /**
  115:Core/Src/stm32f4xx_hal_timebase_tim.c ****   * @brief  Suspend Tick increment.
@@ -394,7 +394,7 @@ ARM GAS  /tmp/ccd6oC3p.s 			page 1
  234              	.L12:
  235 0010 00000000 		.word	htim14
  236              		.cfi_endproc
- 237              	.LFE135:
+ 237              	.LFE240:
  239              		.section	.text.HAL_ResumeTick,"ax",%progbits
  240              		.align	1
  241              		.global	HAL_ResumeTick
@@ -402,7 +402,7 @@ ARM GAS  /tmp/ccd6oC3p.s 			page 1
  243              		.thumb
  244              		.thumb_func
  246              	HAL_ResumeTick:
- 247              	.LFB136:
+ 247              	.LFB241:
  125:Core/Src/stm32f4xx_hal_timebase_tim.c **** 
  126:Core/Src/stm32f4xx_hal_timebase_tim.c **** /**
  127:Core/Src/stm32f4xx_hal_timebase_tim.c ****   * @brief  Resume Tick increment.
@@ -418,7 +418,7 @@ ARM GAS  /tmp/ccd6oC3p.s 			page 1
  251              		@ frame_needed = 0, uses_anonymous_args = 0
  252              		@ link register save eliminated.
  134:Core/Src/stm32f4xx_hal_timebase_tim.c ****   /* Enable TIM14 Update interrupt */
-ARM GAS  /tmp/ccd6oC3p.s 			page 8
+ARM GAS  /tmp/ccfPOsqu.s 			page 8
 
 
  135:Core/Src/stm32f4xx_hal_timebase_tim.c ****   __HAL_TIM_ENABLE_IT(&htim14, TIM_IT_UPDATE);
@@ -436,7 +436,7 @@ ARM GAS  /tmp/ccd6oC3p.s 			page 1
  263              	.L15:
  264 0010 00000000 		.word	htim14
  265              		.cfi_endproc
- 266              	.LFE136:
+ 266              	.LFE241:
  268              		.global	htim14
  269              		.section	.bss.htim14,"aw",%nobits
  270              		.align	2
@@ -456,22 +456,22 @@ ARM GAS  /tmp/ccd6oC3p.s 			page 1
  282              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
  283              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
  284              		.file 9 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h"
-ARM GAS  /tmp/ccd6oC3p.s 			page 9
+ARM GAS  /tmp/ccfPOsqu.s 			page 9
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 stm32f4xx_hal_timebase_tim.c
-     /tmp/ccd6oC3p.s:21     .text.HAL_InitTick:00000000 $t
-     /tmp/ccd6oC3p.s:27     .text.HAL_InitTick:00000000 HAL_InitTick
-     /tmp/ccd6oC3p.s:202    .text.HAL_InitTick:00000090 $d
-     /tmp/ccd6oC3p.s:273    .bss.htim14:00000000 htim14
-     /tmp/ccd6oC3p.s:211    .text.HAL_SuspendTick:00000000 $t
-     /tmp/ccd6oC3p.s:217    .text.HAL_SuspendTick:00000000 HAL_SuspendTick
-     /tmp/ccd6oC3p.s:235    .text.HAL_SuspendTick:00000010 $d
-     /tmp/ccd6oC3p.s:240    .text.HAL_ResumeTick:00000000 $t
-     /tmp/ccd6oC3p.s:246    .text.HAL_ResumeTick:00000000 HAL_ResumeTick
-     /tmp/ccd6oC3p.s:264    .text.HAL_ResumeTick:00000010 $d
-     /tmp/ccd6oC3p.s:270    .bss.htim14:00000000 $d
+     /tmp/ccfPOsqu.s:21     .text.HAL_InitTick:00000000 $t
+     /tmp/ccfPOsqu.s:27     .text.HAL_InitTick:00000000 HAL_InitTick
+     /tmp/ccfPOsqu.s:202    .text.HAL_InitTick:00000090 $d
+     /tmp/ccfPOsqu.s:273    .bss.htim14:00000000 htim14
+     /tmp/ccfPOsqu.s:211    .text.HAL_SuspendTick:00000000 $t
+     /tmp/ccfPOsqu.s:217    .text.HAL_SuspendTick:00000000 HAL_SuspendTick
+     /tmp/ccfPOsqu.s:235    .text.HAL_SuspendTick:00000010 $d
+     /tmp/ccfPOsqu.s:240    .text.HAL_ResumeTick:00000000 $t
+     /tmp/ccfPOsqu.s:246    .text.HAL_ResumeTick:00000000 HAL_ResumeTick
+     /tmp/ccfPOsqu.s:264    .text.HAL_ResumeTick:00000010 $d
+     /tmp/ccfPOsqu.s:270    .bss.htim14:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_RCC_GetClockConfig

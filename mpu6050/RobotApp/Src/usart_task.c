@@ -63,10 +63,10 @@ void StartUsartTask(void *argument)
                     
                     tx_buf[2] = 0x20; // 功能码
                     
-                    // 【修改点1】长度改为 16 字节 (4个变量 * 4字节)
-                    tx_buf[3] = 16;   
+                    // 长度改为 20 字节 (count_L:4 + count_R:4 + speed_L:4 + speed_R:4 + battery_voltage:4)
+                    tx_buf[3] = 20;   
                     
-                    // 【修改点2】依次打包 4 个数据
+                    // 依次打包 5 个数据
                     // 偏移 4: 左脉冲 (int)
                     memcpy(&tx_buf[4],  &p_motor->count_L, 4);
                     // 偏移 8: 右脉冲 (int)
@@ -75,8 +75,10 @@ void StartUsartTask(void *argument)
                     memcpy(&tx_buf[12], &p_motor->speed_L,   4);
                     // 偏移 16: 右速度 (float)
                     memcpy(&tx_buf[16], &p_motor->speed_R,   4);
+                    // 偏移 20: 电池电压 (float)
+                    memcpy(&tx_buf[20], &p_motor->battery_voltage, 4);
                     
-                    payload_len = 16;
+                    payload_len = 20;
                     break;
                 }
                 

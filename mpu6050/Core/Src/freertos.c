@@ -105,6 +105,13 @@ const osThreadAttr_t motorTask_attributes = {
   .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityRealtime,
 };
+/* Definitions for battrytTask */
+osThreadId_t battrytTaskHandle;
+const osThreadAttr_t battrytTask_attributes = {
+  .name = "battrytTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 /* Definitions for dataQueue */
 osMessageQueueId_t dataQueueHandle;
 const osMessageQueueAttr_t dataQueue_attributes = {
@@ -130,6 +137,7 @@ void StartimuTask(void *argument);
 void StartUsartTask(void *argument);
 void StartcmdTask(void *argument);
 void StartmotorTask(void *argument);
+void StartbattyTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -181,6 +189,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of motorTask */
   motorTaskHandle = osThreadNew(StartmotorTask, NULL, &motorTask_attributes);
+
+  /* creation of battrytTask */
+  battrytTaskHandle = osThreadNew(StartbattyTask, NULL, &battrytTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -262,6 +273,24 @@ __weak void StartmotorTask(void *argument)
     osDelay(1);
   }
   /* USER CODE END StartmotorTask */
+}
+
+/* USER CODE BEGIN Header_StartbattyTask */
+/**
+* @brief Function implementing the battrytTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartbattyTask */
+__weak void StartbattyTask(void *argument)
+{
+  /* USER CODE BEGIN StartbattyTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartbattyTask */
 }
 
 /* Private application code --------------------------------------------------*/

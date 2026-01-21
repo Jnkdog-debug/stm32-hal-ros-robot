@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccGSmT0a.s 			page 1
+ARM GAS  /tmp/ccem2lyV.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -28,7 +28,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
   25              		.thumb_func
   27              	Motor_Init:
   28              	.LVL0:
-  29              	.LFB134:
+  29              	.LFB239:
    1:BSP/EncoderMotor/encodermotor.c **** #include "encodermotor.h"
    2:BSP/EncoderMotor/encodermotor.c **** #include <stdint.h>
    3:BSP/EncoderMotor/encodermotor.c **** 
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
   27:BSP/EncoderMotor/encodermotor.c ****     .encoder_tim = &htim5, 
   28:BSP/EncoderMotor/encodermotor.c ****     .encoder_direction = 1,  // Motor_D 编码器反向（需要取反）
   29:BSP/EncoderMotor/encodermotor.c ****     .kp = 5.0f,
-ARM GAS  /tmp/ccGSmT0a.s 			page 2
+ARM GAS  /tmp/ccem2lyV.s 			page 2
 
 
   30:BSP/EncoderMotor/encodermotor.c ****     .ki = 0.05f,
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
   43:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
   71              		.loc 1 43 5 is_stmt 1 view .LVU9
   72              		.loc 1 43 39 is_stmt 0 view .LVU10
-ARM GAS  /tmp/ccGSmT0a.s 			page 3
+ARM GAS  /tmp/ccem2lyV.s 			page 3
 
 
   73 002c 2369     		ldr	r3, [r4, #16]
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  118 0068 0022     		movs	r2, #0
  119 006a 1A64     		str	r2, [r3, #64]
  120 006c DEE7     		b	.L7
-ARM GAS  /tmp/ccGSmT0a.s 			page 4
+ARM GAS  /tmp/ccem2lyV.s 			page 4
 
 
  121              	.L13:
@@ -198,7 +198,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  133 007e DA63     		str	r2, [r3, #60]
  134 0080 D4E7     		b	.L7
  135              		.cfi_endproc
- 136              	.LFE134:
+ 136              	.LFE239:
  138              		.section	.text.Motor_SetPWM,"ax",%progbits
  139              		.align	1
  140              		.global	Motor_SetPWM
@@ -207,7 +207,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  143              		.thumb_func
  145              	Motor_SetPWM:
  146              	.LVL5:
- 147              	.LFB135:
+ 147              	.LFB240:
   45:BSP/EncoderMotor/encodermotor.c **** 
   46:BSP/EncoderMotor/encodermotor.c **** 
   47:BSP/EncoderMotor/encodermotor.c **** void Motor_SetPWM(MotorControl_t* motor, int16_t duty) {
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  166 0010 5FDD     		ble	.L25
   54:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, pwm_val);
  167              		.loc 1 54 9 is_stmt 1 view .LVU30
-ARM GAS  /tmp/ccGSmT0a.s 			page 5
+ARM GAS  /tmp/ccem2lyV.s 			page 5
 
 
  168 0012 8268     		ldr	r2, [r0, #8]
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  214              		.loc 1 51 9 discriminator 4 view .LVU41
  215 004a 082A     		cmp	r2, #8
  216 004c 09D0     		beq	.L42
-ARM GAS  /tmp/ccGSmT0a.s 			page 6
+ARM GAS  /tmp/ccem2lyV.s 			page 6
 
 
   51:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  261 0080 9363     		str	r3, [r2, #56]
  262 0082 7047     		bx	lr
  263              	.L44:
-ARM GAS  /tmp/ccGSmT0a.s 			page 7
+ARM GAS  /tmp/ccem2lyV.s 			page 7
 
 
   52:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
@@ -418,7 +418,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  312 00c2 0022     		movs	r2, #0
  313 00c4 9A63     		str	r2, [r3, #56]
  314 00c6 7047     		bx	lr
-ARM GAS  /tmp/ccGSmT0a.s 			page 8
+ARM GAS  /tmp/ccem2lyV.s 			page 8
 
 
  315              	.L48:
@@ -478,7 +478,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  362 0104 9A63     		str	r2, [r3, #56]
  363 0106 EAE7     		b	.L34
  364              	.L50:
-ARM GAS  /tmp/ccGSmT0a.s 			page 9
+ARM GAS  /tmp/ccem2lyV.s 			page 9
 
 
   57:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
@@ -521,7 +521,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  397 0134 DA63     		str	r2, [r3, #60]
  398 0136 7047     		bx	lr
  399              		.cfi_endproc
- 400              	.LFE135:
+ 400              	.LFE240:
  402              		.section	.text.Motor_Encoder_Init,"ax",%progbits
  403              		.align	1
  404              		.global	Motor_Encoder_Init
@@ -530,7 +530,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  407              		.thumb_func
  409              	Motor_Encoder_Init:
  410              	.LVL20:
- 411              	.LFB136:
+ 411              	.LFB241:
   61:BSP/EncoderMotor/encodermotor.c **** 
   62:BSP/EncoderMotor/encodermotor.c **** 
   63:BSP/EncoderMotor/encodermotor.c **** /*编码器实现*/
@@ -538,7 +538,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
   65:BSP/EncoderMotor/encodermotor.c **** void Motor_Encoder_Init(MotorControl_t* motor) {
  412              		.loc 1 65 48 is_stmt 1 view -0
  413              		.cfi_startproc
-ARM GAS  /tmp/ccGSmT0a.s 			page 10
+ARM GAS  /tmp/ccem2lyV.s 			page 10
 
 
  414              		@ args = 0, pretend = 0, frame = 0
@@ -592,19 +592,19 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  452              		.loc 1 75 1 view .LVU97
  453 001c 08BD     		pop	{r3, pc}
  454              		.cfi_endproc
- 455              	.LFE136:
+ 455              	.LFE241:
  457              		.section	.text.Motor_Encoder_Update,"ax",%progbits
  458              		.align	1
  459              		.global	Motor_Encoder_Update
  460              		.syntax unified
  461              		.thumb
-ARM GAS  /tmp/ccGSmT0a.s 			page 11
+ARM GAS  /tmp/ccem2lyV.s 			page 11
 
 
  462              		.thumb_func
  464              	Motor_Encoder_Update:
  465              	.LVL23:
- 466              	.LFB137:
+ 466              	.LFB242:
   76:BSP/EncoderMotor/encodermotor.c **** 
   77:BSP/EncoderMotor/encodermotor.c **** 
   78:BSP/EncoderMotor/encodermotor.c **** 
@@ -658,7 +658,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  496              		.loc 1 96 11 view .LVU108
  497 0016 13FB01F3 		smulbb	r3, r3, r1
  498              	.LVL26:
-ARM GAS  /tmp/ccGSmT0a.s 			page 12
+ARM GAS  /tmp/ccem2lyV.s 			page 12
 
 
  499              		.loc 1 96 11 view .LVU109
@@ -718,10 +718,10 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  538 0048 00008244 		.word	1149370368
  539 004c 0080BB45 		.word	1169915904
  540              		.cfi_endproc
-ARM GAS  /tmp/ccGSmT0a.s 			page 13
+ARM GAS  /tmp/ccem2lyV.s 			page 13
 
 
- 541              	.LFE137:
+ 541              	.LFE242:
  543              		.section	.text.Incremental_PID,"ax",%progbits
  544              		.align	1
  545              		.global	Incremental_PID
@@ -730,7 +730,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  548              		.thumb_func
  550              	Incremental_PID:
  551              	.LVL31:
- 552              	.LFB138:
+ 552              	.LFB243:
  112:BSP/EncoderMotor/encodermotor.c **** 
  113:BSP/EncoderMotor/encodermotor.c **** 
  114:BSP/EncoderMotor/encodermotor.c **** int16_t Incremental_PID(MotorControl_t* motor, float target) {
@@ -778,7 +778,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  580 0024 D0ED0F6A 		vldr.32	s13, [r0, #60]
  581              		.loc 1 128 42 view .LVU135
  582 0028 30EE667A 		vsub.f32	s14, s0, s13
-ARM GAS  /tmp/ccGSmT0a.s 			page 14
+ARM GAS  /tmp/ccem2lyV.s 			page 14
 
 
  583              		.loc 1 128 33 view .LVU136
@@ -838,7 +838,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  624 0074 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  625 0078 01DD     		ble	.L62
  626              		.loc 1 139 32 is_stmt 1 discriminator 1 view .LVU157
-ARM GAS  /tmp/ccGSmT0a.s 			page 15
+ARM GAS  /tmp/ccem2lyV.s 			page 15
 
 
  627              		.loc 1 139 47 is_stmt 0 discriminator 1 view .LVU158
@@ -898,7 +898,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  120:BSP/EncoderMotor/encodermotor.c ****         return 0;
  668              		.loc 1 120 16 is_stmt 0 view .LVU177
  669 00ae 0020     		movs	r0, #0
-ARM GAS  /tmp/ccGSmT0a.s 			page 16
+ARM GAS  /tmp/ccem2lyV.s 			page 16
 
 
  670              	.LVL37:
@@ -911,7 +911,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  676 00b4 00806D44 		.word	1148026880
  677 00b8 00806DC4 		.word	-999456768
  678              		.cfi_endproc
- 679              	.LFE138:
+ 679              	.LFE243:
  681              		.global	Motor_D
  682              		.section	.data.Motor_D,"aw"
  683              		.align	2
@@ -958,7 +958,7 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  714      00000000 
  715              		.text
  716              	.Letext0:
-ARM GAS  /tmp/ccGSmT0a.s 			page 17
+ARM GAS  /tmp/ccem2lyV.s 			page 17
 
 
  717              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
@@ -968,27 +968,27 @@ ARM GAS  /tmp/ccGSmT0a.s 			page 1
  721              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
  722              		.file 7 "Core/Inc/tim.h"
  723              		.file 8 "BSP/EncoderMotor/encodermotor.h"
-ARM GAS  /tmp/ccGSmT0a.s 			page 18
+ARM GAS  /tmp/ccem2lyV.s 			page 18
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 encodermotor.c
-     /tmp/ccGSmT0a.s:21     .text.Motor_Init:00000000 $t
-     /tmp/ccGSmT0a.s:27     .text.Motor_Init:00000000 Motor_Init
-     /tmp/ccGSmT0a.s:139    .text.Motor_SetPWM:00000000 $t
-     /tmp/ccGSmT0a.s:145    .text.Motor_SetPWM:00000000 Motor_SetPWM
-     /tmp/ccGSmT0a.s:403    .text.Motor_Encoder_Init:00000000 $t
-     /tmp/ccGSmT0a.s:409    .text.Motor_Encoder_Init:00000000 Motor_Encoder_Init
-     /tmp/ccGSmT0a.s:458    .text.Motor_Encoder_Update:00000000 $t
-     /tmp/ccGSmT0a.s:464    .text.Motor_Encoder_Update:00000000 Motor_Encoder_Update
-     /tmp/ccGSmT0a.s:538    .text.Motor_Encoder_Update:00000048 $d
-     /tmp/ccGSmT0a.s:544    .text.Incremental_PID:00000000 $t
-     /tmp/ccGSmT0a.s:550    .text.Incremental_PID:00000000 Incremental_PID
-     /tmp/ccGSmT0a.s:676    .text.Incremental_PID:000000b4 $d
-     /tmp/ccGSmT0a.s:686    .data.Motor_D:00000000 Motor_D
-     /tmp/ccGSmT0a.s:683    .data.Motor_D:00000000 $d
-     /tmp/ccGSmT0a.s:703    .data.Motor_A:00000000 Motor_A
-     /tmp/ccGSmT0a.s:700    .data.Motor_A:00000000 $d
+     /tmp/ccem2lyV.s:21     .text.Motor_Init:00000000 $t
+     /tmp/ccem2lyV.s:27     .text.Motor_Init:00000000 Motor_Init
+     /tmp/ccem2lyV.s:139    .text.Motor_SetPWM:00000000 $t
+     /tmp/ccem2lyV.s:145    .text.Motor_SetPWM:00000000 Motor_SetPWM
+     /tmp/ccem2lyV.s:403    .text.Motor_Encoder_Init:00000000 $t
+     /tmp/ccem2lyV.s:409    .text.Motor_Encoder_Init:00000000 Motor_Encoder_Init
+     /tmp/ccem2lyV.s:458    .text.Motor_Encoder_Update:00000000 $t
+     /tmp/ccem2lyV.s:464    .text.Motor_Encoder_Update:00000000 Motor_Encoder_Update
+     /tmp/ccem2lyV.s:538    .text.Motor_Encoder_Update:00000048 $d
+     /tmp/ccem2lyV.s:544    .text.Incremental_PID:00000000 $t
+     /tmp/ccem2lyV.s:550    .text.Incremental_PID:00000000 Incremental_PID
+     /tmp/ccem2lyV.s:676    .text.Incremental_PID:000000b4 $d
+     /tmp/ccem2lyV.s:686    .data.Motor_D:00000000 Motor_D
+     /tmp/ccem2lyV.s:683    .data.Motor_D:00000000 $d
+     /tmp/ccem2lyV.s:703    .data.Motor_A:00000000 Motor_A
+     /tmp/ccem2lyV.s:700    .data.Motor_A:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_TIM_PWM_Start
