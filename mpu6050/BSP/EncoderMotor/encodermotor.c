@@ -3,34 +3,61 @@
 
 
 
+// ==========================================
+// 麦克纳姆轮底盘：四轮电机硬件资源全映射
+// ==========================================
+
+// 1. 电机 A (左前轮 FL)
+// 硬件分配: PWM -> TIM10_CH1 / TIM11_CH1, 编码器 -> TIM2 PA15 PB3
 MotorControl_t Motor_A = {
-    .pwm_timo1 = &htim10,
+    .pwm_timo1 = &htim10, 
     .pwm_channel1 = TIM_CHANNEL_1,
-    .pwm_timo2 = &htim11,
+    .pwm_timo2 = &htim11, 
     .pwm_channel2 = TIM_CHANNEL_1,
-    .encoder_tim = &htim3,
-    .encoder_direction = 1,   // Motor_A 编码器正向
-    .kp = 5.0f,
-    .ki = 0.05f,
-    .kd = 0.1f
+    .encoder_tim = &htim2, 
+    .encoder_direction = 1,   // 根据实际接线调整 1 或 -1
+    .kp = 5.0f, .ki = 0.05f, .kd = 0.1f
 };
 
+// 2. 电机 B (右前轮 FR)
+// 硬件分配: PWM -> TIM9_CH1 / TIM9_CH2, 编码器 -> TIM3 PB4 PB5
+MotorControl_t Motor_B = {
+    .pwm_timo1 = &htim9, 
+    .pwm_channel1 = TIM_CHANNEL_1,
+    .pwm_timo2 = &htim9, 
+    .pwm_channel2 = TIM_CHANNEL_2,
+    .encoder_tim = &htim3, 
+    .encoder_direction = 1,   
+    .kp = 5.0f, .ki = 0.05f, .kd = 0.1f
+};
 
+// 3. 电机 C (左后轮 RL)
+// 硬件分配: PWM -> TIM1_CH1 / TIM1_CH2, 编码器 -> TIM4 PB6 PB7
+MotorControl_t Motor_C = {
+    .pwm_timo1 = &htim1, 
+    .pwm_channel1 = TIM_CHANNEL_1,
+    .pwm_timo2 = &htim1, 
+    .pwm_channel2 = TIM_CHANNEL_2,
+    .encoder_tim = &htim4, 
+    .encoder_direction = 1,   
+    .kp = 5.0f, .ki = 0.05f, .kd = 0.1f
+};
 
-
-// 电机 D: PWM (TIM1_CH3/CH4), 编码器 (TIM5)
+// 4. 电机 D (右后轮 RR)
+// 硬件分配: PWM -> TIM1_CH3 / TIM1_CH4, 编码器 -> TIM5 PA0 PA1
 MotorControl_t Motor_D = {
     .pwm_timo1 = &htim1, 
     .pwm_channel1 = TIM_CHANNEL_3,
     .pwm_timo2 = &htim1, 
     .pwm_channel2 = TIM_CHANNEL_4,
     .encoder_tim = &htim5, 
-    .encoder_direction = 1,  // Motor_D 编码器反向（需要取反）
-    .kp = 5.0f,
-    .ki = 0.05f,
-    .kd = 0.1f
+    .encoder_direction = 1,   
+    .kp = 5.0f, .ki = 0.05f, .kd = 0.1f
 };
 
+// 建议：为了方便后续在 FreeRTOS 的 motorTask 中用 for 循环遍历控制，
+// 可以把它们装进一个数组里！
+MotorControl_t* Mecanum_Motors[4] = {&Motor_A, &Motor_B, &Motor_C, &Motor_D};
 
 void Motor_Init(MotorControl_t* motor)
 {

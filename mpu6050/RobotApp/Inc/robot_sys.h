@@ -23,12 +23,11 @@ typedef struct {
 
 /* 3. 定义电机数据结构体 (举例) */
 typedef struct {
-    float speed_L;
-    float speed_R; 
-    int32_t count_L;   // 左轮总脉冲 (用于 SLAM 里程计)
-    int32_t count_R;   // 右轮总脉冲
-    float battery_voltage;  // 电池电压 (V)
-} MotorData_t;
+// V2.0 麦轮状态上报结构体 (总计 36 字节)
+    float   rpm[4];             // 4个轮子的转速 (16字节)
+    int32_t count[4];           // 4个轮子的累计脉冲 (16字节)
+    float   battery_voltage;    // 电池电压 (4字节)
+ } MotorData_t;
 
 
 
@@ -39,15 +38,11 @@ typedef struct {
     uint8_t is_running;
     uint32_t sample_period;  // 采样周期 (ms)
     
-    float speed_L;
-    float speed_R;
-    int32_t encoder_L;
-    int32_t encoder_R;
-
-     float target_speed_L;
-     float target_speed_R;
-     float current_speed_L;
-     float current_speed_R;
+// 【新增】V2.0 麦轮全局空间速度指令
+    float target_Vx;
+    float target_Vy;
+    float target_Wz;
+    uint32_t last_cmd_time; // 喂狗时间戳
 
      float battery_voltage;  // 电池电压 (V)
 

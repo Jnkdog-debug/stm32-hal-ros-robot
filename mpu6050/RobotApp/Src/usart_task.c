@@ -60,47 +60,48 @@ void StartUsartTask(void *argument)
                 case MSG_TYPE_MOTOR:
                 {
                     MotorData_t* p_motor = (MotorData_t*)recv_msg.p_data;
-                    
-                    tx_buf[2] = 0x20; // 功能码
-                    
-                    // 长度改为 20 字节 (count_L:4 + count_R:4 + speed_L:4 + speed_R:4 + battery_voltage:4)
-                    tx_buf[3] = 20;   
-                    
-                    // 依次打包 5 个数据
-                    // 偏移 4: 左脉冲 (int)
-                    memcpy(&tx_buf[4],  &p_motor->count_L, 4);
-                    // 偏移 8: 右脉冲 (int)
-                    memcpy(&tx_buf[8],  &p_motor->count_R, 4);
-                    // 偏移 12: 左速度 (float)
-                    memcpy(&tx_buf[12], &p_motor->speed_L,   4);
-                    // 偏移 16: 右速度 (float)
-                    memcpy(&tx_buf[16], &p_motor->speed_R,   4);
-                    // 偏移 20: 电池电压 (float)
-                    memcpy(&tx_buf[20], &p_motor->battery_voltage, 4);
-                    
-                    payload_len = 20;
+
+                    tx_buf[2] = 0x20; // 功能码: 麦轮电机状态
+
+                    // 【V2.0 升级】长度改为 36 字节
+                    // 4个rpm(16) + 4个count(16) + 电压(4) = 36
+                    tx_buf[3] = 36;   
+
+                    // --- 1. 打包 4 个轮子的转速 RPM (float) ---
+                    memcpy(&tx_buf[4],  &p_motor->rpm[0], 4); // 偏移 4: FL
+                    memcpy(&tx_buf[8],  &p_motor->rpm[1], 4); // 偏移 8: FR
+                    memcpy(&tx_buf[12], &p_motor->rpm[2], 4); // 偏移 12: RL
+                    memcpy(&tx_buf[16], &p_motor->rpm[3], 4); // 偏移 16: RR
+
+                    // --- 2. 打包 4 个轮子的脉冲数 Count (int32) ---
+                    memcpy(&tx_buf[20], &p_motor->count[0], 4); // 偏移 20: FL
+                    memcpy(&tx_buf[24], &p_motor->count[1], 4); // 偏移 24: FR
+                    memcpy(&tx_buf[28], &p_motor->count[2], 4); // 偏移 28: RL
+                    memcpy(&tx_buf[32], &p_motor->count[3], 4); // 偏移 32: RR
+
+                    // --- 3. 打包电池电压 (float) ---
+                    memcpy(&tx_buf[36], &p_motor->battery_voltage, 4); // 偏移 36
+
+                    payload_len = 36;
                     break;
+                } 
+            }           
+                // 3. 计算校验并发送
+                if (payload_len > 0) {
+                    // 校验位放在 payload 后面
+                    // 总长度 = 头(2) + 功能(1) + 长度(1) + Payload + 校验(1)
+                    uint8_t total_len = 2 + 1 + 1 + payload_len + 1;
+                    
+                    // 计算前面所有字节的校验和 (除了最后一个字节)
+                    tx_buf[total_len - 1] = Calc_Checksum(&tx_buf[2], total_len - 3);                
+                    // 发送二进制流
+                    HAL_UART_Transmit(&huart3, tx_buf, total_len, 10);
                 }
-                
-                default:
-                    break;
-            }
-
-            // 3. 计算校验并发送
-            if (payload_len > 0) {
-                // 校验位放在 payload 后面
-                // 总长度 = 头(2) + 功能(1) + 长度(1) + Payload + 校验(1)
-                uint8_t total_len = 2 + 1 + 1 + payload_len + 1;
-                
-                // 计算前面所有字节的校验和 (除了最后一个字节)
-                tx_buf[total_len - 1] = Calc_Checksum(&tx_buf[2], total_len - 3);                
-                // 发送二进制流
-                HAL_UART_Transmit(&huart3, tx_buf, total_len, 10);
-            }
-
+            
             // 4. ***最重要的一步***：释放内存
             // 无论是什么类型，recv_msg.p_data 指向的都是 malloc 出来的内存
             vPortFree(recv_msg.p_data);
+            
         }
     }
 }

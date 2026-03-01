@@ -100,8 +100,27 @@ int main(void)
   MX_TIM10_Init();
   MX_TIM11_Init();
   MX_ADC1_Init();
+  MX_TIM2_Init();
+  MX_TIM4_Init();
+  MX_TIM9_Init();
   /* USER CODE BEGIN 2 */
-
+  // ==========================================
+  // 🤖 机器人开机声光自检 (Power-on Self-Test)
+  // ==========================================
+  // 第 1 声 "滴"
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);   // 蜂鸣器响
+  HAL_Delay(50);                                       // 响 100 毫秒
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET); // 蜂鸣器灭
+  
+  HAL_Delay(50);                                       // 停顿 100 毫秒
+  
+  // 第 2 声 "滴"
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);   
+  HAL_Delay(50);                                       
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET); 
+  
+  // 自检结束，准备进入 RTOS 调度
+  // ==========================================
   /* USER CODE END 2 */
 
   /* Init scheduler */

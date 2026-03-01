@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccem2lyV.s 			page 1
+ARM GAS  /tmp/ccNU7FZv.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -34,164 +34,191 @@ ARM GAS  /tmp/ccem2lyV.s 			page 1
    3:BSP/EncoderMotor/encodermotor.c **** 
    4:BSP/EncoderMotor/encodermotor.c **** 
    5:BSP/EncoderMotor/encodermotor.c **** 
-   6:BSP/EncoderMotor/encodermotor.c **** MotorControl_t Motor_A = {
-   7:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo1 = &htim10,
-   8:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel1 = TIM_CHANNEL_1,
-   9:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo2 = &htim11,
-  10:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel2 = TIM_CHANNEL_1,
-  11:BSP/EncoderMotor/encodermotor.c ****     .encoder_tim = &htim3,
-  12:BSP/EncoderMotor/encodermotor.c ****     .encoder_direction = 1,   // Motor_A 编码器正向
-  13:BSP/EncoderMotor/encodermotor.c ****     .kp = 5.0f,
-  14:BSP/EncoderMotor/encodermotor.c ****     .ki = 0.05f,
-  15:BSP/EncoderMotor/encodermotor.c ****     .kd = 0.1f
-  16:BSP/EncoderMotor/encodermotor.c **** };
-  17:BSP/EncoderMotor/encodermotor.c **** 
-  18:BSP/EncoderMotor/encodermotor.c **** 
-  19:BSP/EncoderMotor/encodermotor.c **** 
-  20:BSP/EncoderMotor/encodermotor.c **** 
-  21:BSP/EncoderMotor/encodermotor.c **** // 电机 D: PWM (TIM1_CH3/CH4), 编码器 (TIM5)
-  22:BSP/EncoderMotor/encodermotor.c **** MotorControl_t Motor_D = {
-  23:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo1 = &htim1, 
-  24:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel1 = TIM_CHANNEL_3,
-  25:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo2 = &htim1, 
-  26:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel2 = TIM_CHANNEL_4,
-  27:BSP/EncoderMotor/encodermotor.c ****     .encoder_tim = &htim5, 
-  28:BSP/EncoderMotor/encodermotor.c ****     .encoder_direction = 1,  // Motor_D 编码器反向（需要取反）
-  29:BSP/EncoderMotor/encodermotor.c ****     .kp = 5.0f,
-ARM GAS  /tmp/ccem2lyV.s 			page 2
+   6:BSP/EncoderMotor/encodermotor.c **** // ==========================================
+   7:BSP/EncoderMotor/encodermotor.c **** // 麦克纳姆轮底盘：四轮电机硬件资源全映射
+   8:BSP/EncoderMotor/encodermotor.c **** // ==========================================
+   9:BSP/EncoderMotor/encodermotor.c **** 
+  10:BSP/EncoderMotor/encodermotor.c **** // 1. 电机 A (左前轮 FL)
+  11:BSP/EncoderMotor/encodermotor.c **** // 硬件分配: PWM -> TIM10_CH1 / TIM11_CH1, 编码器 -> TIM2 PA15 PB3
+  12:BSP/EncoderMotor/encodermotor.c **** MotorControl_t Motor_A = {
+  13:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo1 = &htim10, 
+  14:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel1 = TIM_CHANNEL_1,
+  15:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo2 = &htim11, 
+  16:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel2 = TIM_CHANNEL_1,
+  17:BSP/EncoderMotor/encodermotor.c ****     .encoder_tim = &htim2, 
+  18:BSP/EncoderMotor/encodermotor.c ****     .encoder_direction = 1,   // 根据实际接线调整 1 或 -1
+  19:BSP/EncoderMotor/encodermotor.c ****     .kp = 5.0f, .ki = 0.05f, .kd = 0.1f
+  20:BSP/EncoderMotor/encodermotor.c **** };
+  21:BSP/EncoderMotor/encodermotor.c **** 
+  22:BSP/EncoderMotor/encodermotor.c **** // 2. 电机 B (右前轮 FR)
+  23:BSP/EncoderMotor/encodermotor.c **** // 硬件分配: PWM -> TIM9_CH1 / TIM9_CH2, 编码器 -> TIM3 PB4 PB5
+  24:BSP/EncoderMotor/encodermotor.c **** MotorControl_t Motor_B = {
+  25:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo1 = &htim9, 
+  26:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel1 = TIM_CHANNEL_1,
+  27:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo2 = &htim9, 
+  28:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel2 = TIM_CHANNEL_2,
+  29:BSP/EncoderMotor/encodermotor.c ****     .encoder_tim = &htim3, 
+ARM GAS  /tmp/ccNU7FZv.s 			page 2
 
 
-  30:BSP/EncoderMotor/encodermotor.c ****     .ki = 0.05f,
-  31:BSP/EncoderMotor/encodermotor.c ****     .kd = 0.1f
+  30:BSP/EncoderMotor/encodermotor.c ****     .encoder_direction = 1,   
+  31:BSP/EncoderMotor/encodermotor.c ****     .kp = 5.0f, .ki = 0.05f, .kd = 0.1f
   32:BSP/EncoderMotor/encodermotor.c **** };
   33:BSP/EncoderMotor/encodermotor.c **** 
-  34:BSP/EncoderMotor/encodermotor.c **** 
-  35:BSP/EncoderMotor/encodermotor.c **** void Motor_Init(MotorControl_t* motor)
-  36:BSP/EncoderMotor/encodermotor.c **** {
-  30              		.loc 1 36 1 view -0
+  34:BSP/EncoderMotor/encodermotor.c **** // 3. 电机 C (左后轮 RL)
+  35:BSP/EncoderMotor/encodermotor.c **** // 硬件分配: PWM -> TIM1_CH1 / TIM1_CH2, 编码器 -> TIM4 PB6 PB7
+  36:BSP/EncoderMotor/encodermotor.c **** MotorControl_t Motor_C = {
+  37:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo1 = &htim1, 
+  38:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel1 = TIM_CHANNEL_1,
+  39:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo2 = &htim1, 
+  40:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel2 = TIM_CHANNEL_2,
+  41:BSP/EncoderMotor/encodermotor.c ****     .encoder_tim = &htim4, 
+  42:BSP/EncoderMotor/encodermotor.c ****     .encoder_direction = 1,   
+  43:BSP/EncoderMotor/encodermotor.c ****     .kp = 5.0f, .ki = 0.05f, .kd = 0.1f
+  44:BSP/EncoderMotor/encodermotor.c **** };
+  45:BSP/EncoderMotor/encodermotor.c **** 
+  46:BSP/EncoderMotor/encodermotor.c **** // 4. 电机 D (右后轮 RR)
+  47:BSP/EncoderMotor/encodermotor.c **** // 硬件分配: PWM -> TIM1_CH3 / TIM1_CH4, 编码器 -> TIM5 PA0 PA1
+  48:BSP/EncoderMotor/encodermotor.c **** MotorControl_t Motor_D = {
+  49:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo1 = &htim1, 
+  50:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel1 = TIM_CHANNEL_3,
+  51:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo2 = &htim1, 
+  52:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel2 = TIM_CHANNEL_4,
+  53:BSP/EncoderMotor/encodermotor.c ****     .encoder_tim = &htim5, 
+  54:BSP/EncoderMotor/encodermotor.c ****     .encoder_direction = 1,   
+  55:BSP/EncoderMotor/encodermotor.c ****     .kp = 5.0f, .ki = 0.05f, .kd = 0.1f
+  56:BSP/EncoderMotor/encodermotor.c **** };
+  57:BSP/EncoderMotor/encodermotor.c **** 
+  58:BSP/EncoderMotor/encodermotor.c **** // 建议：为了方便后续在 FreeRTOS 的 motorTask 中用 for 循环遍历控制，
+  59:BSP/EncoderMotor/encodermotor.c **** // 可以把它们装进一个数组里！
+  60:BSP/EncoderMotor/encodermotor.c **** MotorControl_t* Mecanum_Motors[4] = {&Motor_A, &Motor_B, &Motor_C, &Motor_D};
+  61:BSP/EncoderMotor/encodermotor.c **** 
+  62:BSP/EncoderMotor/encodermotor.c **** void Motor_Init(MotorControl_t* motor)
+  63:BSP/EncoderMotor/encodermotor.c **** {
+  30              		.loc 1 63 1 view -0
   31              		.cfi_startproc
   32              		@ args = 0, pretend = 0, frame = 0
   33              		@ frame_needed = 0, uses_anonymous_args = 0
-  34              		.loc 1 36 1 is_stmt 0 view .LVU1
+  34              		.loc 1 63 1 is_stmt 0 view .LVU1
   35 0000 10B5     		push	{r4, lr}
   36              	.LCFI0:
   37              		.cfi_def_cfa_offset 8
   38              		.cfi_offset 4, -8
   39              		.cfi_offset 14, -4
   40 0002 0446     		mov	r4, r0
-  37:BSP/EncoderMotor/encodermotor.c ****     
-  38:BSP/EncoderMotor/encodermotor.c ****     HAL_TIM_PWM_Start(motor->pwm_timo1, motor->pwm_channel1);
-  41              		.loc 1 38 5 is_stmt 1 view .LVU2
+  64:BSP/EncoderMotor/encodermotor.c ****     
+  65:BSP/EncoderMotor/encodermotor.c ****     HAL_TIM_PWM_Start(motor->pwm_timo1, motor->pwm_channel1);
+  41              		.loc 1 65 5 is_stmt 1 view .LVU2
   42 0004 8168     		ldr	r1, [r0, #8]
   43 0006 0068     		ldr	r0, [r0]
   44              	.LVL1:
-  45              		.loc 1 38 5 is_stmt 0 view .LVU3
+  45              		.loc 1 65 5 is_stmt 0 view .LVU3
   46 0008 FFF7FEFF 		bl	HAL_TIM_PWM_Start
   47              	.LVL2:
-  39:BSP/EncoderMotor/encodermotor.c ****     HAL_TIM_PWM_Start(motor->pwm_timo2, motor->pwm_channel2);
-  48              		.loc 1 39 5 is_stmt 1 view .LVU4
+  66:BSP/EncoderMotor/encodermotor.c ****     HAL_TIM_PWM_Start(motor->pwm_timo2, motor->pwm_channel2);
+  48              		.loc 1 66 5 is_stmt 1 view .LVU4
   49 000c E168     		ldr	r1, [r4, #12]
+ARM GAS  /tmp/ccNU7FZv.s 			page 3
+
+
   50 000e 6068     		ldr	r0, [r4, #4]
   51 0010 FFF7FEFF 		bl	HAL_TIM_PWM_Start
   52              	.LVL3:
-  40:BSP/EncoderMotor/encodermotor.c **** 
-  41:BSP/EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
-  53              		.loc 1 41 5 view .LVU5
+  67:BSP/EncoderMotor/encodermotor.c **** 
+  68:BSP/EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
+  53              		.loc 1 68 5 view .LVU5
   54 0014 A368     		ldr	r3, [r4, #8]
   55 0016 73B9     		cbnz	r3, .L2
-  56              		.loc 1 41 5 is_stmt 0 discriminator 1 view .LVU6
+  56              		.loc 1 68 5 is_stmt 0 discriminator 1 view .LVU6
   57 0018 2368     		ldr	r3, [r4]
   58 001a 1B68     		ldr	r3, [r3]
   59 001c 0022     		movs	r2, #0
   60 001e 5A63     		str	r2, [r3, #52]
   61              	.L3:
-  42:BSP/EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
-  62              		.loc 1 42 5 is_stmt 1 view .LVU7
+  69:BSP/EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+  62              		.loc 1 69 5 is_stmt 1 view .LVU7
   63 0020 E368     		ldr	r3, [r4, #12]
   64 0022 DBB9     		cbnz	r3, .L6
-  65              		.loc 1 42 5 is_stmt 0 discriminator 1 view .LVU8
+  65              		.loc 1 69 5 is_stmt 0 discriminator 1 view .LVU8
   66 0024 6368     		ldr	r3, [r4, #4]
   67 0026 1B68     		ldr	r3, [r3]
   68 0028 0022     		movs	r2, #0
   69 002a 5A63     		str	r2, [r3, #52]
   70              	.L7:
-  43:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
-  71              		.loc 1 43 5 is_stmt 1 view .LVU9
-  72              		.loc 1 43 39 is_stmt 0 view .LVU10
-ARM GAS  /tmp/ccem2lyV.s 			page 3
-
-
+  70:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
+  71              		.loc 1 70 5 is_stmt 1 view .LVU9
+  72              		.loc 1 70 39 is_stmt 0 view .LVU10
   73 002c 2369     		ldr	r3, [r4, #16]
   74 002e 1B68     		ldr	r3, [r3]
   75 0030 5B6A     		ldr	r3, [r3, #36]
-  76              		.loc 1 43 27 view .LVU11
+  76              		.loc 1 70 27 view .LVU11
   77 0032 2384     		strh	r3, [r4, #32]	@ movhi
-  44:BSP/EncoderMotor/encodermotor.c **** }
-  78              		.loc 1 44 1 view .LVU12
+  71:BSP/EncoderMotor/encodermotor.c **** }
+  78              		.loc 1 71 1 view .LVU12
   79 0034 10BD     		pop	{r4, pc}
   80              	.LVL4:
   81              	.L2:
-  41:BSP/EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
-  82              		.loc 1 41 5 discriminator 2 view .LVU13
+  68:BSP/EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+  82              		.loc 1 68 5 discriminator 2 view .LVU13
   83 0036 042B     		cmp	r3, #4
   84 0038 06D0     		beq	.L11
-  41:BSP/EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
-  85              		.loc 1 41 5 discriminator 4 view .LVU14
+  68:BSP/EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+  85              		.loc 1 68 5 discriminator 4 view .LVU14
   86 003a 082B     		cmp	r3, #8
   87 003c 09D0     		beq	.L12
-  41:BSP/EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
-  88              		.loc 1 41 5 discriminator 7 view .LVU15
+  68:BSP/EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+  88              		.loc 1 68 5 discriminator 7 view .LVU15
   89 003e 2368     		ldr	r3, [r4]
   90 0040 1B68     		ldr	r3, [r3]
   91 0042 0022     		movs	r2, #0
   92 0044 1A64     		str	r2, [r3, #64]
   93 0046 EBE7     		b	.L3
   94              	.L11:
-  41:BSP/EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
-  95              		.loc 1 41 5 discriminator 3 view .LVU16
+  68:BSP/EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+  95              		.loc 1 68 5 discriminator 3 view .LVU16
   96 0048 2368     		ldr	r3, [r4]
   97 004a 1B68     		ldr	r3, [r3]
+ARM GAS  /tmp/ccNU7FZv.s 			page 4
+
+
   98 004c 0022     		movs	r2, #0
   99 004e 9A63     		str	r2, [r3, #56]
  100 0050 E6E7     		b	.L3
  101              	.L12:
-  41:BSP/EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
- 102              		.loc 1 41 5 discriminator 6 view .LVU17
+  68:BSP/EncoderMotor/encodermotor.c ****     __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 102              		.loc 1 68 5 discriminator 6 view .LVU17
  103 0052 2368     		ldr	r3, [r4]
  104 0054 1B68     		ldr	r3, [r3]
  105 0056 0022     		movs	r2, #0
  106 0058 DA63     		str	r2, [r3, #60]
  107 005a E1E7     		b	.L3
  108              	.L6:
-  42:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
- 109              		.loc 1 42 5 discriminator 2 view .LVU18
+  69:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
+ 109              		.loc 1 69 5 discriminator 2 view .LVU18
  110 005c 042B     		cmp	r3, #4
  111 005e 06D0     		beq	.L13
-  42:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
- 112              		.loc 1 42 5 discriminator 4 view .LVU19
+  69:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
+ 112              		.loc 1 69 5 discriminator 4 view .LVU19
  113 0060 082B     		cmp	r3, #8
  114 0062 09D0     		beq	.L14
-  42:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
- 115              		.loc 1 42 5 discriminator 7 view .LVU20
+  69:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
+ 115              		.loc 1 69 5 discriminator 7 view .LVU20
  116 0064 6368     		ldr	r3, [r4, #4]
  117 0066 1B68     		ldr	r3, [r3]
  118 0068 0022     		movs	r2, #0
  119 006a 1A64     		str	r2, [r3, #64]
  120 006c DEE7     		b	.L7
-ARM GAS  /tmp/ccem2lyV.s 			page 4
-
-
  121              	.L13:
-  42:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
- 122              		.loc 1 42 5 discriminator 3 view .LVU21
+  69:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
+ 122              		.loc 1 69 5 discriminator 3 view .LVU21
  123 006e 6368     		ldr	r3, [r4, #4]
  124 0070 1B68     		ldr	r3, [r3]
  125 0072 0022     		movs	r2, #0
  126 0074 9A63     		str	r2, [r3, #56]
  127 0076 D9E7     		b	.L7
  128              	.L14:
-  42:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
- 129              		.loc 1 42 5 discriminator 6 view .LVU22
+  69:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
+ 129              		.loc 1 69 5 discriminator 6 view .LVU22
  130 0078 6368     		ldr	r3, [r4, #4]
  131 007a 1B68     		ldr	r3, [r3]
  132 007c 0022     		movs	r2, #0
@@ -208,55 +235,55 @@ ARM GAS  /tmp/ccem2lyV.s 			page 1
  145              	Motor_SetPWM:
  146              	.LVL5:
  147              	.LFB240:
-  45:BSP/EncoderMotor/encodermotor.c **** 
-  46:BSP/EncoderMotor/encodermotor.c **** 
-  47:BSP/EncoderMotor/encodermotor.c **** void Motor_SetPWM(MotorControl_t* motor, int16_t duty) {
- 148              		.loc 1 47 56 is_stmt 1 view -0
+  72:BSP/EncoderMotor/encodermotor.c **** 
+  73:BSP/EncoderMotor/encodermotor.c **** 
+  74:BSP/EncoderMotor/encodermotor.c **** void Motor_SetPWM(MotorControl_t* motor, int16_t duty) {
+ARM GAS  /tmp/ccNU7FZv.s 			page 5
+
+
+ 148              		.loc 1 74 56 is_stmt 1 view -0
  149              		.cfi_startproc
  150              		@ args = 0, pretend = 0, frame = 0
  151              		@ frame_needed = 0, uses_anonymous_args = 0
  152              		@ link register save eliminated.
-  48:BSP/EncoderMotor/encodermotor.c ****     uint16_t pwm_val = (duty < 0) ? -duty : duty;
- 153              		.loc 1 48 5 view .LVU24
- 154              		.loc 1 48 14 is_stmt 0 view .LVU25
+  75:BSP/EncoderMotor/encodermotor.c ****     uint16_t pwm_val = (duty < 0) ? -duty : duty;
+ 153              		.loc 1 75 5 view .LVU24
+ 154              		.loc 1 75 14 is_stmt 0 view .LVU25
  155 0000 81EAE173 		eor	r3, r1, r1, asr #31
  156 0004 A3EBE173 		sub	r3, r3, r1, asr #31
  157 0008 9BB2     		uxth	r3, r3
  158              	.LVL6:
-  49:BSP/EncoderMotor/encodermotor.c **** 
-  50:BSP/EncoderMotor/encodermotor.c ****     if (duty < 0) {
- 159              		.loc 1 50 5 is_stmt 1 view .LVU26
- 160              		.loc 1 50 8 is_stmt 0 view .LVU27
+  76:BSP/EncoderMotor/encodermotor.c **** 
+  77:BSP/EncoderMotor/encodermotor.c ****     if (duty < 0) {
+ 159              		.loc 1 77 5 is_stmt 1 view .LVU26
+ 160              		.loc 1 77 8 is_stmt 0 view .LVU27
  161 000a 0029     		cmp	r1, #0
  162 000c 0FDB     		blt	.L40
-  51:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
-  52:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
-  53:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
- 163              		.loc 1 53 12 is_stmt 1 view .LVU28
- 164              		.loc 1 53 15 is_stmt 0 view .LVU29
+  78:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
+  79:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+  80:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 163              		.loc 1 80 12 is_stmt 1 view .LVU28
+ 164              		.loc 1 80 15 is_stmt 0 view .LVU29
  165 000e 0029     		cmp	r1, #0
  166 0010 5FDD     		ble	.L25
-  54:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, pwm_val);
- 167              		.loc 1 54 9 is_stmt 1 view .LVU30
-ARM GAS  /tmp/ccem2lyV.s 			page 5
-
-
+  81:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, pwm_val);
+ 167              		.loc 1 81 9 is_stmt 1 view .LVU30
  168 0012 8268     		ldr	r2, [r0, #8]
  169 0014 002A     		cmp	r2, #0
  170 0016 39D1     		bne	.L26
- 171              		.loc 1 54 9 is_stmt 0 discriminator 1 view .LVU31
+ 171              		.loc 1 81 9 is_stmt 0 discriminator 1 view .LVU31
  172 0018 0268     		ldr	r2, [r0]
  173 001a 1268     		ldr	r2, [r2]
  174 001c 5363     		str	r3, [r2, #52]
  175              	.L27:
-  55:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
- 176              		.loc 1 55 9 is_stmt 1 view .LVU32
+  82:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 176              		.loc 1 82 9 is_stmt 1 view .LVU32
  177 001e C368     		ldr	r3, [r0, #12]
  178              	.LVL7:
- 179              		.loc 1 55 9 is_stmt 0 view .LVU33
+ 179              		.loc 1 82 9 is_stmt 0 view .LVU33
  180 0020 002B     		cmp	r3, #0
  181 0022 43D1     		bne	.L30
- 182              		.loc 1 55 9 discriminator 1 view .LVU34
+ 182              		.loc 1 82 9 discriminator 1 view .LVU34
  183 0024 4368     		ldr	r3, [r0, #4]
  184 0026 1B68     		ldr	r3, [r3]
  185 0028 0022     		movs	r2, #0
@@ -264,165 +291,165 @@ ARM GAS  /tmp/ccem2lyV.s 			page 1
  187 002c 7047     		bx	lr
  188              	.LVL8:
  189              	.L40:
-  51:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
- 190              		.loc 1 51 9 is_stmt 1 view .LVU35
+  78:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
+ 190              		.loc 1 78 9 is_stmt 1 view .LVU35
  191 002e 8268     		ldr	r2, [r0, #8]
  192 0030 4AB9     		cbnz	r2, .L17
-  51:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
- 193              		.loc 1 51 9 is_stmt 0 discriminator 1 view .LVU36
+  78:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
+ 193              		.loc 1 78 9 is_stmt 0 discriminator 1 view .LVU36
  194 0032 0268     		ldr	r2, [r0]
+ARM GAS  /tmp/ccNU7FZv.s 			page 6
+
+
  195 0034 1268     		ldr	r2, [r2]
  196 0036 0021     		movs	r1, #0
  197              	.LVL9:
-  51:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
- 198              		.loc 1 51 9 discriminator 1 view .LVU37
+  78:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
+ 198              		.loc 1 78 9 discriminator 1 view .LVU37
  199 0038 5163     		str	r1, [r2, #52]
  200              	.L18:
-  52:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
- 201              		.loc 1 52 9 is_stmt 1 view .LVU38
+  79:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 201              		.loc 1 79 9 is_stmt 1 view .LVU38
  202 003a C268     		ldr	r2, [r0, #12]
  203 003c B2B9     		cbnz	r2, .L21
-  52:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
- 204              		.loc 1 52 9 is_stmt 0 discriminator 1 view .LVU39
+  79:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 204              		.loc 1 79 9 is_stmt 0 discriminator 1 view .LVU39
  205 003e 4268     		ldr	r2, [r0, #4]
  206 0040 1268     		ldr	r2, [r2]
  207 0042 5363     		str	r3, [r2, #52]
  208 0044 7047     		bx	lr
  209              	.LVL10:
  210              	.L17:
-  51:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
- 211              		.loc 1 51 9 discriminator 2 view .LVU40
+  78:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 211              		.loc 1 78 9 discriminator 2 view .LVU40
  212 0046 042A     		cmp	r2, #4
  213 0048 06D0     		beq	.L41
-  51:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
- 214              		.loc 1 51 9 discriminator 4 view .LVU41
+  78:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 214              		.loc 1 78 9 discriminator 4 view .LVU41
  215 004a 082A     		cmp	r2, #8
  216 004c 09D0     		beq	.L42
-ARM GAS  /tmp/ccem2lyV.s 			page 6
-
-
-  51:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
- 217              		.loc 1 51 9 discriminator 7 view .LVU42
+  78:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 217              		.loc 1 78 9 discriminator 7 view .LVU42
  218 004e 0268     		ldr	r2, [r0]
  219 0050 1268     		ldr	r2, [r2]
  220 0052 0021     		movs	r1, #0
  221              	.LVL11:
-  51:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
- 222              		.loc 1 51 9 discriminator 7 view .LVU43
+  78:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 222              		.loc 1 78 9 discriminator 7 view .LVU43
  223 0054 1164     		str	r1, [r2, #64]
  224 0056 F0E7     		b	.L18
  225              	.LVL12:
  226              	.L41:
-  51:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
- 227              		.loc 1 51 9 discriminator 3 view .LVU44
+  78:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 227              		.loc 1 78 9 discriminator 3 view .LVU44
  228 0058 0268     		ldr	r2, [r0]
  229 005a 1268     		ldr	r2, [r2]
  230 005c 0021     		movs	r1, #0
  231              	.LVL13:
-  51:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
- 232              		.loc 1 51 9 discriminator 3 view .LVU45
+  78:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 232              		.loc 1 78 9 discriminator 3 view .LVU45
  233 005e 9163     		str	r1, [r2, #56]
  234 0060 EBE7     		b	.L18
  235              	.LVL14:
  236              	.L42:
-  51:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
- 237              		.loc 1 51 9 discriminator 6 view .LVU46
+  78:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 237              		.loc 1 78 9 discriminator 6 view .LVU46
  238 0062 0268     		ldr	r2, [r0]
  239 0064 1268     		ldr	r2, [r2]
  240 0066 0021     		movs	r1, #0
  241              	.LVL15:
-  51:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
- 242              		.loc 1 51 9 discriminator 6 view .LVU47
+ARM GAS  /tmp/ccNU7FZv.s 			page 7
+
+
+  78:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
+ 242              		.loc 1 78 9 discriminator 6 view .LVU47
  243 0068 D163     		str	r1, [r2, #60]
  244 006a E6E7     		b	.L18
  245              	.L21:
-  52:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
- 246              		.loc 1 52 9 discriminator 2 view .LVU48
+  79:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 246              		.loc 1 79 9 discriminator 2 view .LVU48
  247 006c 042A     		cmp	r2, #4
  248 006e 05D0     		beq	.L43
-  52:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
- 249              		.loc 1 52 9 discriminator 4 view .LVU49
+  79:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 249              		.loc 1 79 9 discriminator 4 view .LVU49
  250 0070 082A     		cmp	r2, #8
  251 0072 07D0     		beq	.L44
-  52:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
- 252              		.loc 1 52 9 discriminator 7 view .LVU50
+  79:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 252              		.loc 1 79 9 discriminator 7 view .LVU50
  253 0074 4268     		ldr	r2, [r0, #4]
  254 0076 1268     		ldr	r2, [r2]
  255 0078 1364     		str	r3, [r2, #64]
  256 007a 7047     		bx	lr
  257              	.L43:
-  52:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
- 258              		.loc 1 52 9 discriminator 3 view .LVU51
+  79:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 258              		.loc 1 79 9 discriminator 3 view .LVU51
  259 007c 4268     		ldr	r2, [r0, #4]
  260 007e 1268     		ldr	r2, [r2]
  261 0080 9363     		str	r3, [r2, #56]
  262 0082 7047     		bx	lr
  263              	.L44:
-ARM GAS  /tmp/ccem2lyV.s 			page 7
-
-
-  52:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
- 264              		.loc 1 52 9 discriminator 6 view .LVU52
+  79:BSP/EncoderMotor/encodermotor.c ****     } else if (duty > 0) {
+ 264              		.loc 1 79 9 discriminator 6 view .LVU52
  265 0084 4268     		ldr	r2, [r0, #4]
  266 0086 1268     		ldr	r2, [r2]
  267 0088 D363     		str	r3, [r2, #60]
  268 008a 7047     		bx	lr
  269              	.LVL16:
  270              	.L26:
-  54:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
- 271              		.loc 1 54 9 discriminator 2 view .LVU53
+  81:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 271              		.loc 1 81 9 discriminator 2 view .LVU53
  272 008c 042A     		cmp	r2, #4
  273 008e 05D0     		beq	.L45
-  54:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
- 274              		.loc 1 54 9 discriminator 4 view .LVU54
+  81:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 274              		.loc 1 81 9 discriminator 4 view .LVU54
  275 0090 082A     		cmp	r2, #8
  276 0092 07D0     		beq	.L46
-  54:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
- 277              		.loc 1 54 9 discriminator 7 view .LVU55
+  81:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 277              		.loc 1 81 9 discriminator 7 view .LVU55
  278 0094 0268     		ldr	r2, [r0]
  279 0096 1268     		ldr	r2, [r2]
  280 0098 1364     		str	r3, [r2, #64]
  281 009a C0E7     		b	.L27
  282              	.L45:
-  54:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
- 283              		.loc 1 54 9 discriminator 3 view .LVU56
+  81:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 283              		.loc 1 81 9 discriminator 3 view .LVU56
  284 009c 0268     		ldr	r2, [r0]
  285 009e 1268     		ldr	r2, [r2]
  286 00a0 9363     		str	r3, [r2, #56]
  287 00a2 BCE7     		b	.L27
  288              	.L46:
-  54:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
- 289              		.loc 1 54 9 discriminator 6 view .LVU57
+ARM GAS  /tmp/ccNU7FZv.s 			page 8
+
+
+  81:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 289              		.loc 1 81 9 discriminator 6 view .LVU57
  290 00a4 0268     		ldr	r2, [r0]
  291 00a6 1268     		ldr	r2, [r2]
  292 00a8 D363     		str	r3, [r2, #60]
  293 00aa B8E7     		b	.L27
  294              	.LVL17:
  295              	.L30:
- 296              		.loc 1 55 9 discriminator 2 view .LVU58
+ 296              		.loc 1 82 9 discriminator 2 view .LVU58
  297 00ac 042B     		cmp	r3, #4
  298 00ae 06D0     		beq	.L47
- 299              		.loc 1 55 9 discriminator 4 view .LVU59
+ 299              		.loc 1 82 9 discriminator 4 view .LVU59
  300 00b0 082B     		cmp	r3, #8
  301 00b2 09D0     		beq	.L48
- 302              		.loc 1 55 9 discriminator 7 view .LVU60
+ 302              		.loc 1 82 9 discriminator 7 view .LVU60
  303 00b4 4368     		ldr	r3, [r0, #4]
  304 00b6 1B68     		ldr	r3, [r3]
  305 00b8 0022     		movs	r2, #0
  306 00ba 1A64     		str	r2, [r3, #64]
  307 00bc 7047     		bx	lr
  308              	.L47:
- 309              		.loc 1 55 9 discriminator 3 view .LVU61
+ 309              		.loc 1 82 9 discriminator 3 view .LVU61
  310 00be 4368     		ldr	r3, [r0, #4]
  311 00c0 1B68     		ldr	r3, [r3]
  312 00c2 0022     		movs	r2, #0
  313 00c4 9A63     		str	r2, [r3, #56]
  314 00c6 7047     		bx	lr
-ARM GAS  /tmp/ccem2lyV.s 			page 8
-
-
  315              	.L48:
- 316              		.loc 1 55 9 discriminator 6 view .LVU62
+ 316              		.loc 1 82 9 discriminator 6 view .LVU62
  317 00c8 4368     		ldr	r3, [r0, #4]
  318 00ca 1B68     		ldr	r3, [r3]
  319 00cc 0022     		movs	r2, #0
@@ -430,91 +457,94 @@ ARM GAS  /tmp/ccem2lyV.s 			page 1
  321 00d0 7047     		bx	lr
  322              	.LVL18:
  323              	.L25:
-  56:BSP/EncoderMotor/encodermotor.c ****     } else {  // duty == 0
-  57:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
- 324              		.loc 1 57 9 is_stmt 1 view .LVU63
+  83:BSP/EncoderMotor/encodermotor.c ****     } else {  // duty == 0
+  84:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
+ 324              		.loc 1 84 9 is_stmt 1 view .LVU63
  325 00d2 8368     		ldr	r3, [r0, #8]
  326              	.LVL19:
- 327              		.loc 1 57 9 is_stmt 0 view .LVU64
+ 327              		.loc 1 84 9 is_stmt 0 view .LVU64
  328 00d4 53B9     		cbnz	r3, .L33
- 329              		.loc 1 57 9 discriminator 1 view .LVU65
+ 329              		.loc 1 84 9 discriminator 1 view .LVU65
  330 00d6 0368     		ldr	r3, [r0]
  331 00d8 1B68     		ldr	r3, [r3]
  332 00da 0022     		movs	r2, #0
  333 00dc 5A63     		str	r2, [r3, #52]
  334              	.L34:
-  58:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
- 335              		.loc 1 58 9 is_stmt 1 view .LVU66
+  85:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 335              		.loc 1 85 9 is_stmt 1 view .LVU66
  336 00de C368     		ldr	r3, [r0, #12]
  337 00e0 BBB9     		cbnz	r3, .L37
- 338              		.loc 1 58 9 is_stmt 0 discriminator 1 view .LVU67
+ 338              		.loc 1 85 9 is_stmt 0 discriminator 1 view .LVU67
  339 00e2 4368     		ldr	r3, [r0, #4]
  340 00e4 1B68     		ldr	r3, [r3]
  341 00e6 0022     		movs	r2, #0
+ARM GAS  /tmp/ccNU7FZv.s 			page 9
+
+
  342 00e8 5A63     		str	r2, [r3, #52]
  343 00ea 7047     		bx	lr
  344              	.L33:
-  57:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
- 345              		.loc 1 57 9 discriminator 2 view .LVU68
+  84:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 345              		.loc 1 84 9 discriminator 2 view .LVU68
  346 00ec 042B     		cmp	r3, #4
  347 00ee 06D0     		beq	.L49
-  57:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
- 348              		.loc 1 57 9 discriminator 4 view .LVU69
+  84:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 348              		.loc 1 84 9 discriminator 4 view .LVU69
  349 00f0 082B     		cmp	r3, #8
  350 00f2 09D0     		beq	.L50
-  57:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
- 351              		.loc 1 57 9 discriminator 7 view .LVU70
+  84:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 351              		.loc 1 84 9 discriminator 7 view .LVU70
  352 00f4 0368     		ldr	r3, [r0]
  353 00f6 1B68     		ldr	r3, [r3]
  354 00f8 0022     		movs	r2, #0
  355 00fa 1A64     		str	r2, [r3, #64]
  356 00fc EFE7     		b	.L34
  357              	.L49:
-  57:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
- 358              		.loc 1 57 9 discriminator 3 view .LVU71
+  84:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 358              		.loc 1 84 9 discriminator 3 view .LVU71
  359 00fe 0368     		ldr	r3, [r0]
  360 0100 1B68     		ldr	r3, [r3]
  361 0102 0022     		movs	r2, #0
  362 0104 9A63     		str	r2, [r3, #56]
  363 0106 EAE7     		b	.L34
  364              	.L50:
-ARM GAS  /tmp/ccem2lyV.s 			page 9
-
-
-  57:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
- 365              		.loc 1 57 9 discriminator 6 view .LVU72
+  84:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
+ 365              		.loc 1 84 9 discriminator 6 view .LVU72
  366 0108 0368     		ldr	r3, [r0]
  367 010a 1B68     		ldr	r3, [r3]
  368 010c 0022     		movs	r2, #0
  369 010e DA63     		str	r2, [r3, #60]
  370 0110 E5E7     		b	.L34
  371              	.L37:
- 372              		.loc 1 58 9 discriminator 2 view .LVU73
+ 372              		.loc 1 85 9 discriminator 2 view .LVU73
  373 0112 042B     		cmp	r3, #4
  374 0114 06D0     		beq	.L51
- 375              		.loc 1 58 9 discriminator 4 view .LVU74
+ 375              		.loc 1 85 9 discriminator 4 view .LVU74
  376 0116 082B     		cmp	r3, #8
  377 0118 09D0     		beq	.L52
- 378              		.loc 1 58 9 discriminator 7 view .LVU75
+ 378              		.loc 1 85 9 discriminator 7 view .LVU75
  379 011a 4368     		ldr	r3, [r0, #4]
  380 011c 1B68     		ldr	r3, [r3]
  381 011e 0022     		movs	r2, #0
  382 0120 1A64     		str	r2, [r3, #64]
-  59:BSP/EncoderMotor/encodermotor.c ****     }
-  60:BSP/EncoderMotor/encodermotor.c **** }
- 383              		.loc 1 60 1 view .LVU76
+  86:BSP/EncoderMotor/encodermotor.c ****     }
+  87:BSP/EncoderMotor/encodermotor.c **** }
+ 383              		.loc 1 87 1 view .LVU76
  384 0122 7047     		bx	lr
  385              	.L51:
-  58:BSP/EncoderMotor/encodermotor.c ****     }
- 386              		.loc 1 58 9 discriminator 3 view .LVU77
+  85:BSP/EncoderMotor/encodermotor.c ****     }
+ 386              		.loc 1 85 9 discriminator 3 view .LVU77
  387 0124 4368     		ldr	r3, [r0, #4]
  388 0126 1B68     		ldr	r3, [r3]
  389 0128 0022     		movs	r2, #0
  390 012a 9A63     		str	r2, [r3, #56]
+ARM GAS  /tmp/ccNU7FZv.s 			page 10
+
+
  391 012c 7047     		bx	lr
  392              	.L52:
-  58:BSP/EncoderMotor/encodermotor.c ****     }
- 393              		.loc 1 58 9 discriminator 6 view .LVU78
+  85:BSP/EncoderMotor/encodermotor.c ****     }
+ 393              		.loc 1 85 9 discriminator 6 view .LVU78
  394 012e 4368     		ldr	r3, [r0, #4]
  395 0130 1B68     		ldr	r3, [r3]
  396 0132 0022     		movs	r2, #0
@@ -531,65 +561,65 @@ ARM GAS  /tmp/ccem2lyV.s 			page 1
  409              	Motor_Encoder_Init:
  410              	.LVL20:
  411              	.LFB241:
-  61:BSP/EncoderMotor/encodermotor.c **** 
-  62:BSP/EncoderMotor/encodermotor.c **** 
-  63:BSP/EncoderMotor/encodermotor.c **** /*编码器实现*/
-  64:BSP/EncoderMotor/encodermotor.c **** 
-  65:BSP/EncoderMotor/encodermotor.c **** void Motor_Encoder_Init(MotorControl_t* motor) {
- 412              		.loc 1 65 48 is_stmt 1 view -0
+  88:BSP/EncoderMotor/encodermotor.c **** 
+  89:BSP/EncoderMotor/encodermotor.c **** 
+  90:BSP/EncoderMotor/encodermotor.c **** /*编码器实现*/
+  91:BSP/EncoderMotor/encodermotor.c **** 
+  92:BSP/EncoderMotor/encodermotor.c **** void Motor_Encoder_Init(MotorControl_t* motor) {
+ 412              		.loc 1 92 48 is_stmt 1 view -0
  413              		.cfi_startproc
-ARM GAS  /tmp/ccem2lyV.s 			page 10
-
-
  414              		@ args = 0, pretend = 0, frame = 0
  415              		@ frame_needed = 0, uses_anonymous_args = 0
- 416              		.loc 1 65 48 is_stmt 0 view .LVU80
+ 416              		.loc 1 92 48 is_stmt 0 view .LVU80
  417 0000 08B5     		push	{r3, lr}
  418              	.LCFI1:
  419              		.cfi_def_cfa_offset 8
  420              		.cfi_offset 3, -8
  421              		.cfi_offset 14, -4
-  66:BSP/EncoderMotor/encodermotor.c ****     motor->encoder_last = 0;
- 422              		.loc 1 66 5 is_stmt 1 view .LVU81
- 423              		.loc 1 66 25 is_stmt 0 view .LVU82
+  93:BSP/EncoderMotor/encodermotor.c ****     motor->encoder_last = 0;
+ 422              		.loc 1 93 5 is_stmt 1 view .LVU81
+ 423              		.loc 1 93 25 is_stmt 0 view .LVU82
  424 0002 0023     		movs	r3, #0
  425 0004 8361     		str	r3, [r0, #24]
-  67:BSP/EncoderMotor/encodermotor.c ****     motor->duty_rpm = 0;
- 426              		.loc 1 67 5 is_stmt 1 view .LVU83
- 427              		.loc 1 67 21 is_stmt 0 view .LVU84
+  94:BSP/EncoderMotor/encodermotor.c ****     motor->duty_rpm = 0;
+ 426              		.loc 1 94 5 is_stmt 1 view .LVU83
+ 427              		.loc 1 94 21 is_stmt 0 view .LVU84
  428 0006 0023     		movs	r3, #0
  429 0008 4362     		str	r3, [r0, #36]	@ float
-  68:BSP/EncoderMotor/encodermotor.c ****     motor->target_rpm = 0;
- 430              		.loc 1 68 5 is_stmt 1 view .LVU85
- 431              		.loc 1 68 23 is_stmt 0 view .LVU86
+  95:BSP/EncoderMotor/encodermotor.c ****     motor->target_rpm = 0;
+ 430              		.loc 1 95 5 is_stmt 1 view .LVU85
+ 431              		.loc 1 95 23 is_stmt 0 view .LVU86
  432 000a 8362     		str	r3, [r0, #40]	@ float
-  69:BSP/EncoderMotor/encodermotor.c ****     motor->pid_prev_error = 0.0f;
- 433              		.loc 1 69 5 is_stmt 1 view .LVU87
- 434              		.loc 1 69 27 is_stmt 0 view .LVU88
+  96:BSP/EncoderMotor/encodermotor.c ****     motor->pid_prev_error = 0.0f;
+ 433              		.loc 1 96 5 is_stmt 1 view .LVU87
+ 434              		.loc 1 96 27 is_stmt 0 view .LVU88
  435 000c 0364     		str	r3, [r0, #64]	@ float
-  70:BSP/EncoderMotor/encodermotor.c ****     motor->pid_last_error = 0.0f;
- 436              		.loc 1 70 5 is_stmt 1 view .LVU89
- 437              		.loc 1 70 27 is_stmt 0 view .LVU90
+  97:BSP/EncoderMotor/encodermotor.c ****     motor->pid_last_error = 0.0f;
+ 436              		.loc 1 97 5 is_stmt 1 view .LVU89
+ 437              		.loc 1 97 27 is_stmt 0 view .LVU90
  438 000e C363     		str	r3, [r0, #60]	@ float
-  71:BSP/EncoderMotor/encodermotor.c ****     motor->pid_integral = 0.0f;
- 439              		.loc 1 71 5 is_stmt 1 view .LVU91
- 440              		.loc 1 71 25 is_stmt 0 view .LVU92
+ARM GAS  /tmp/ccNU7FZv.s 			page 11
+
+
+  98:BSP/EncoderMotor/encodermotor.c ****     motor->pid_integral = 0.0f;
+ 439              		.loc 1 98 5 is_stmt 1 view .LVU91
+ 440              		.loc 1 98 25 is_stmt 0 view .LVU92
  441 0010 8363     		str	r3, [r0, #56]	@ float
-  72:BSP/EncoderMotor/encodermotor.c ****     motor->pid_out = 0.0f;
- 442              		.loc 1 72 5 is_stmt 1 view .LVU93
- 443              		.loc 1 72 20 is_stmt 0 view .LVU94
+  99:BSP/EncoderMotor/encodermotor.c ****     motor->pid_out = 0.0f;
+ 442              		.loc 1 99 5 is_stmt 1 view .LVU93
+ 443              		.loc 1 99 20 is_stmt 0 view .LVU94
  444 0012 4364     		str	r3, [r0, #68]	@ float
-  73:BSP/EncoderMotor/encodermotor.c **** 
-  74:BSP/EncoderMotor/encodermotor.c ****     HAL_TIM_Encoder_Start(motor->encoder_tim, TIM_CHANNEL_ALL);
- 445              		.loc 1 74 5 is_stmt 1 view .LVU95
+ 100:BSP/EncoderMotor/encodermotor.c **** 
+ 101:BSP/EncoderMotor/encodermotor.c ****     HAL_TIM_Encoder_Start(motor->encoder_tim, TIM_CHANNEL_ALL);
+ 445              		.loc 1 101 5 is_stmt 1 view .LVU95
  446 0014 3C21     		movs	r1, #60
  447 0016 0069     		ldr	r0, [r0, #16]
  448              	.LVL21:
- 449              		.loc 1 74 5 is_stmt 0 view .LVU96
+ 449              		.loc 1 101 5 is_stmt 0 view .LVU96
  450 0018 FFF7FEFF 		bl	HAL_TIM_Encoder_Start
  451              	.LVL22:
-  75:BSP/EncoderMotor/encodermotor.c **** }
- 452              		.loc 1 75 1 view .LVU97
+ 102:BSP/EncoderMotor/encodermotor.c **** }
+ 452              		.loc 1 102 1 view .LVU97
  453 001c 08BD     		pop	{r3, pc}
  454              		.cfi_endproc
  455              	.LFE241:
@@ -598,119 +628,119 @@ ARM GAS  /tmp/ccem2lyV.s 			page 1
  459              		.global	Motor_Encoder_Update
  460              		.syntax unified
  461              		.thumb
-ARM GAS  /tmp/ccem2lyV.s 			page 11
-
-
  462              		.thumb_func
  464              	Motor_Encoder_Update:
  465              	.LVL23:
  466              	.LFB242:
-  76:BSP/EncoderMotor/encodermotor.c **** 
-  77:BSP/EncoderMotor/encodermotor.c **** 
-  78:BSP/EncoderMotor/encodermotor.c **** 
-  79:BSP/EncoderMotor/encodermotor.c **** 
-  80:BSP/EncoderMotor/encodermotor.c **** 
-  81:BSP/EncoderMotor/encodermotor.c **** 
-  82:BSP/EncoderMotor/encodermotor.c **** // 修正后的配置参数
-  83:BSP/EncoderMotor/encodermotor.c **** #define ENCODER_PPR       13.0f   
-  84:BSP/EncoderMotor/encodermotor.c **** #define MULTIPLIER        4.0f    
-  85:BSP/EncoderMotor/encodermotor.c **** #define GEAR_RATIO        20.0f   
-  86:BSP/EncoderMotor/encodermotor.c **** #define SAMPLE_TIME_S     0.01f   // 必须与 Task 的 10ms 匹配！
-  87:BSP/EncoderMotor/encodermotor.c **** 
-  88:BSP/EncoderMotor/encodermotor.c **** int32_t Motor_Encoder_Update(MotorControl_t* motor) {
- 467              		.loc 1 88 53 is_stmt 1 view -0
+ 103:BSP/EncoderMotor/encodermotor.c **** 
+ 104:BSP/EncoderMotor/encodermotor.c **** 
+ 105:BSP/EncoderMotor/encodermotor.c **** 
+ 106:BSP/EncoderMotor/encodermotor.c **** 
+ 107:BSP/EncoderMotor/encodermotor.c **** 
+ 108:BSP/EncoderMotor/encodermotor.c **** 
+ 109:BSP/EncoderMotor/encodermotor.c **** // 修正后的配置参数
+ 110:BSP/EncoderMotor/encodermotor.c **** #define ENCODER_PPR       13.0f   
+ 111:BSP/EncoderMotor/encodermotor.c **** #define MULTIPLIER        4.0f    
+ 112:BSP/EncoderMotor/encodermotor.c **** #define GEAR_RATIO        20.0f   
+ 113:BSP/EncoderMotor/encodermotor.c **** #define SAMPLE_TIME_S     0.01f   // 必须与 Task 的 10ms 匹配！
+ 114:BSP/EncoderMotor/encodermotor.c **** 
+ 115:BSP/EncoderMotor/encodermotor.c **** int32_t Motor_Encoder_Update(MotorControl_t* motor) {
+ 467              		.loc 1 115 53 is_stmt 1 view -0
  468              		.cfi_startproc
  469              		@ args = 0, pretend = 0, frame = 0
  470              		@ frame_needed = 0, uses_anonymous_args = 0
  471              		@ link register save eliminated.
- 472              		.loc 1 88 53 is_stmt 0 view .LVU99
+ 472              		.loc 1 115 53 is_stmt 0 view .LVU99
  473 0000 10B4     		push	{r4}
  474              	.LCFI2:
  475              		.cfi_def_cfa_offset 4
  476              		.cfi_offset 4, -4
  477 0002 0246     		mov	r2, r0
-  89:BSP/EncoderMotor/encodermotor.c ****     // 1. 获取硬件原始值
-  90:BSP/EncoderMotor/encodermotor.c ****     uint16_t now = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
- 478              		.loc 1 90 5 is_stmt 1 view .LVU100
- 479              		.loc 1 90 30 is_stmt 0 view .LVU101
+ 116:BSP/EncoderMotor/encodermotor.c ****     // 1. 获取硬件原始值
+ 117:BSP/EncoderMotor/encodermotor.c ****     uint16_t now = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
+ARM GAS  /tmp/ccNU7FZv.s 			page 12
+
+
+ 478              		.loc 1 117 5 is_stmt 1 view .LVU100
+ 479              		.loc 1 117 30 is_stmt 0 view .LVU101
  480 0004 0369     		ldr	r3, [r0, #16]
  481 0006 1B68     		ldr	r3, [r3]
  482 0008 5C6A     		ldr	r4, [r3, #36]
- 483              		.loc 1 90 14 view .LVU102
+ 483              		.loc 1 117 14 view .LVU102
  484 000a A3B2     		uxth	r3, r4
  485              	.LVL24:
-  91:BSP/EncoderMotor/encodermotor.c ****     
-  92:BSP/EncoderMotor/encodermotor.c ****     // 2. 计算差值
-  93:BSP/EncoderMotor/encodermotor.c ****     int16_t delta = (int16_t)(now - motor->last_raw_value);
- 486              		.loc 1 93 5 is_stmt 1 view .LVU103
- 487              		.loc 1 93 42 is_stmt 0 view .LVU104
+ 118:BSP/EncoderMotor/encodermotor.c ****     
+ 119:BSP/EncoderMotor/encodermotor.c ****     // 2. 计算差值
+ 120:BSP/EncoderMotor/encodermotor.c ****     int16_t delta = (int16_t)(now - motor->last_raw_value);
+ 486              		.loc 1 120 5 is_stmt 1 view .LVU103
+ 487              		.loc 1 120 42 is_stmt 0 view .LVU104
  488 000c 018C     		ldrh	r1, [r0, #32]
- 489              		.loc 1 93 35 view .LVU105
+ 489              		.loc 1 120 35 view .LVU105
  490 000e 5B1A     		subs	r3, r3, r1
  491              	.LVL25:
-  94:BSP/EncoderMotor/encodermotor.c ****     
-  95:BSP/EncoderMotor/encodermotor.c ****     // 3. 根据编码器方向调整脉冲值
-  96:BSP/EncoderMotor/encodermotor.c ****     delta *= motor->encoder_direction;
- 492              		.loc 1 96 5 is_stmt 1 view .LVU106
- 493              		.loc 1 96 19 is_stmt 0 view .LVU107
+ 121:BSP/EncoderMotor/encodermotor.c ****     
+ 122:BSP/EncoderMotor/encodermotor.c ****     // 3. 根据编码器方向调整脉冲值
+ 123:BSP/EncoderMotor/encodermotor.c ****     delta *= motor->encoder_direction;
+ 492              		.loc 1 123 5 is_stmt 1 view .LVU106
+ 493              		.loc 1 123 19 is_stmt 0 view .LVU107
  494 0010 90F91410 		ldrsb	r1, [r0, #20]
  495 0014 89B2     		uxth	r1, r1
- 496              		.loc 1 96 11 view .LVU108
+ 496              		.loc 1 123 11 view .LVU108
  497 0016 13FB01F3 		smulbb	r3, r3, r1
  498              	.LVL26:
-ARM GAS  /tmp/ccem2lyV.s 			page 12
-
-
- 499              		.loc 1 96 11 view .LVU109
+ 499              		.loc 1 123 11 view .LVU109
  500 001a 1BB2     		sxth	r3, r3
  501              	.LVL27:
-  97:BSP/EncoderMotor/encodermotor.c ****     
-  98:BSP/EncoderMotor/encodermotor.c ****     // 4. 更新总脉冲
-  99:BSP/EncoderMotor/encodermotor.c ****     motor->total_count += delta;
- 502              		.loc 1 99 5 is_stmt 1 view .LVU110
- 503              		.loc 1 99 10 is_stmt 0 view .LVU111
+ 124:BSP/EncoderMotor/encodermotor.c ****     
+ 125:BSP/EncoderMotor/encodermotor.c ****     // 4. 更新总脉冲
+ 126:BSP/EncoderMotor/encodermotor.c ****     motor->total_count += delta;
+ 502              		.loc 1 126 5 is_stmt 1 view .LVU110
+ 503              		.loc 1 126 10 is_stmt 0 view .LVU111
  504 001c C069     		ldr	r0, [r0, #28]
  505              	.LVL28:
- 506              		.loc 1 99 24 view .LVU112
+ 506              		.loc 1 126 24 view .LVU112
  507 001e 1844     		add	r0, r0, r3
  508 0020 D061     		str	r0, [r2, #28]
- 100:BSP/EncoderMotor/encodermotor.c ****     
- 101:BSP/EncoderMotor/encodermotor.c ****     // 5. 计算当前 RPM
- 102:BSP/EncoderMotor/encodermotor.c ****     // 逻辑：(脉冲数 / 每转总脉冲) / 时间 = 转/秒，再 * 60 = 转/分
- 103:BSP/EncoderMotor/encodermotor.c ****     // 别忘了除以减速比才是轮子的输出转速
- 104:BSP/EncoderMotor/encodermotor.c ****     float pulses_per_rev = ENCODER_PPR * MULTIPLIER * GEAR_RATIO;
- 509              		.loc 1 104 5 is_stmt 1 view .LVU113
+ 127:BSP/EncoderMotor/encodermotor.c ****     
+ 128:BSP/EncoderMotor/encodermotor.c ****     // 5. 计算当前 RPM
+ 129:BSP/EncoderMotor/encodermotor.c ****     // 逻辑：(脉冲数 / 每转总脉冲) / 时间 = 转/秒，再 * 60 = 转/分
+ 130:BSP/EncoderMotor/encodermotor.c ****     // 别忘了除以减速比才是轮子的输出转速
+ 131:BSP/EncoderMotor/encodermotor.c ****     float pulses_per_rev = ENCODER_PPR * MULTIPLIER * GEAR_RATIO;
+ 509              		.loc 1 131 5 is_stmt 1 view .LVU113
  510              	.LVL29:
- 105:BSP/EncoderMotor/encodermotor.c ****     motor->duty_rpm = ((float)delta / pulses_per_rev) * (60.0f / SAMPLE_TIME_S);
- 511              		.loc 1 105 5 view .LVU114
- 512              		.loc 1 105 24 is_stmt 0 view .LVU115
+ 132:BSP/EncoderMotor/encodermotor.c ****     motor->duty_rpm = ((float)delta / pulses_per_rev) * (60.0f / SAMPLE_TIME_S);
+ 511              		.loc 1 132 5 view .LVU114
+ 512              		.loc 1 132 24 is_stmt 0 view .LVU115
  513 0022 07EE903A 		vmov	s15, r3	@ int
  514 0026 F8EEE77A 		vcvt.f32.s32	s15, s15
- 515              		.loc 1 105 37 view .LVU116
+ 515              		.loc 1 132 37 view .LVU116
  516 002a DFED076A 		vldr.32	s13, .L57
  517 002e 87EEA67A 		vdiv.f32	s14, s15, s13
- 518              		.loc 1 105 55 view .LVU117
+ 518              		.loc 1 132 55 view .LVU117
  519 0032 DFED067A 		vldr.32	s15, .L57+4
+ARM GAS  /tmp/ccNU7FZv.s 			page 13
+
+
  520 0036 67EE277A 		vmul.f32	s15, s14, s15
- 521              		.loc 1 105 21 view .LVU118
+ 521              		.loc 1 132 21 view .LVU118
  522 003a C2ED097A 		vstr.32	s15, [r2, #36]
- 106:BSP/EncoderMotor/encodermotor.c **** 
- 107:BSP/EncoderMotor/encodermotor.c ****     // 6. 更新旧值
- 108:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = now;
- 523              		.loc 1 108 5 is_stmt 1 view .LVU119
- 524              		.loc 1 108 27 is_stmt 0 view .LVU120
+ 133:BSP/EncoderMotor/encodermotor.c **** 
+ 134:BSP/EncoderMotor/encodermotor.c ****     // 6. 更新旧值
+ 135:BSP/EncoderMotor/encodermotor.c ****     motor->last_raw_value = now;
+ 523              		.loc 1 135 5 is_stmt 1 view .LVU119
+ 524              		.loc 1 135 27 is_stmt 0 view .LVU120
  525 003e 1484     		strh	r4, [r2, #32]	@ movhi
- 109:BSP/EncoderMotor/encodermotor.c ****     
- 110:BSP/EncoderMotor/encodermotor.c ****     return motor->total_count;
- 526              		.loc 1 110 5 is_stmt 1 view .LVU121
- 111:BSP/EncoderMotor/encodermotor.c **** }
- 527              		.loc 1 111 1 is_stmt 0 view .LVU122
+ 136:BSP/EncoderMotor/encodermotor.c ****     
+ 137:BSP/EncoderMotor/encodermotor.c ****     return motor->total_count;
+ 526              		.loc 1 137 5 is_stmt 1 view .LVU121
+ 138:BSP/EncoderMotor/encodermotor.c **** }
+ 527              		.loc 1 138 1 is_stmt 0 view .LVU122
  528 0040 5DF8044B 		ldr	r4, [sp], #4
  529              	.LCFI3:
  530              		.cfi_restore 4
  531              		.cfi_def_cfa_offset 0
  532              	.LVL30:
- 533              		.loc 1 111 1 view .LVU123
+ 533              		.loc 1 138 1 view .LVU123
  534 0044 7047     		bx	lr
  535              	.L58:
  536 0046 00BF     		.align	2
@@ -718,9 +748,6 @@ ARM GAS  /tmp/ccem2lyV.s 			page 1
  538 0048 00008244 		.word	1149370368
  539 004c 0080BB45 		.word	1169915904
  540              		.cfi_endproc
-ARM GAS  /tmp/ccem2lyV.s 			page 13
-
-
  541              	.LFE242:
  543              		.section	.text.Incremental_PID,"ax",%progbits
  544              		.align	1
@@ -731,179 +758,179 @@ ARM GAS  /tmp/ccem2lyV.s 			page 1
  550              	Incremental_PID:
  551              	.LVL31:
  552              	.LFB243:
- 112:BSP/EncoderMotor/encodermotor.c **** 
- 113:BSP/EncoderMotor/encodermotor.c **** 
- 114:BSP/EncoderMotor/encodermotor.c **** int16_t Incremental_PID(MotorControl_t* motor, float target) {
- 553              		.loc 1 114 62 is_stmt 1 view -0
+ 139:BSP/EncoderMotor/encodermotor.c **** 
+ 140:BSP/EncoderMotor/encodermotor.c **** 
+ 141:BSP/EncoderMotor/encodermotor.c **** int16_t Incremental_PID(MotorControl_t* motor, float target) {
+ 553              		.loc 1 141 62 is_stmt 1 view -0
  554              		.cfi_startproc
  555              		@ args = 0, pretend = 0, frame = 0
  556              		@ frame_needed = 0, uses_anonymous_args = 0
  557              		@ link register save eliminated.
- 115:BSP/EncoderMotor/encodermotor.c ****     if (target == 0 && motor->duty_rpm == 0) {
- 558              		.loc 1 115 5 view .LVU125
- 559              		.loc 1 115 8 is_stmt 0 view .LVU126
+ 142:BSP/EncoderMotor/encodermotor.c ****     if (target == 0 && motor->duty_rpm == 0) {
+ 558              		.loc 1 142 5 view .LVU125
+ 559              		.loc 1 142 8 is_stmt 0 view .LVU126
  560 0000 B5EE400A 		vcmp.f32	s0, #0
  561 0004 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  562 0008 06D1     		bne	.L60
- 563              		.loc 1 115 29 discriminator 1 view .LVU127
+ 563              		.loc 1 142 29 discriminator 1 view .LVU127
  564 000a D0ED097A 		vldr.32	s15, [r0, #36]
- 565              		.loc 1 115 21 discriminator 1 view .LVU128
+ 565              		.loc 1 142 21 discriminator 1 view .LVU128
  566 000e F5EE407A 		vcmp.f32	s15, #0
  567 0012 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  568 0016 45D0     		beq	.L68
+ARM GAS  /tmp/ccNU7FZv.s 			page 14
+
+
  569              	.L60:
- 116:BSP/EncoderMotor/encodermotor.c ****         motor->pid_out = 0;
- 117:BSP/EncoderMotor/encodermotor.c ****         motor->pid_last_error = 0;
- 118:BSP/EncoderMotor/encodermotor.c ****         motor->pid_prev_error = 0;
- 119:BSP/EncoderMotor/encodermotor.c ****         motor->pid_integral = 0;
- 120:BSP/EncoderMotor/encodermotor.c ****         return 0;
- 121:BSP/EncoderMotor/encodermotor.c ****     }
- 122:BSP/EncoderMotor/encodermotor.c **** 
- 123:BSP/EncoderMotor/encodermotor.c ****     float error = target - motor->duty_rpm;
- 570              		.loc 1 123 5 is_stmt 1 view .LVU129
- 571              		.loc 1 123 33 is_stmt 0 view .LVU130
+ 143:BSP/EncoderMotor/encodermotor.c ****         motor->pid_out = 0;
+ 144:BSP/EncoderMotor/encodermotor.c ****         motor->pid_last_error = 0;
+ 145:BSP/EncoderMotor/encodermotor.c ****         motor->pid_prev_error = 0;
+ 146:BSP/EncoderMotor/encodermotor.c ****         motor->pid_integral = 0;
+ 147:BSP/EncoderMotor/encodermotor.c ****         return 0;
+ 148:BSP/EncoderMotor/encodermotor.c ****     }
+ 149:BSP/EncoderMotor/encodermotor.c **** 
+ 150:BSP/EncoderMotor/encodermotor.c ****     float error = target - motor->duty_rpm;
+ 570              		.loc 1 150 5 is_stmt 1 view .LVU129
+ 571              		.loc 1 150 33 is_stmt 0 view .LVU130
  572 0018 D0ED097A 		vldr.32	s15, [r0, #36]
- 573              		.loc 1 123 11 view .LVU131
+ 573              		.loc 1 150 11 view .LVU131
  574 001c 30EE670A 		vsub.f32	s0, s0, s15
  575              	.LVL32:
- 124:BSP/EncoderMotor/encodermotor.c ****     
- 125:BSP/EncoderMotor/encodermotor.c ****     // 增量式PID计算：Δu(k) = Kp*[e(k)-e(k-1)] + Ki*e(k) + Kd*[e(k)-2*e(k-1)+e(k-2)]
- 126:BSP/EncoderMotor/encodermotor.c ****     // 注意：积分项直接用 error，不要累积！
- 127:BSP/EncoderMotor/encodermotor.c ****     // ✅ 正确：积分项只乘以当前误差，不累积
- 128:BSP/EncoderMotor/encodermotor.c ****     float increment = motor->kp * (error - motor->pid_last_error) + 
- 576              		.loc 1 128 5 is_stmt 1 view .LVU132
- 577              		.loc 1 128 28 is_stmt 0 view .LVU133
+ 151:BSP/EncoderMotor/encodermotor.c ****     
+ 152:BSP/EncoderMotor/encodermotor.c ****     // 增量式PID计算：Δu(k) = Kp*[e(k)-e(k-1)] + Ki*e(k) + Kd*[e(k)-2*e(k-1)+e(k-2)]
+ 153:BSP/EncoderMotor/encodermotor.c ****     // 注意：积分项直接用 error，不要累积！
+ 154:BSP/EncoderMotor/encodermotor.c ****     // ✅ 正确：积分项只乘以当前误差，不累积
+ 155:BSP/EncoderMotor/encodermotor.c ****     float increment = motor->kp * (error - motor->pid_last_error) + 
+ 576              		.loc 1 155 5 is_stmt 1 view .LVU132
+ 577              		.loc 1 155 28 is_stmt 0 view .LVU133
  578 0020 D0ED0B7A 		vldr.32	s15, [r0, #44]
- 579              		.loc 1 128 49 view .LVU134
+ 579              		.loc 1 155 49 view .LVU134
  580 0024 D0ED0F6A 		vldr.32	s13, [r0, #60]
- 581              		.loc 1 128 42 view .LVU135
+ 581              		.loc 1 155 42 view .LVU135
  582 0028 30EE667A 		vsub.f32	s14, s0, s13
-ARM GAS  /tmp/ccem2lyV.s 			page 14
-
-
- 583              		.loc 1 128 33 view .LVU136
+ 583              		.loc 1 155 33 view .LVU136
  584 002c 67EE877A 		vmul.f32	s15, s15, s14
- 129:BSP/EncoderMotor/encodermotor.c ****                       motor->ki * error +  // ← 只是 error，不是 pid_integral
- 585              		.loc 1 129 28 view .LVU137
+ 156:BSP/EncoderMotor/encodermotor.c ****                       motor->ki * error +  // ← 只是 error，不是 pid_integral
+ 585              		.loc 1 156 28 view .LVU137
  586 0030 90ED0C7A 		vldr.32	s14, [r0, #48]
- 587              		.loc 1 129 33 view .LVU138
+ 587              		.loc 1 156 33 view .LVU138
  588 0034 27EE007A 		vmul.f32	s14, s14, s0
- 128:BSP/EncoderMotor/encodermotor.c ****                       motor->ki * error +  // ← 只是 error，不是 pid_integral
- 589              		.loc 1 128 67 view .LVU139
+ 155:BSP/EncoderMotor/encodermotor.c ****                       motor->ki * error +  // ← 只是 error，不是 pid_integral
+ 589              		.loc 1 155 67 view .LVU139
  590 0038 77EE877A 		vadd.f32	s15, s15, s14
- 130:BSP/EncoderMotor/encodermotor.c ****                       motor->kd * (error - 2 * motor->pid_last_error + motor->pid_prev_error);
- 591              		.loc 1 130 28 view .LVU140
+ 157:BSP/EncoderMotor/encodermotor.c ****                       motor->kd * (error - 2 * motor->pid_last_error + motor->pid_prev_error);
+ 591              		.loc 1 157 28 view .LVU140
  592 003c 90ED0D6A 		vldr.32	s12, [r0, #52]
- 593              		.loc 1 130 46 view .LVU141
+ 593              		.loc 1 157 46 view .LVU141
  594 0040 36EEA67A 		vadd.f32	s14, s13, s13
- 595              		.loc 1 130 42 view .LVU142
+ 595              		.loc 1 157 42 view .LVU142
  596 0044 30EE477A 		vsub.f32	s14, s0, s14
- 597              		.loc 1 130 77 view .LVU143
+ 597              		.loc 1 157 77 view .LVU143
  598 0048 D0ED105A 		vldr.32	s11, [r0, #64]
- 599              		.loc 1 130 70 view .LVU144
+ 599              		.loc 1 157 70 view .LVU144
  600 004c 37EE257A 		vadd.f32	s14, s14, s11
- 601              		.loc 1 130 33 view .LVU145
+ 601              		.loc 1 157 33 view .LVU145
  602 0050 26EE077A 		vmul.f32	s14, s12, s14
- 128:BSP/EncoderMotor/encodermotor.c ****                       motor->ki * error +  // ← 只是 error，不是 pid_integral
- 603              		.loc 1 128 11 view .LVU146
+ 155:BSP/EncoderMotor/encodermotor.c ****                       motor->ki * error +  // ← 只是 error，不是 pid_integral
+ 603              		.loc 1 155 11 view .LVU146
  604 0054 77EE877A 		vadd.f32	s15, s15, s14
  605              	.LVL33:
- 131:BSP/EncoderMotor/encodermotor.c ****                       
- 132:BSP/EncoderMotor/encodermotor.c ****     motor->pid_out += increment;
- 606              		.loc 1 132 5 is_stmt 1 view .LVU147
- 607              		.loc 1 132 10 is_stmt 0 view .LVU148
+ 158:BSP/EncoderMotor/encodermotor.c ****                       
+ 159:BSP/EncoderMotor/encodermotor.c ****     motor->pid_out += increment;
+ 606              		.loc 1 159 5 is_stmt 1 view .LVU147
+ARM GAS  /tmp/ccNU7FZv.s 			page 15
+
+
+ 607              		.loc 1 159 10 is_stmt 0 view .LVU148
  608 0058 90ED117A 		vldr.32	s14, [r0, #68]
- 609              		.loc 1 132 20 view .LVU149
+ 609              		.loc 1 159 20 view .LVU149
  610 005c 77EE277A 		vadd.f32	s15, s14, s15
  611              	.LVL34:
- 612              		.loc 1 132 20 view .LVU150
+ 612              		.loc 1 159 20 view .LVU150
  613 0060 C0ED117A 		vstr.32	s15, [r0, #68]
- 133:BSP/EncoderMotor/encodermotor.c ****     
- 134:BSP/EncoderMotor/encodermotor.c ****     // 更新误差历史
- 135:BSP/EncoderMotor/encodermotor.c ****     motor->pid_prev_error = motor->pid_last_error;
- 614              		.loc 1 135 5 is_stmt 1 view .LVU151
- 615              		.loc 1 135 27 is_stmt 0 view .LVU152
+ 160:BSP/EncoderMotor/encodermotor.c ****     
+ 161:BSP/EncoderMotor/encodermotor.c ****     // 更新误差历史
+ 162:BSP/EncoderMotor/encodermotor.c ****     motor->pid_prev_error = motor->pid_last_error;
+ 614              		.loc 1 162 5 is_stmt 1 view .LVU151
+ 615              		.loc 1 162 27 is_stmt 0 view .LVU152
  616 0064 C0ED106A 		vstr.32	s13, [r0, #64]
- 136:BSP/EncoderMotor/encodermotor.c ****     motor->pid_last_error = error;
- 617              		.loc 1 136 5 is_stmt 1 view .LVU153
- 618              		.loc 1 136 27 is_stmt 0 view .LVU154
+ 163:BSP/EncoderMotor/encodermotor.c ****     motor->pid_last_error = error;
+ 617              		.loc 1 163 5 is_stmt 1 view .LVU153
+ 618              		.loc 1 163 27 is_stmt 0 view .LVU154
  619 0068 80ED0F0A 		vstr.32	s0, [r0, #60]
- 137:BSP/EncoderMotor/encodermotor.c ****     
- 138:BSP/EncoderMotor/encodermotor.c ****     // --- 限幅对应 ARR=999 ---
- 139:BSP/EncoderMotor/encodermotor.c ****     if (motor->pid_out > 950)  motor->pid_out = 950;
- 620              		.loc 1 139 5 is_stmt 1 view .LVU155
- 621              		.loc 1 139 8 is_stmt 0 view .LVU156
+ 164:BSP/EncoderMotor/encodermotor.c ****     
+ 165:BSP/EncoderMotor/encodermotor.c ****     // --- 限幅对应 ARR=999 ---
+ 166:BSP/EncoderMotor/encodermotor.c ****     if (motor->pid_out > 950)  motor->pid_out = 950;
+ 620              		.loc 1 166 5 is_stmt 1 view .LVU155
+ 621              		.loc 1 166 8 is_stmt 0 view .LVU156
  622 006c 9FED117A 		vldr.32	s14, .L69
  623 0070 F4EEC77A 		vcmpe.f32	s15, s14
  624 0074 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  625 0078 01DD     		ble	.L62
- 626              		.loc 1 139 32 is_stmt 1 discriminator 1 view .LVU157
-ARM GAS  /tmp/ccem2lyV.s 			page 15
-
-
- 627              		.loc 1 139 47 is_stmt 0 discriminator 1 view .LVU158
+ 626              		.loc 1 166 32 is_stmt 1 discriminator 1 view .LVU157
+ 627              		.loc 1 166 47 is_stmt 0 discriminator 1 view .LVU158
  628 007a 80ED117A 		vstr.32	s14, [r0, #68]
  629              	.L62:
- 140:BSP/EncoderMotor/encodermotor.c ****     if (motor->pid_out < -950) motor->pid_out = -950;
- 630              		.loc 1 140 5 is_stmt 1 view .LVU159
- 631              		.loc 1 140 14 is_stmt 0 view .LVU160
+ 167:BSP/EncoderMotor/encodermotor.c ****     if (motor->pid_out < -950) motor->pid_out = -950;
+ 630              		.loc 1 167 5 is_stmt 1 view .LVU159
+ 631              		.loc 1 167 14 is_stmt 0 view .LVU160
  632 007e 90ED117A 		vldr.32	s14, [r0, #68]
- 633              		.loc 1 140 8 view .LVU161
+ 633              		.loc 1 167 8 view .LVU161
  634 0082 DFED0D7A 		vldr.32	s15, .L69+4
  635 0086 B4EEE77A 		vcmpe.f32	s14, s15
  636 008a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  637 008e 01D5     		bpl	.L64
- 638              		.loc 1 140 32 is_stmt 1 discriminator 1 view .LVU162
- 639              		.loc 1 140 47 is_stmt 0 discriminator 1 view .LVU163
+ 638              		.loc 1 167 32 is_stmt 1 discriminator 1 view .LVU162
+ 639              		.loc 1 167 47 is_stmt 0 discriminator 1 view .LVU163
  640 0090 C0ED117A 		vstr.32	s15, [r0, #68]
  641              	.L64:
- 141:BSP/EncoderMotor/encodermotor.c ****     
- 142:BSP/EncoderMotor/encodermotor.c ****     return (int16_t)motor->pid_out;
- 642              		.loc 1 142 5 is_stmt 1 view .LVU164
- 643              		.loc 1 142 26 is_stmt 0 view .LVU165
+ 168:BSP/EncoderMotor/encodermotor.c ****     
+ 169:BSP/EncoderMotor/encodermotor.c ****     return (int16_t)motor->pid_out;
+ 642              		.loc 1 169 5 is_stmt 1 view .LVU164
+ 643              		.loc 1 169 26 is_stmt 0 view .LVU165
  644 0094 D0ED117A 		vldr.32	s15, [r0, #68]
- 645              		.loc 1 142 12 view .LVU166
+ 645              		.loc 1 169 12 view .LVU166
  646 0098 FDEEE77A 		vcvt.s32.f32	s15, s15
  647 009c 17EE903A 		vmov	r3, s15	@ int
  648 00a0 18B2     		sxth	r0, r3
  649              	.LVL35:
- 143:BSP/EncoderMotor/encodermotor.c **** }...
- 650              		.loc 1 143 1 view .LVU167
+ 170:BSP/EncoderMotor/encodermotor.c **** }...
+ 650              		.loc 1 170 1 view .LVU167
  651 00a2 7047     		bx	lr
  652              	.LVL36:
+ARM GAS  /tmp/ccNU7FZv.s 			page 16
+
+
  653              	.L68:
- 116:BSP/EncoderMotor/encodermotor.c ****         motor->pid_out = 0;
- 654              		.loc 1 116 9 is_stmt 1 view .LVU168
- 116:BSP/EncoderMotor/encodermotor.c ****         motor->pid_out = 0;
- 655              		.loc 1 116 24 is_stmt 0 view .LVU169
+ 143:BSP/EncoderMotor/encodermotor.c ****         motor->pid_out = 0;
+ 654              		.loc 1 143 9 is_stmt 1 view .LVU168
+ 143:BSP/EncoderMotor/encodermotor.c ****         motor->pid_out = 0;
+ 655              		.loc 1 143 24 is_stmt 0 view .LVU169
  656 00a4 0023     		movs	r3, #0
  657 00a6 4364     		str	r3, [r0, #68]	@ float
- 117:BSP/EncoderMotor/encodermotor.c ****         motor->pid_last_error = 0;
- 658              		.loc 1 117 9 is_stmt 1 view .LVU170
- 117:BSP/EncoderMotor/encodermotor.c ****         motor->pid_last_error = 0;
- 659              		.loc 1 117 31 is_stmt 0 view .LVU171
+ 144:BSP/EncoderMotor/encodermotor.c ****         motor->pid_last_error = 0;
+ 658              		.loc 1 144 9 is_stmt 1 view .LVU170
+ 144:BSP/EncoderMotor/encodermotor.c ****         motor->pid_last_error = 0;
+ 659              		.loc 1 144 31 is_stmt 0 view .LVU171
  660 00a8 C363     		str	r3, [r0, #60]	@ float
- 118:BSP/EncoderMotor/encodermotor.c ****         motor->pid_prev_error = 0;
- 661              		.loc 1 118 9 is_stmt 1 view .LVU172
- 118:BSP/EncoderMotor/encodermotor.c ****         motor->pid_prev_error = 0;
- 662              		.loc 1 118 31 is_stmt 0 view .LVU173
+ 145:BSP/EncoderMotor/encodermotor.c ****         motor->pid_prev_error = 0;
+ 661              		.loc 1 145 9 is_stmt 1 view .LVU172
+ 145:BSP/EncoderMotor/encodermotor.c ****         motor->pid_prev_error = 0;
+ 662              		.loc 1 145 31 is_stmt 0 view .LVU173
  663 00aa 0364     		str	r3, [r0, #64]	@ float
- 119:BSP/EncoderMotor/encodermotor.c ****         motor->pid_integral = 0;
- 664              		.loc 1 119 9 is_stmt 1 view .LVU174
- 119:BSP/EncoderMotor/encodermotor.c ****         motor->pid_integral = 0;
- 665              		.loc 1 119 29 is_stmt 0 view .LVU175
+ 146:BSP/EncoderMotor/encodermotor.c ****         motor->pid_integral = 0;
+ 664              		.loc 1 146 9 is_stmt 1 view .LVU174
+ 146:BSP/EncoderMotor/encodermotor.c ****         motor->pid_integral = 0;
+ 665              		.loc 1 146 29 is_stmt 0 view .LVU175
  666 00ac 8363     		str	r3, [r0, #56]	@ float
- 120:BSP/EncoderMotor/encodermotor.c ****         return 0;
- 667              		.loc 1 120 9 is_stmt 1 view .LVU176
- 120:BSP/EncoderMotor/encodermotor.c ****         return 0;
- 668              		.loc 1 120 16 is_stmt 0 view .LVU177
+ 147:BSP/EncoderMotor/encodermotor.c ****         return 0;
+ 667              		.loc 1 147 9 is_stmt 1 view .LVU176
+ 147:BSP/EncoderMotor/encodermotor.c ****         return 0;
+ 668              		.loc 1 147 16 is_stmt 0 view .LVU177
  669 00ae 0020     		movs	r0, #0
-ARM GAS  /tmp/ccem2lyV.s 			page 16
-
-
  670              	.LVL37:
- 120:BSP/EncoderMotor/encodermotor.c ****         return 0;
- 671              		.loc 1 120 16 view .LVU178
+ 147:BSP/EncoderMotor/encodermotor.c ****         return 0;
+ 671              		.loc 1 147 16 view .LVU178
  672 00b0 7047     		bx	lr
  673              	.L70:
  674 00b2 00BF     		.align	2
@@ -912,89 +939,153 @@ ARM GAS  /tmp/ccem2lyV.s 			page 1
  677 00b8 00806DC4 		.word	-999456768
  678              		.cfi_endproc
  679              	.LFE243:
- 681              		.global	Motor_D
- 682              		.section	.data.Motor_D,"aw"
+ 681              		.global	Mecanum_Motors
+ 682              		.section	.data.Mecanum_Motors,"aw"
  683              		.align	2
- 686              	Motor_D:
- 687 0000 00000000 		.word	htim1
- 688 0004 00000000 		.word	htim1
- 689 0008 08000000 		.word	8
- 690 000c 0C000000 		.word	12
- 691 0010 00000000 		.word	htim5
- 692 0014 01       		.byte	1
- 693 0015 00000000 		.space	23
- 693      00000000 
- 693      00000000 
- 693      00000000 
- 693      00000000 
- 694 002c 0000A040 		.word	1084227584
- 695 0030 CDCC4C3D 		.word	1028443341
- 696 0034 CDCCCC3D 		.word	1036831949
- 697 0038 00000000 		.space	16
- 697      00000000 
- 697      00000000 
- 697      00000000 
- 698              		.global	Motor_A
- 699              		.section	.data.Motor_A,"aw"
- 700              		.align	2
- 703              	Motor_A:
- 704 0000 00000000 		.word	htim10
- 705 0004 00000000 		.word	htim11
- 706 0008 00000000 		.word	0
- 707 000c 00000000 		.word	0
- 708 0010 00000000 		.word	htim3
- 709 0014 01       		.byte	1
- 710 0015 00000000 		.space	23
- 710      00000000 
- 710      00000000 
- 710      00000000 
- 710      00000000 
- 711 002c 0000A040 		.word	1084227584
- 712 0030 CDCC4C3D 		.word	1028443341
- 713 0034 CDCCCC3D 		.word	1036831949
- 714 0038 00000000 		.space	16
- 714      00000000 
- 714      00000000 
- 714      00000000 
- 715              		.text
- 716              	.Letext0:
-ARM GAS  /tmp/ccem2lyV.s 			page 17
+ 686              	Mecanum_Motors:
+ 687 0000 00000000 		.word	Motor_A
+ 688 0004 00000000 		.word	Motor_B
+ 689 0008 00000000 		.word	Motor_C
+ 690 000c 00000000 		.word	Motor_D
+ 691              		.global	Motor_D
+ 692              		.section	.data.Motor_D,"aw"
+ 693              		.align	2
+ 696              	Motor_D:
+ 697 0000 00000000 		.word	htim1
+ 698 0004 00000000 		.word	htim1
+ 699 0008 08000000 		.word	8
+ 700 000c 0C000000 		.word	12
+ 701 0010 00000000 		.word	htim5
+ 702 0014 01       		.byte	1
+ 703 0015 00000000 		.space	23
+ARM GAS  /tmp/ccNU7FZv.s 			page 17
 
 
- 717              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
- 718              		.file 3 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
- 719              		.file 4 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 720              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 721              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
- 722              		.file 7 "Core/Inc/tim.h"
- 723              		.file 8 "BSP/EncoderMotor/encodermotor.h"
-ARM GAS  /tmp/ccem2lyV.s 			page 18
+ 703      00000000 
+ 703      00000000 
+ 703      00000000 
+ 703      00000000 
+ 704 002c 0000A040 		.word	1084227584
+ 705 0030 CDCC4C3D 		.word	1028443341
+ 706 0034 CDCCCC3D 		.word	1036831949
+ 707 0038 00000000 		.space	16
+ 707      00000000 
+ 707      00000000 
+ 707      00000000 
+ 708              		.global	Motor_C
+ 709              		.section	.data.Motor_C,"aw"
+ 710              		.align	2
+ 713              	Motor_C:
+ 714 0000 00000000 		.word	htim1
+ 715 0004 00000000 		.word	htim1
+ 716 0008 00000000 		.word	0
+ 717 000c 04000000 		.word	4
+ 718 0010 00000000 		.word	htim4
+ 719 0014 01       		.byte	1
+ 720 0015 00000000 		.space	23
+ 720      00000000 
+ 720      00000000 
+ 720      00000000 
+ 720      00000000 
+ 721 002c 0000A040 		.word	1084227584
+ 722 0030 CDCC4C3D 		.word	1028443341
+ 723 0034 CDCCCC3D 		.word	1036831949
+ 724 0038 00000000 		.space	16
+ 724      00000000 
+ 724      00000000 
+ 724      00000000 
+ 725              		.global	Motor_B
+ 726              		.section	.data.Motor_B,"aw"
+ 727              		.align	2
+ 730              	Motor_B:
+ 731 0000 00000000 		.word	htim9
+ 732 0004 00000000 		.word	htim9
+ 733 0008 00000000 		.word	0
+ 734 000c 04000000 		.word	4
+ 735 0010 00000000 		.word	htim3
+ 736 0014 01       		.byte	1
+ 737 0015 00000000 		.space	23
+ 737      00000000 
+ 737      00000000 
+ 737      00000000 
+ 737      00000000 
+ 738 002c 0000A040 		.word	1084227584
+ 739 0030 CDCC4C3D 		.word	1028443341
+ 740 0034 CDCCCC3D 		.word	1036831949
+ 741 0038 00000000 		.space	16
+ 741      00000000 
+ 741      00000000 
+ 741      00000000 
+ 742              		.global	Motor_A
+ 743              		.section	.data.Motor_A,"aw"
+ARM GAS  /tmp/ccNU7FZv.s 			page 18
+
+
+ 744              		.align	2
+ 747              	Motor_A:
+ 748 0000 00000000 		.word	htim10
+ 749 0004 00000000 		.word	htim11
+ 750 0008 00000000 		.word	0
+ 751 000c 00000000 		.word	0
+ 752 0010 00000000 		.word	htim2
+ 753 0014 01       		.byte	1
+ 754 0015 00000000 		.space	23
+ 754      00000000 
+ 754      00000000 
+ 754      00000000 
+ 754      00000000 
+ 755 002c 0000A040 		.word	1084227584
+ 756 0030 CDCC4C3D 		.word	1028443341
+ 757 0034 CDCCCC3D 		.word	1036831949
+ 758 0038 00000000 		.space	16
+ 758      00000000 
+ 758      00000000 
+ 758      00000000 
+ 759              		.text
+ 760              	.Letext0:
+ 761              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 762              		.file 3 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 763              		.file 4 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 764              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 765              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 766              		.file 7 "Core/Inc/tim.h"
+ 767              		.file 8 "BSP/EncoderMotor/encodermotor.h"
+ARM GAS  /tmp/ccNU7FZv.s 			page 19
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 encodermotor.c
-     /tmp/ccem2lyV.s:21     .text.Motor_Init:00000000 $t
-     /tmp/ccem2lyV.s:27     .text.Motor_Init:00000000 Motor_Init
-     /tmp/ccem2lyV.s:139    .text.Motor_SetPWM:00000000 $t
-     /tmp/ccem2lyV.s:145    .text.Motor_SetPWM:00000000 Motor_SetPWM
-     /tmp/ccem2lyV.s:403    .text.Motor_Encoder_Init:00000000 $t
-     /tmp/ccem2lyV.s:409    .text.Motor_Encoder_Init:00000000 Motor_Encoder_Init
-     /tmp/ccem2lyV.s:458    .text.Motor_Encoder_Update:00000000 $t
-     /tmp/ccem2lyV.s:464    .text.Motor_Encoder_Update:00000000 Motor_Encoder_Update
-     /tmp/ccem2lyV.s:538    .text.Motor_Encoder_Update:00000048 $d
-     /tmp/ccem2lyV.s:544    .text.Incremental_PID:00000000 $t
-     /tmp/ccem2lyV.s:550    .text.Incremental_PID:00000000 Incremental_PID
-     /tmp/ccem2lyV.s:676    .text.Incremental_PID:000000b4 $d
-     /tmp/ccem2lyV.s:686    .data.Motor_D:00000000 Motor_D
-     /tmp/ccem2lyV.s:683    .data.Motor_D:00000000 $d
-     /tmp/ccem2lyV.s:703    .data.Motor_A:00000000 Motor_A
-     /tmp/ccem2lyV.s:700    .data.Motor_A:00000000 $d
+     /tmp/ccNU7FZv.s:21     .text.Motor_Init:00000000 $t
+     /tmp/ccNU7FZv.s:27     .text.Motor_Init:00000000 Motor_Init
+     /tmp/ccNU7FZv.s:139    .text.Motor_SetPWM:00000000 $t
+     /tmp/ccNU7FZv.s:145    .text.Motor_SetPWM:00000000 Motor_SetPWM
+     /tmp/ccNU7FZv.s:403    .text.Motor_Encoder_Init:00000000 $t
+     /tmp/ccNU7FZv.s:409    .text.Motor_Encoder_Init:00000000 Motor_Encoder_Init
+     /tmp/ccNU7FZv.s:458    .text.Motor_Encoder_Update:00000000 $t
+     /tmp/ccNU7FZv.s:464    .text.Motor_Encoder_Update:00000000 Motor_Encoder_Update
+     /tmp/ccNU7FZv.s:538    .text.Motor_Encoder_Update:00000048 $d
+     /tmp/ccNU7FZv.s:544    .text.Incremental_PID:00000000 $t
+     /tmp/ccNU7FZv.s:550    .text.Incremental_PID:00000000 Incremental_PID
+     /tmp/ccNU7FZv.s:676    .text.Incremental_PID:000000b4 $d
+     /tmp/ccNU7FZv.s:686    .data.Mecanum_Motors:00000000 Mecanum_Motors
+     /tmp/ccNU7FZv.s:683    .data.Mecanum_Motors:00000000 $d
+     /tmp/ccNU7FZv.s:747    .data.Motor_A:00000000 Motor_A
+     /tmp/ccNU7FZv.s:730    .data.Motor_B:00000000 Motor_B
+     /tmp/ccNU7FZv.s:713    .data.Motor_C:00000000 Motor_C
+     /tmp/ccNU7FZv.s:696    .data.Motor_D:00000000 Motor_D
+     /tmp/ccNU7FZv.s:693    .data.Motor_D:00000000 $d
+     /tmp/ccNU7FZv.s:710    .data.Motor_C:00000000 $d
+     /tmp/ccNU7FZv.s:727    .data.Motor_B:00000000 $d
+     /tmp/ccNU7FZv.s:744    .data.Motor_A:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_TIM_PWM_Start
 HAL_TIM_Encoder_Start
 htim1
 htim5
+htim4
+htim9
+htim3
 htim10
 htim11
-htim3
+htim2

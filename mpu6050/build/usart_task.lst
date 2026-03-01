@@ -1,4 +1,4 @@
-ARM GAS  /tmp/cczttQju.s 			page 1
+ARM GAS  /tmp/ccYzDTM3.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/cczttQju.s 			page 1
   45              		.loc 1 9 13 view .LVU6
   46 0004 1846     		mov	r0, r3
   47              	.LVL2:
-ARM GAS  /tmp/cczttQju.s 			page 2
+ARM GAS  /tmp/ccYzDTM3.s 			page 2
 
 
   48              	.LBB3:
@@ -118,7 +118,7 @@ ARM GAS  /tmp/cczttQju.s 			page 1
   98              	.LCFI1:
   99              		.cfi_def_cfa_offset 88
  100 0004 28E0     		b	.L5
-ARM GAS  /tmp/cczttQju.s 			page 3
+ARM GAS  /tmp/ccYzDTM3.s 			page 3
 
 
  101              	.LVL8:
@@ -178,7 +178,7 @@ ARM GAS  /tmp/cczttQju.s 			page 1
   48:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[12], &p_imu->Accel_Z, 4);
  124              		.loc 1 48 21 view .LVU26
  125 001c 9A68     		ldr	r2, [r3, #8]	@ unaligned
-ARM GAS  /tmp/cczttQju.s 			page 4
+ARM GAS  /tmp/ccYzDTM3.s 			page 4
 
 
  126 001e 0392     		str	r2, [sp, #12]
@@ -212,76 +212,76 @@ ARM GAS  /tmp/cczttQju.s 			page 1
   60:RobotApp/Src/usart_task.c ****                 case MSG_TYPE_MOTOR:
   61:RobotApp/Src/usart_task.c ****                 {
   62:RobotApp/Src/usart_task.c ****                     MotorData_t* p_motor = (MotorData_t*)recv_msg.p_data;
-  63:RobotApp/Src/usart_task.c ****                     
-  64:RobotApp/Src/usart_task.c ****                     tx_buf[2] = 0x20; // 功能码
-  65:RobotApp/Src/usart_task.c ****                     
-  66:RobotApp/Src/usart_task.c ****                     // 长度改为 20 字节 (count_L:4 + count_R:4 + speed_L:4 + speed_R:4 + batt
-  67:RobotApp/Src/usart_task.c ****                     tx_buf[3] = 20;   
-  68:RobotApp/Src/usart_task.c ****                     
-  69:RobotApp/Src/usart_task.c ****                     // 依次打包 5 个数据
-  70:RobotApp/Src/usart_task.c ****                     // 偏移 4: 左脉冲 (int)
-  71:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[4],  &p_motor->count_L, 4);
-  72:RobotApp/Src/usart_task.c ****                     // 偏移 8: 右脉冲 (int)
-  73:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[8],  &p_motor->count_R, 4);
-  74:RobotApp/Src/usart_task.c ****                     // 偏移 12: 左速度 (float)
-  75:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[12], &p_motor->speed_L,   4);
-  76:RobotApp/Src/usart_task.c ****                     // 偏移 16: 右速度 (float)
-  77:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[16], &p_motor->speed_R,   4);
-  78:RobotApp/Src/usart_task.c ****                     // 偏移 20: 电池电压 (float)
-  79:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[20], &p_motor->battery_voltage, 4);
-  80:RobotApp/Src/usart_task.c ****                     
-  81:RobotApp/Src/usart_task.c ****                     payload_len = 20;
-  82:RobotApp/Src/usart_task.c ****                     break;
-  83:RobotApp/Src/usart_task.c ****                 }
-  84:RobotApp/Src/usart_task.c ****                 
-  85:RobotApp/Src/usart_task.c ****                 default:
+  63:RobotApp/Src/usart_task.c **** 
+  64:RobotApp/Src/usart_task.c ****                     tx_buf[2] = 0x20; // 功能码: 麦轮电机状态
+  65:RobotApp/Src/usart_task.c **** 
+  66:RobotApp/Src/usart_task.c ****                     // 【V2.0 升级】长度改为 36 字节
+  67:RobotApp/Src/usart_task.c ****                     // 4个rpm(16) + 4个count(16) + 电压(4) = 36
+  68:RobotApp/Src/usart_task.c ****                     tx_buf[3] = 36;   
+  69:RobotApp/Src/usart_task.c **** 
+  70:RobotApp/Src/usart_task.c ****                     // --- 1. 打包 4 个轮子的转速 RPM (float) ---
+  71:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[4],  &p_motor->rpm[0], 4); // 偏移 4: FL
+  72:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[8],  &p_motor->rpm[1], 4); // 偏移 8: FR
+  73:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[12], &p_motor->rpm[2], 4); // 偏移 12: RL
+  74:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[16], &p_motor->rpm[3], 4); // 偏移 16: RR
+  75:RobotApp/Src/usart_task.c **** 
+  76:RobotApp/Src/usart_task.c ****                     // --- 2. 打包 4 个轮子的脉冲数 Count (int32) ---
+  77:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[20], &p_motor->count[0], 4); // 偏移 20: FL
+  78:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[24], &p_motor->count[1], 4); // 偏移 24: FR
+  79:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[28], &p_motor->count[2], 4); // 偏移 28: RL
+  80:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[32], &p_motor->count[3], 4); // 偏移 32: RR
+  81:RobotApp/Src/usart_task.c **** 
+  82:RobotApp/Src/usart_task.c ****                     // --- 3. 打包电池电压 (float) ---
+  83:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[36], &p_motor->battery_voltage, 4); // 偏移 36
+  84:RobotApp/Src/usart_task.c **** 
+  85:RobotApp/Src/usart_task.c ****                     payload_len = 36;
   86:RobotApp/Src/usart_task.c ****                     break;
-  87:RobotApp/Src/usart_task.c ****             }
-  88:RobotApp/Src/usart_task.c **** 
-ARM GAS  /tmp/cczttQju.s 			page 5
+  87:RobotApp/Src/usart_task.c ****                 } 
+  88:RobotApp/Src/usart_task.c ****             }           
+ARM GAS  /tmp/ccYzDTM3.s 			page 5
 
 
-  89:RobotApp/Src/usart_task.c ****             // 3. 计算校验并发送
-  90:RobotApp/Src/usart_task.c ****             if (payload_len > 0) {
- 143              		.loc 1 90 13 is_stmt 1 view .LVU34
+  89:RobotApp/Src/usart_task.c ****                 // 3. 计算校验并发送
+  90:RobotApp/Src/usart_task.c ****                 if (payload_len > 0) {
+ 143              		.loc 1 90 17 is_stmt 1 view .LVU34
  144              	.L9:
  145              	.LBB7:
-  91:RobotApp/Src/usart_task.c ****                 // 校验位放在 payload 后面
-  92:RobotApp/Src/usart_task.c ****                 // 总长度 = 头(2) + 功能(1) + 长度(1) + Payload + 校验(1)
-  93:RobotApp/Src/usart_task.c ****                 uint8_t total_len = 2 + 1 + 1 + payload_len + 1;
- 146              		.loc 1 93 17 view .LVU35
- 147              		.loc 1 93 25 is_stmt 0 view .LVU36
+  91:RobotApp/Src/usart_task.c ****                     // 校验位放在 payload 后面
+  92:RobotApp/Src/usart_task.c ****                     // 总长度 = 头(2) + 功能(1) + 长度(1) + Payload + 校验(1)
+  93:RobotApp/Src/usart_task.c ****                     uint8_t total_len = 2 + 1 + 1 + payload_len + 1;
+ 146              		.loc 1 93 21 view .LVU35
+ 147              		.loc 1 93 29 is_stmt 0 view .LVU36
  148 002c 4D1D     		adds	r5, r1, #5
  149              	.LVL12:
-  94:RobotApp/Src/usart_task.c ****                 
-  95:RobotApp/Src/usart_task.c ****                 // 计算前面所有字节的校验和 (除了最后一个字节)
-  96:RobotApp/Src/usart_task.c ****                 tx_buf[total_len - 1] = Calc_Checksum(&tx_buf[2], total_len - 3);                
- 150              		.loc 1 96 17 is_stmt 1 view .LVU37
- 151              		.loc 1 96 34 is_stmt 0 view .LVU38
+  94:RobotApp/Src/usart_task.c ****                     
+  95:RobotApp/Src/usart_task.c ****                     // 计算前面所有字节的校验和 (除了最后一个字节)
+  96:RobotApp/Src/usart_task.c ****                     tx_buf[total_len - 1] = Calc_Checksum(&tx_buf[2], total_len - 3);              
+ 150              		.loc 1 96 21 is_stmt 1 view .LVU37
+ 151              		.loc 1 96 38 is_stmt 0 view .LVU38
  152 002e 0C1D     		adds	r4, r1, #4
- 153              		.loc 1 96 41 view .LVU39
+ 153              		.loc 1 96 45 view .LVU39
  154 0030 0231     		adds	r1, r1, #2
  155 0032 0DF10200 		add	r0, sp, #2
  156 0036 FFF7FEFF 		bl	Calc_Checksum
  157              	.LVL13:
- 158              		.loc 1 96 39 discriminator 1 view .LVU40
+ 158              		.loc 1 96 43 discriminator 1 view .LVU40
  159 003a 04F14803 		add	r3, r4, #72
  160 003e 0DEB0304 		add	r4, sp, r3
  161 0042 04F8480C 		strb	r0, [r4, #-72]
-  97:RobotApp/Src/usart_task.c ****                 // 发送二进制流
-  98:RobotApp/Src/usart_task.c ****                 HAL_UART_Transmit(&huart3, tx_buf, total_len, 10);
- 162              		.loc 1 98 17 is_stmt 1 view .LVU41
+  97:RobotApp/Src/usart_task.c ****                     // 发送二进制流
+  98:RobotApp/Src/usart_task.c ****                     HAL_UART_Transmit(&huart3, tx_buf, total_len, 10);
+ 162              		.loc 1 98 21 is_stmt 1 view .LVU41
  163 0046 0A23     		movs	r3, #10
  164 0048 2A46     		mov	r2, r5
  165 004a 6946     		mov	r1, sp
- 166 004c 1648     		ldr	r0, .L12
+ 166 004c 1A48     		ldr	r0, .L12
  167 004e FFF7FEFF 		bl	HAL_UART_Transmit
  168              	.LVL14:
  169              	.L8:
- 170              		.loc 1 98 17 is_stmt 0 view .LVU42
+ 170              		.loc 1 98 21 is_stmt 0 view .LVU42
  171              	.LBE7:
-  99:RobotApp/Src/usart_task.c ****             }
- 100:RobotApp/Src/usart_task.c **** 
+  99:RobotApp/Src/usart_task.c ****                 }
+ 100:RobotApp/Src/usart_task.c ****             
  101:RobotApp/Src/usart_task.c ****             // 4. ***最重要的一步***：释放内存
  102:RobotApp/Src/usart_task.c ****             // 无论是什么类型，recv_msg.p_data 指向的都是 malloc 出来的内存
  103:RobotApp/Src/usart_task.c ****             vPortFree(recv_msg.p_data);
@@ -298,7 +298,7 @@ ARM GAS  /tmp/cczttQju.s 			page 1
  180              		.loc 1 18 5 view .LVU45
   20:RobotApp/Src/usart_task.c ****     {
  181              		.loc 1 20 5 view .LVU46
-ARM GAS  /tmp/cczttQju.s 			page 6
+ARM GAS  /tmp/ccYzDTM3.s 			page 6
 
 
   23:RobotApp/Src/usart_task.c ****             
@@ -308,7 +308,7 @@ ARM GAS  /tmp/cczttQju.s 			page 1
  184              		.loc 1 23 13 is_stmt 0 view .LVU48
  185 0058 4FF0FF32 		mov	r2, #-1
  186 005c 10A9     		add	r1, sp, #64
- 187 005e 134B     		ldr	r3, .L12+4
+ 187 005e 174B     		ldr	r3, .L12+4
  188 0060 1868     		ldr	r0, [r3]
  189 0062 FFF7FEFF 		bl	xQueueReceive
  190              	.LVL16:
@@ -344,96 +344,112 @@ ARM GAS  /tmp/cczttQju.s 			page 1
  211 007e 012B     		cmp	r3, #1
  212 0080 E7D1     		bne	.L8
  213              	.LBB8:
-  62:RobotApp/Src/usart_task.c ****                     
+  62:RobotApp/Src/usart_task.c **** 
  214              		.loc 1 62 21 is_stmt 1 view .LVU58
-  62:RobotApp/Src/usart_task.c ****                     
+  62:RobotApp/Src/usart_task.c **** 
  215              		.loc 1 62 34 is_stmt 0 view .LVU59
  216 0082 119B     		ldr	r3, [sp, #68]
  217              	.LVL18:
-  64:RobotApp/Src/usart_task.c ****                     
+  64:RobotApp/Src/usart_task.c **** 
  218              		.loc 1 64 21 is_stmt 1 view .LVU60
-  64:RobotApp/Src/usart_task.c ****                     
+  64:RobotApp/Src/usart_task.c **** 
  219              		.loc 1 64 31 is_stmt 0 view .LVU61
  220 0084 2022     		movs	r2, #32
  221 0086 8DF80220 		strb	r2, [sp, #2]
-  67:RobotApp/Src/usart_task.c ****                     
- 222              		.loc 1 67 21 is_stmt 1 view .LVU62
-ARM GAS  /tmp/cczttQju.s 			page 7
+  68:RobotApp/Src/usart_task.c **** 
+ 222              		.loc 1 68 21 is_stmt 1 view .LVU62
+ARM GAS  /tmp/ccYzDTM3.s 			page 7
 
 
-  67:RobotApp/Src/usart_task.c ****                     
- 223              		.loc 1 67 31 is_stmt 0 view .LVU63
- 224 008a 1421     		movs	r1, #20
+  68:RobotApp/Src/usart_task.c **** 
+ 223              		.loc 1 68 31 is_stmt 0 view .LVU63
+ 224 008a 2421     		movs	r1, #36
  225 008c 8DF80310 		strb	r1, [sp, #3]
-  71:RobotApp/Src/usart_task.c ****                     // 偏移 8: 右脉冲 (int)
+  71:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[8],  &p_motor->rpm[1], 4); // 偏移 8: FR
  226              		.loc 1 71 21 is_stmt 1 view .LVU64
- 227 0090 9A68     		ldr	r2, [r3, #8]	@ unaligned
+ 227 0090 1A68     		ldr	r2, [r3]	@ unaligned
  228 0092 0192     		str	r2, [sp, #4]
-  73:RobotApp/Src/usart_task.c ****                     // 偏移 12: 左速度 (float)
- 229              		.loc 1 73 21 view .LVU65
- 230 0094 DA68     		ldr	r2, [r3, #12]	@ unaligned
+  72:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[12], &p_motor->rpm[2], 4); // 偏移 12: RL
+ 229              		.loc 1 72 21 view .LVU65
+ 230 0094 5A68     		ldr	r2, [r3, #4]	@ unaligned
  231 0096 0292     		str	r2, [sp, #8]
-  75:RobotApp/Src/usart_task.c ****                     // 偏移 16: 右速度 (float)
- 232              		.loc 1 75 21 view .LVU66
- 233 0098 1A68     		ldr	r2, [r3]	@ unaligned
+  73:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[16], &p_motor->rpm[3], 4); // 偏移 16: RR
+ 232              		.loc 1 73 21 view .LVU66
+ 233 0098 9A68     		ldr	r2, [r3, #8]	@ unaligned
  234 009a 0392     		str	r2, [sp, #12]
-  77:RobotApp/Src/usart_task.c ****                     // 偏移 20: 电池电压 (float)
- 235              		.loc 1 77 21 view .LVU67
- 236 009c 5A68     		ldr	r2, [r3, #4]	@ unaligned
+  74:RobotApp/Src/usart_task.c **** 
+ 235              		.loc 1 74 21 view .LVU67
+ 236 009c DA68     		ldr	r2, [r3, #12]	@ unaligned
  237 009e 0492     		str	r2, [sp, #16]
-  79:RobotApp/Src/usart_task.c ****                     
- 238              		.loc 1 79 21 view .LVU68
- 239 00a0 1B69     		ldr	r3, [r3, #16]	@ unaligned
- 240              	.LVL19:
-  79:RobotApp/Src/usart_task.c ****                     
- 241              		.loc 1 79 21 is_stmt 0 view .LVU69
- 242 00a2 0593     		str	r3, [sp, #20]
-  81:RobotApp/Src/usart_task.c ****                     break;
- 243              		.loc 1 81 21 is_stmt 1 view .LVU70
- 244              	.LVL20:
-  82:RobotApp/Src/usart_task.c ****                 }
- 245              		.loc 1 82 21 view .LVU71
-  82:RobotApp/Src/usart_task.c ****                 }
- 246              		.loc 1 82 21 is_stmt 0 view .LVU72
- 247              	.LBE8:
-  90:RobotApp/Src/usart_task.c ****                 // 校验位放在 payload 后面
- 248              		.loc 1 90 13 is_stmt 1 view .LVU73
- 249 00a4 C2E7     		b	.L9
- 250              	.L13:
- 251 00a6 00BF     		.align	2
- 252              	.L12:
- 253 00a8 00000000 		.word	huart3
- 254 00ac 00000000 		.word	dataQueueHandle
- 255              	.LBE9:
- 256              	.LBE10:
- 257              		.cfi_endproc
- 258              	.LFE244:
- 260              		.text
- 261              	.Letext0:
- 262              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
- 263              		.file 3 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
- 264              		.file 4 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 265              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 266              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
- 267              		.file 7 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
- 268              		.file 8 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
- 269              		.file 9 "BSP/mpu6050/mpu6050.h"
-ARM GAS  /tmp/cczttQju.s 			page 8
+  77:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[24], &p_motor->count[1], 4); // 偏移 24: FR
+ 238              		.loc 1 77 21 view .LVU68
+ 239 00a0 1A69     		ldr	r2, [r3, #16]	@ unaligned
+ 240 00a2 0592     		str	r2, [sp, #20]
+  78:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[28], &p_motor->count[2], 4); // 偏移 28: RL
+ 241              		.loc 1 78 21 view .LVU69
+ 242 00a4 5A69     		ldr	r2, [r3, #20]	@ unaligned
+ 243 00a6 0692     		str	r2, [sp, #24]
+  79:RobotApp/Src/usart_task.c ****                     memcpy(&tx_buf[32], &p_motor->count[3], 4); // 偏移 32: RR
+ 244              		.loc 1 79 21 view .LVU70
+ 245 00a8 9A69     		ldr	r2, [r3, #24]	@ unaligned
+ 246 00aa 0792     		str	r2, [sp, #28]
+  80:RobotApp/Src/usart_task.c **** 
+ 247              		.loc 1 80 21 view .LVU71
+ 248 00ac DA69     		ldr	r2, [r3, #28]	@ unaligned
+ 249 00ae 0892     		str	r2, [sp, #32]
+  83:RobotApp/Src/usart_task.c **** 
+ 250              		.loc 1 83 21 view .LVU72
+ 251 00b0 1B6A     		ldr	r3, [r3, #32]	@ unaligned
+ 252              	.LVL19:
+  83:RobotApp/Src/usart_task.c **** 
+ 253              		.loc 1 83 21 is_stmt 0 view .LVU73
+ 254 00b2 0993     		str	r3, [sp, #36]
+  85:RobotApp/Src/usart_task.c ****                     break;
+ 255              		.loc 1 85 21 is_stmt 1 view .LVU74
+ 256              	.LVL20:
+  86:RobotApp/Src/usart_task.c ****                 } 
+ 257              		.loc 1 86 21 view .LVU75
+  86:RobotApp/Src/usart_task.c ****                 } 
+ 258              		.loc 1 86 21 is_stmt 0 view .LVU76
+ 259              	.LBE8:
+  90:RobotApp/Src/usart_task.c ****                     // 校验位放在 payload 后面
+ 260              		.loc 1 90 17 is_stmt 1 view .LVU77
+ 261 00b4 BAE7     		b	.L9
+ 262              	.L13:
+ 263 00b6 00BF     		.align	2
+ 264              	.L12:
+ARM GAS  /tmp/ccYzDTM3.s 			page 8
 
 
- 270              		.file 10 "RobotApp/Inc/robot_sys.h"
- 271              		.file 11 "Core/Inc/usart.h"
- 272              		.file 12 "Middlewares/Third_Party/FreeRTOS/Source/include/portable.h"
-ARM GAS  /tmp/cczttQju.s 			page 9
+ 265 00b8 00000000 		.word	huart3
+ 266 00bc 00000000 		.word	dataQueueHandle
+ 267              	.LBE9:
+ 268              	.LBE10:
+ 269              		.cfi_endproc
+ 270              	.LFE244:
+ 272              		.text
+ 273              	.Letext0:
+ 274              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 275              		.file 3 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 276              		.file 4 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 277              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 278              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 279              		.file 7 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 280              		.file 8 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 281              		.file 9 "BSP/mpu6050/mpu6050.h"
+ 282              		.file 10 "RobotApp/Inc/robot_sys.h"
+ 283              		.file 11 "Core/Inc/usart.h"
+ 284              		.file 12 "Middlewares/Third_Party/FreeRTOS/Source/include/portable.h"
+ARM GAS  /tmp/ccYzDTM3.s 			page 9
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 usart_task.c
-     /tmp/cczttQju.s:21     .text.Calc_Checksum:00000000 $t
-     /tmp/cczttQju.s:27     .text.Calc_Checksum:00000000 Calc_Checksum
-     /tmp/cczttQju.s:77     .text.StartUsartTask:00000000 $t
-     /tmp/cczttQju.s:83     .text.StartUsartTask:00000000 StartUsartTask
-     /tmp/cczttQju.s:253    .text.StartUsartTask:000000a8 $d
+     /tmp/ccYzDTM3.s:21     .text.Calc_Checksum:00000000 $t
+     /tmp/ccYzDTM3.s:27     .text.Calc_Checksum:00000000 Calc_Checksum
+     /tmp/ccYzDTM3.s:77     .text.StartUsartTask:00000000 $t
+     /tmp/ccYzDTM3.s:83     .text.StartUsartTask:00000000 StartUsartTask
+     /tmp/ccYzDTM3.s:265    .text.StartUsartTask:000000b8 $d
 
 UNDEFINED SYMBOLS
 HAL_UART_Transmit

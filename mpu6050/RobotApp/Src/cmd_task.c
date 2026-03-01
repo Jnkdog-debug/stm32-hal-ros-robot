@@ -15,11 +15,15 @@ void Process_Command(uint8_t func, uint8_t* payload, uint8_t len)
             g_robot.is_running = payload[0];
             break;
 
-        case 0x10: // 设置目标速度 (2个 float = 8字节)
-            if (len == 8) {
+        case 0x10: // 【V2.0】设置目标空间速度 (3个 float = 12字节)
+            if (len == 12) {
                 // 使用 memcpy 安全地转换类型
-                memcpy(&g_robot.speed_L, &payload[0], 4);
-                memcpy(&g_robot.speed_R, &payload[4], 4);
+                memcpy(&g_robot.target_Vx, &payload[0], 4);
+                memcpy(&g_robot.target_Vy, &payload[4], 4);
+                memcpy(&g_robot.target_Wz, &payload[8], 4);
+                
+                // 刷新看门狗时间戳
+                g_robot.last_cmd_time = osKernelGetTickCount();
             }
             break;
 
@@ -30,8 +34,15 @@ void Process_Command(uint8_t func, uint8_t* payload, uint8_t len)
                 // memcpy(&g_robot.pid_vel_kd, &payload[8], 4);
             }
             break;
+        
+            case 0x99: // ⚠️ 接收到上位机的软件复位指令！
+            // 释放互斥锁（虽然要重启了，但保持代码规范是个好习惯）
+            osMutexRelease(robotMutexHandle);
             
-        // ... 更多命令
+            // 触发内核级软复位
+            NVIC_SystemReset(); 
+            break;
+
     }
 
     // 释放锁
