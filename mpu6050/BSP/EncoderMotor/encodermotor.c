@@ -10,9 +10,9 @@
 // 1. 电机 A (左前轮 FL)
 // 硬件分配: PWM -> TIM10_CH1 / TIM11_CH1, 编码器 -> TIM2 PA15 PB3
 MotorControl_t Motor_A = {
-    .pwm_timo1 = &htim10, 
+    .pwm_timo1 = &htim11, 
     .pwm_channel1 = TIM_CHANNEL_1,
-    .pwm_timo2 = &htim11, 
+    .pwm_timo2 = &htim10, 
     .pwm_channel2 = TIM_CHANNEL_1,
     .encoder_tim = &htim2, 
     .encoder_direction = 1,   // 根据实际接线调整 1 或 -1
@@ -23,11 +23,11 @@ MotorControl_t Motor_A = {
 // 硬件分配: PWM -> TIM9_CH1 / TIM9_CH2, 编码器 -> TIM3 PB4 PB5
 MotorControl_t Motor_B = {
     .pwm_timo1 = &htim9, 
-    .pwm_channel1 = TIM_CHANNEL_1,
+    .pwm_channel1 = TIM_CHANNEL_2,
     .pwm_timo2 = &htim9, 
-    .pwm_channel2 = TIM_CHANNEL_2,
+    .pwm_channel2 = TIM_CHANNEL_1,
     .encoder_tim = &htim3, 
-    .encoder_direction = 1,   
+    .encoder_direction =-1,   
     .kp = 5.0f, .ki = 0.05f, .kd = 0.1f
 };
 
@@ -39,7 +39,7 @@ MotorControl_t Motor_C = {
     .pwm_timo2 = &htim1, 
     .pwm_channel2 = TIM_CHANNEL_2,
     .encoder_tim = &htim4, 
-    .encoder_direction = 1,   
+    .encoder_direction =1,   
     .kp = 5.0f, .ki = 0.05f, .kd = 0.1f
 };
 
@@ -51,7 +51,7 @@ MotorControl_t Motor_D = {
     .pwm_timo2 = &htim1, 
     .pwm_channel2 = TIM_CHANNEL_4,
     .encoder_tim = &htim5, 
-    .encoder_direction = 1,   
+    .encoder_direction =-1,   
     .kp = 5.0f, .ki = 0.05f, .kd = 0.1f
 };
 

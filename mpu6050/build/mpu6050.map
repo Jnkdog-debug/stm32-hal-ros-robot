@@ -2040,7 +2040,7 @@ LOAD /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crtn.o
                 0x08000000                g_pfnVectors
                 0x08000188                        . = ALIGN (0x4)
 
-.text           0x080001c0     0xb714
+.text           0x080001c0     0xb718
                 0x080001c0                        . = ALIGN (0x4)
  *(.text)
  .text          0x080001c0       0x88 /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crtbegin.o
@@ -2837,189 +2837,189 @@ LOAD /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crtn.o
  .text.ADC_GetBatteryVoltage
                 0x0800a810       0x7c build/motor_task.o
  .text.StartmotorTask
-                0x0800a88c      0x1c0 build/motor_task.o
+                0x0800a88c      0x1c4 build/motor_task.o
                 0x0800a88c                StartmotorTask
  .text.Calc_Checksum
-                0x0800aa4c       0x18 build/usart_task.o
-                0x0800aa4c                Calc_Checksum
+                0x0800aa50       0x18 build/usart_task.o
+                0x0800aa50                Calc_Checksum
  .text.StartUsartTask
-                0x0800aa64       0xc0 build/usart_task.o
-                0x0800aa64                StartUsartTask
+                0x0800aa68       0xc0 build/usart_task.o
+                0x0800aa68                StartUsartTask
  .text.MX_TIM2_Init
-                0x0800ab24       0x64 build/tim.o
-                0x0800ab24                MX_TIM2_Init
+                0x0800ab28       0x64 build/tim.o
+                0x0800ab28                MX_TIM2_Init
  .text.MX_TIM3_Init
-                0x0800ab88       0x64 build/tim.o
-                0x0800ab88                MX_TIM3_Init
+                0x0800ab8c       0x64 build/tim.o
+                0x0800ab8c                MX_TIM3_Init
  .text.MX_TIM4_Init
-                0x0800abec       0x64 build/tim.o
-                0x0800abec                MX_TIM4_Init
+                0x0800abf0       0x64 build/tim.o
+                0x0800abf0                MX_TIM4_Init
  .text.MX_TIM5_Init
-                0x0800ac50       0x64 build/tim.o
-                0x0800ac50                MX_TIM5_Init
+                0x0800ac54       0x64 build/tim.o
+                0x0800ac54                MX_TIM5_Init
  .text.HAL_TIM_PWM_MspInit
-                0x0800acb4       0x54 build/tim.o
-                0x0800acb4                HAL_TIM_PWM_MspInit
+                0x0800acb8       0x54 build/tim.o
+                0x0800acb8                HAL_TIM_PWM_MspInit
  .text.HAL_TIM_Encoder_MspInit
-                0x0800ad08      0x174 build/tim.o
-                0x0800ad08                HAL_TIM_Encoder_MspInit
+                0x0800ad0c      0x174 build/tim.o
+                0x0800ad0c                HAL_TIM_Encoder_MspInit
  .text.HAL_TIM_Base_MspInit
-                0x0800ae7c       0x54 build/tim.o
-                0x0800ae7c                HAL_TIM_Base_MspInit
+                0x0800ae80       0x54 build/tim.o
+                0x0800ae80                HAL_TIM_Base_MspInit
  .text.HAL_TIM_MspPostInit
-                0x0800aed0      0x10c build/tim.o
-                0x0800aed0                HAL_TIM_MspPostInit
+                0x0800aed4      0x10c build/tim.o
+                0x0800aed4                HAL_TIM_MspPostInit
  .text.MX_TIM1_Init
-                0x0800afdc       0xf0 build/tim.o
-                0x0800afdc                MX_TIM1_Init
+                0x0800afe0       0xf0 build/tim.o
+                0x0800afe0                MX_TIM1_Init
  .text.MX_TIM9_Init
-                0x0800b0cc       0x7c build/tim.o
-                0x0800b0cc                MX_TIM9_Init
+                0x0800b0d0       0x7c build/tim.o
+                0x0800b0d0                MX_TIM9_Init
  .text.MX_TIM10_Init
-                0x0800b148       0x74 build/tim.o
-                0x0800b148                MX_TIM10_Init
+                0x0800b14c       0x74 build/tim.o
+                0x0800b14c                MX_TIM10_Init
  .text.MX_TIM11_Init
-                0x0800b1bc       0x74 build/tim.o
-                0x0800b1bc                MX_TIM11_Init
+                0x0800b1c0       0x74 build/tim.o
+                0x0800b1c0                MX_TIM11_Init
  .text.MX_ADC1_Init
-                0x0800b230       0x6c build/adc.o
-                0x0800b230                MX_ADC1_Init
+                0x0800b234       0x6c build/adc.o
+                0x0800b234                MX_ADC1_Init
  .text.HAL_ADC_MspInit
-                0x0800b29c       0x68 build/adc.o
-                0x0800b29c                HAL_ADC_MspInit
+                0x0800b2a0       0x68 build/adc.o
+                0x0800b2a0                HAL_ADC_MspInit
  .text.ADC_Init
-                0x0800b304      0x134 build/stm32f4xx_hal_adc.o
+                0x0800b308      0x134 build/stm32f4xx_hal_adc.o
  .text.HAL_ADC_Init
-                0x0800b438       0x56 build/stm32f4xx_hal_adc.o
-                0x0800b438                HAL_ADC_Init
- *fill*         0x0800b48e        0x2 
+                0x0800b43c       0x56 build/stm32f4xx_hal_adc.o
+                0x0800b43c                HAL_ADC_Init
+ *fill*         0x0800b492        0x2 
  .text.HAL_ADC_Start
-                0x0800b490      0x144 build/stm32f4xx_hal_adc.o
-                0x0800b490                HAL_ADC_Start
+                0x0800b494      0x144 build/stm32f4xx_hal_adc.o
+                0x0800b494                HAL_ADC_Start
  .text.HAL_ADC_Stop
-                0x0800b5d4       0x40 build/stm32f4xx_hal_adc.o
-                0x0800b5d4                HAL_ADC_Stop
+                0x0800b5d8       0x40 build/stm32f4xx_hal_adc.o
+                0x0800b5d8                HAL_ADC_Stop
  .text.HAL_ADC_PollForConversion
-                0x0800b614       0xb8 build/stm32f4xx_hal_adc.o
-                0x0800b614                HAL_ADC_PollForConversion
+                0x0800b618       0xb8 build/stm32f4xx_hal_adc.o
+                0x0800b618                HAL_ADC_PollForConversion
  .text.HAL_ADC_GetValue
-                0x0800b6cc        0x6 build/stm32f4xx_hal_adc.o
-                0x0800b6cc                HAL_ADC_GetValue
- *fill*         0x0800b6d2        0x2 
+                0x0800b6d0        0x6 build/stm32f4xx_hal_adc.o
+                0x0800b6d0                HAL_ADC_GetValue
+ *fill*         0x0800b6d6        0x2 
  .text.HAL_ADC_ConfigChannel
-                0x0800b6d4      0x194 build/stm32f4xx_hal_adc.o
-                0x0800b6d4                HAL_ADC_ConfigChannel
+                0x0800b6d8      0x194 build/stm32f4xx_hal_adc.o
+                0x0800b6d8                HAL_ADC_ConfigChannel
  .text.Reset_Handler
-                0x0800b868       0x50 build/startup_stm32f407xx.o
-                0x0800b868                Reset_Handler
+                0x0800b86c       0x50 build/startup_stm32f407xx.o
+                0x0800b86c                Reset_Handler
  .text.Default_Handler
-                0x0800b8b8        0x2 build/startup_stm32f407xx.o
-                0x0800b8b8                RTC_Alarm_IRQHandler
-                0x0800b8b8                HASH_RNG_IRQHandler
-                0x0800b8b8                EXTI2_IRQHandler
-                0x0800b8b8                TIM8_CC_IRQHandler
-                0x0800b8b8                TIM1_CC_IRQHandler
-                0x0800b8b8                DMA2_Stream5_IRQHandler
-                0x0800b8b8                DMA1_Stream5_IRQHandler
-                0x0800b8b8                PVD_IRQHandler
-                0x0800b8b8                SDIO_IRQHandler
-                0x0800b8b8                TAMP_STAMP_IRQHandler
-                0x0800b8b8                CAN2_RX1_IRQHandler
-                0x0800b8b8                EXTI3_IRQHandler
-                0x0800b8b8                TIM1_UP_TIM10_IRQHandler
-                0x0800b8b8                TIM8_UP_TIM13_IRQHandler
-                0x0800b8b8                I2C3_ER_IRQHandler
-                0x0800b8b8                EXTI0_IRQHandler
-                0x0800b8b8                I2C2_EV_IRQHandler
-                0x0800b8b8                DMA1_Stream2_IRQHandler
-                0x0800b8b8                CAN1_RX0_IRQHandler
-                0x0800b8b8                FPU_IRQHandler
-                0x0800b8b8                OTG_HS_WKUP_IRQHandler
-                0x0800b8b8                CAN2_SCE_IRQHandler
-                0x0800b8b8                DMA2_Stream2_IRQHandler
-                0x0800b8b8                SPI1_IRQHandler
-                0x0800b8b8                TIM6_DAC_IRQHandler
-                0x0800b8b8                TIM1_BRK_TIM9_IRQHandler
-                0x0800b8b8                DCMI_IRQHandler
-                0x0800b8b8                CAN2_RX0_IRQHandler
-                0x0800b8b8                DMA2_Stream3_IRQHandler
-                0x0800b8b8                USART6_IRQHandler
-                0x0800b8b8                CAN1_RX1_IRQHandler
-                0x0800b8b8                UART5_IRQHandler
-                0x0800b8b8                DMA2_Stream0_IRQHandler
-                0x0800b8b8                TIM4_IRQHandler
-                0x0800b8b8                I2C1_EV_IRQHandler
-                0x0800b8b8                DMA1_Stream6_IRQHandler
-                0x0800b8b8                DMA1_Stream1_IRQHandler
-                0x0800b8b8                UART4_IRQHandler
-                0x0800b8b8                TIM3_IRQHandler
-                0x0800b8b8                RCC_IRQHandler
-                0x0800b8b8                TIM8_BRK_TIM12_IRQHandler
-                0x0800b8b8                Default_Handler
-                0x0800b8b8                EXTI15_10_IRQHandler
-                0x0800b8b8                ADC_IRQHandler
-                0x0800b8b8                DMA1_Stream7_IRQHandler
-                0x0800b8b8                TIM7_IRQHandler
-                0x0800b8b8                CAN2_TX_IRQHandler
-                0x0800b8b8                TIM5_IRQHandler
-                0x0800b8b8                DMA2_Stream7_IRQHandler
-                0x0800b8b8                I2C3_EV_IRQHandler
-                0x0800b8b8                EXTI9_5_IRQHandler
-                0x0800b8b8                RTC_WKUP_IRQHandler
-                0x0800b8b8                ETH_WKUP_IRQHandler
-                0x0800b8b8                SPI2_IRQHandler
-                0x0800b8b8                OTG_HS_EP1_IN_IRQHandler
-                0x0800b8b8                DMA1_Stream0_IRQHandler
-                0x0800b8b8                CAN1_TX_IRQHandler
-                0x0800b8b8                EXTI4_IRQHandler
-                0x0800b8b8                FSMC_IRQHandler
-                0x0800b8b8                ETH_IRQHandler
-                0x0800b8b8                OTG_HS_EP1_OUT_IRQHandler
-                0x0800b8b8                WWDG_IRQHandler
-                0x0800b8b8                TIM2_IRQHandler
-                0x0800b8b8                OTG_FS_WKUP_IRQHandler
-                0x0800b8b8                TIM1_TRG_COM_TIM11_IRQHandler
-                0x0800b8b8                OTG_HS_IRQHandler
-                0x0800b8b8                EXTI1_IRQHandler
-                0x0800b8b8                USART2_IRQHandler
-                0x0800b8b8                I2C2_ER_IRQHandler
-                0x0800b8b8                DMA2_Stream1_IRQHandler
-                0x0800b8b8                CAN1_SCE_IRQHandler
-                0x0800b8b8                FLASH_IRQHandler
-                0x0800b8b8                DMA2_Stream4_IRQHandler
-                0x0800b8b8                USART1_IRQHandler
-                0x0800b8b8                OTG_FS_IRQHandler
-                0x0800b8b8                SPI3_IRQHandler
-                0x0800b8b8                DMA1_Stream4_IRQHandler
-                0x0800b8b8                I2C1_ER_IRQHandler
-                0x0800b8b8                DMA2_Stream6_IRQHandler
-                0x0800b8b8                DMA1_Stream3_IRQHandler
+                0x0800b8bc        0x2 build/startup_stm32f407xx.o
+                0x0800b8bc                RTC_Alarm_IRQHandler
+                0x0800b8bc                HASH_RNG_IRQHandler
+                0x0800b8bc                EXTI2_IRQHandler
+                0x0800b8bc                TIM8_CC_IRQHandler
+                0x0800b8bc                TIM1_CC_IRQHandler
+                0x0800b8bc                DMA2_Stream5_IRQHandler
+                0x0800b8bc                DMA1_Stream5_IRQHandler
+                0x0800b8bc                PVD_IRQHandler
+                0x0800b8bc                SDIO_IRQHandler
+                0x0800b8bc                TAMP_STAMP_IRQHandler
+                0x0800b8bc                CAN2_RX1_IRQHandler
+                0x0800b8bc                EXTI3_IRQHandler
+                0x0800b8bc                TIM1_UP_TIM10_IRQHandler
+                0x0800b8bc                TIM8_UP_TIM13_IRQHandler
+                0x0800b8bc                I2C3_ER_IRQHandler
+                0x0800b8bc                EXTI0_IRQHandler
+                0x0800b8bc                I2C2_EV_IRQHandler
+                0x0800b8bc                DMA1_Stream2_IRQHandler
+                0x0800b8bc                CAN1_RX0_IRQHandler
+                0x0800b8bc                FPU_IRQHandler
+                0x0800b8bc                OTG_HS_WKUP_IRQHandler
+                0x0800b8bc                CAN2_SCE_IRQHandler
+                0x0800b8bc                DMA2_Stream2_IRQHandler
+                0x0800b8bc                SPI1_IRQHandler
+                0x0800b8bc                TIM6_DAC_IRQHandler
+                0x0800b8bc                TIM1_BRK_TIM9_IRQHandler
+                0x0800b8bc                DCMI_IRQHandler
+                0x0800b8bc                CAN2_RX0_IRQHandler
+                0x0800b8bc                DMA2_Stream3_IRQHandler
+                0x0800b8bc                USART6_IRQHandler
+                0x0800b8bc                CAN1_RX1_IRQHandler
+                0x0800b8bc                UART5_IRQHandler
+                0x0800b8bc                DMA2_Stream0_IRQHandler
+                0x0800b8bc                TIM4_IRQHandler
+                0x0800b8bc                I2C1_EV_IRQHandler
+                0x0800b8bc                DMA1_Stream6_IRQHandler
+                0x0800b8bc                DMA1_Stream1_IRQHandler
+                0x0800b8bc                UART4_IRQHandler
+                0x0800b8bc                TIM3_IRQHandler
+                0x0800b8bc                RCC_IRQHandler
+                0x0800b8bc                TIM8_BRK_TIM12_IRQHandler
+                0x0800b8bc                Default_Handler
+                0x0800b8bc                EXTI15_10_IRQHandler
+                0x0800b8bc                ADC_IRQHandler
+                0x0800b8bc                DMA1_Stream7_IRQHandler
+                0x0800b8bc                TIM7_IRQHandler
+                0x0800b8bc                CAN2_TX_IRQHandler
+                0x0800b8bc                TIM5_IRQHandler
+                0x0800b8bc                DMA2_Stream7_IRQHandler
+                0x0800b8bc                I2C3_EV_IRQHandler
+                0x0800b8bc                EXTI9_5_IRQHandler
+                0x0800b8bc                RTC_WKUP_IRQHandler
+                0x0800b8bc                ETH_WKUP_IRQHandler
+                0x0800b8bc                SPI2_IRQHandler
+                0x0800b8bc                OTG_HS_EP1_IN_IRQHandler
+                0x0800b8bc                DMA1_Stream0_IRQHandler
+                0x0800b8bc                CAN1_TX_IRQHandler
+                0x0800b8bc                EXTI4_IRQHandler
+                0x0800b8bc                FSMC_IRQHandler
+                0x0800b8bc                ETH_IRQHandler
+                0x0800b8bc                OTG_HS_EP1_OUT_IRQHandler
+                0x0800b8bc                WWDG_IRQHandler
+                0x0800b8bc                TIM2_IRQHandler
+                0x0800b8bc                OTG_FS_WKUP_IRQHandler
+                0x0800b8bc                TIM1_TRG_COM_TIM11_IRQHandler
+                0x0800b8bc                OTG_HS_IRQHandler
+                0x0800b8bc                EXTI1_IRQHandler
+                0x0800b8bc                USART2_IRQHandler
+                0x0800b8bc                I2C2_ER_IRQHandler
+                0x0800b8bc                DMA2_Stream1_IRQHandler
+                0x0800b8bc                CAN1_SCE_IRQHandler
+                0x0800b8bc                FLASH_IRQHandler
+                0x0800b8bc                DMA2_Stream4_IRQHandler
+                0x0800b8bc                USART1_IRQHandler
+                0x0800b8bc                OTG_FS_IRQHandler
+                0x0800b8bc                SPI3_IRQHandler
+                0x0800b8bc                DMA1_Stream4_IRQHandler
+                0x0800b8bc                I2C1_ER_IRQHandler
+                0x0800b8bc                DMA2_Stream6_IRQHandler
+                0x0800b8bc                DMA1_Stream3_IRQHandler
  *(.glue_7)
- .glue_7        0x0800b8ba        0x0 linker stubs
+ .glue_7        0x0800b8be        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x0800b8ba        0x0 linker stubs
+ .glue_7t       0x0800b8be        0x0 linker stubs
  *(.eh_frame)
- *fill*         0x0800b8ba        0x2 
- .eh_frame      0x0800b8bc        0x0 /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+ *fill*         0x0800b8be        0x2 
+ .eh_frame      0x0800b8c0        0x0 /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crtbegin.o
  *(.init)
- .init          0x0800b8bc        0x4 /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crti.o
-                0x0800b8bc                _init
- .init          0x0800b8c0        0x8 /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crtn.o
+ .init          0x0800b8c0        0x4 /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crti.o
+                0x0800b8c0                _init
+ .init          0x0800b8c4        0x8 /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crtn.o
  *(.fini)
- .fini          0x0800b8c8        0x4 /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crti.o
-                0x0800b8c8                _fini
- .fini          0x0800b8cc        0x8 /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crtn.o
-                0x0800b8d4                        . = ALIGN (0x4)
-                0x0800b8d4                        _etext = .
+ .fini          0x0800b8cc        0x4 /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crti.o
+                0x0800b8cc                _fini
+ .fini          0x0800b8d0        0x8 /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crtn.o
+                0x0800b8d8                        . = ALIGN (0x4)
+                0x0800b8d8                        _etext = .
 
-.vfp11_veneer   0x0800b8d4        0x0
- .vfp11_veneer  0x0800b8d4        0x0 linker stubs
+.vfp11_veneer   0x0800b8d8        0x0
+ .vfp11_veneer  0x0800b8d8        0x0 linker stubs
 
-.v4_bx          0x0800b8d4        0x0
- .v4_bx         0x0800b8d4        0x0 linker stubs
+.v4_bx          0x0800b8d8        0x0
+ .v4_bx         0x0800b8d8        0x0 linker stubs
 
-.iplt           0x0800b8d4        0x0
- .iplt          0x0800b8d4        0x0 /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+.iplt           0x0800b8d8        0x0
+ .iplt          0x0800b8d8        0x0 /usr/lib/gcc/arm-none-eabi/13.2.1/thumb/v7e-m+fp/hard/crtbegin.o
 
 .rodata         0x0800b8d8      0x4f4
                 0x0800b8d8                        . = ALIGN (0x4)

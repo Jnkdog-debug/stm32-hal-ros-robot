@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccNU7FZv.s 			page 1
+ARM GAS  /tmp/ccYcts9f.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -41,9 +41,9 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
   10:BSP/EncoderMotor/encodermotor.c **** // 1. 电机 A (左前轮 FL)
   11:BSP/EncoderMotor/encodermotor.c **** // 硬件分配: PWM -> TIM10_CH1 / TIM11_CH1, 编码器 -> TIM2 PA15 PB3
   12:BSP/EncoderMotor/encodermotor.c **** MotorControl_t Motor_A = {
-  13:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo1 = &htim10, 
+  13:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo1 = &htim11, 
   14:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel1 = TIM_CHANNEL_1,
-  15:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo2 = &htim11, 
+  15:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo2 = &htim10, 
   16:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel2 = TIM_CHANNEL_1,
   17:BSP/EncoderMotor/encodermotor.c ****     .encoder_tim = &htim2, 
   18:BSP/EncoderMotor/encodermotor.c ****     .encoder_direction = 1,   // 根据实际接线调整 1 或 -1
@@ -54,14 +54,14 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
   23:BSP/EncoderMotor/encodermotor.c **** // 硬件分配: PWM -> TIM9_CH1 / TIM9_CH2, 编码器 -> TIM3 PB4 PB5
   24:BSP/EncoderMotor/encodermotor.c **** MotorControl_t Motor_B = {
   25:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo1 = &htim9, 
-  26:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel1 = TIM_CHANNEL_1,
+  26:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel1 = TIM_CHANNEL_2,
   27:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo2 = &htim9, 
-  28:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel2 = TIM_CHANNEL_2,
+  28:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel2 = TIM_CHANNEL_1,
   29:BSP/EncoderMotor/encodermotor.c ****     .encoder_tim = &htim3, 
-ARM GAS  /tmp/ccNU7FZv.s 			page 2
+ARM GAS  /tmp/ccYcts9f.s 			page 2
 
 
-  30:BSP/EncoderMotor/encodermotor.c ****     .encoder_direction = 1,   
+  30:BSP/EncoderMotor/encodermotor.c ****     .encoder_direction =-1,   
   31:BSP/EncoderMotor/encodermotor.c ****     .kp = 5.0f, .ki = 0.05f, .kd = 0.1f
   32:BSP/EncoderMotor/encodermotor.c **** };
   33:BSP/EncoderMotor/encodermotor.c **** 
@@ -73,7 +73,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
   39:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo2 = &htim1, 
   40:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel2 = TIM_CHANNEL_2,
   41:BSP/EncoderMotor/encodermotor.c ****     .encoder_tim = &htim4, 
-  42:BSP/EncoderMotor/encodermotor.c ****     .encoder_direction = 1,   
+  42:BSP/EncoderMotor/encodermotor.c ****     .encoder_direction =1,   
   43:BSP/EncoderMotor/encodermotor.c ****     .kp = 5.0f, .ki = 0.05f, .kd = 0.1f
   44:BSP/EncoderMotor/encodermotor.c **** };
   45:BSP/EncoderMotor/encodermotor.c **** 
@@ -85,7 +85,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
   51:BSP/EncoderMotor/encodermotor.c ****     .pwm_timo2 = &htim1, 
   52:BSP/EncoderMotor/encodermotor.c ****     .pwm_channel2 = TIM_CHANNEL_4,
   53:BSP/EncoderMotor/encodermotor.c ****     .encoder_tim = &htim5, 
-  54:BSP/EncoderMotor/encodermotor.c ****     .encoder_direction = 1,   
+  54:BSP/EncoderMotor/encodermotor.c ****     .encoder_direction =-1,   
   55:BSP/EncoderMotor/encodermotor.c ****     .kp = 5.0f, .ki = 0.05f, .kd = 0.1f
   56:BSP/EncoderMotor/encodermotor.c **** };
   57:BSP/EncoderMotor/encodermotor.c **** 
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
   66:BSP/EncoderMotor/encodermotor.c ****     HAL_TIM_PWM_Start(motor->pwm_timo2, motor->pwm_channel2);
   48              		.loc 1 66 5 is_stmt 1 view .LVU4
   49 000c E168     		ldr	r1, [r4, #12]
-ARM GAS  /tmp/ccNU7FZv.s 			page 3
+ARM GAS  /tmp/ccYcts9f.s 			page 3
 
 
   50 000e 6068     		ldr	r0, [r4, #4]
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
   95              		.loc 1 68 5 discriminator 3 view .LVU16
   96 0048 2368     		ldr	r3, [r4]
   97 004a 1B68     		ldr	r3, [r3]
-ARM GAS  /tmp/ccNU7FZv.s 			page 4
+ARM GAS  /tmp/ccYcts9f.s 			page 4
 
 
   98 004c 0022     		movs	r2, #0
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
   72:BSP/EncoderMotor/encodermotor.c **** 
   73:BSP/EncoderMotor/encodermotor.c **** 
   74:BSP/EncoderMotor/encodermotor.c **** void Motor_SetPWM(MotorControl_t* motor, int16_t duty) {
-ARM GAS  /tmp/ccNU7FZv.s 			page 5
+ARM GAS  /tmp/ccYcts9f.s 			page 5
 
 
  148              		.loc 1 74 56 is_stmt 1 view -0
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
   78:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo1, motor->pwm_channel1, 0);
  193              		.loc 1 78 9 is_stmt 0 discriminator 1 view .LVU36
  194 0032 0268     		ldr	r2, [r0]
-ARM GAS  /tmp/ccNU7FZv.s 			page 6
+ARM GAS  /tmp/ccYcts9f.s 			page 6
 
 
  195 0034 1268     		ldr	r2, [r2]
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
  239 0064 1268     		ldr	r2, [r2]
  240 0066 0021     		movs	r1, #0
  241              	.LVL15:
-ARM GAS  /tmp/ccNU7FZv.s 			page 7
+ARM GAS  /tmp/ccYcts9f.s 			page 7
 
 
   78:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, pwm_val);
@@ -418,7 +418,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
  286 00a0 9363     		str	r3, [r2, #56]
  287 00a2 BCE7     		b	.L27
  288              	.L46:
-ARM GAS  /tmp/ccNU7FZv.s 			page 8
+ARM GAS  /tmp/ccYcts9f.s 			page 8
 
 
   81:BSP/EncoderMotor/encodermotor.c ****         __HAL_TIM_SET_COMPARE(motor->pwm_timo2, motor->pwm_channel2, 0);
@@ -478,7 +478,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
  339 00e2 4368     		ldr	r3, [r0, #4]
  340 00e4 1B68     		ldr	r3, [r3]
  341 00e6 0022     		movs	r2, #0
-ARM GAS  /tmp/ccNU7FZv.s 			page 9
+ARM GAS  /tmp/ccYcts9f.s 			page 9
 
 
  342 00e8 5A63     		str	r2, [r3, #52]
@@ -538,7 +538,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
  388 0126 1B68     		ldr	r3, [r3]
  389 0128 0022     		movs	r2, #0
  390 012a 9A63     		str	r2, [r3, #56]
-ARM GAS  /tmp/ccNU7FZv.s 			page 10
+ARM GAS  /tmp/ccYcts9f.s 			page 10
 
 
  391 012c 7047     		bx	lr
@@ -598,7 +598,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
  436              		.loc 1 97 5 is_stmt 1 view .LVU89
  437              		.loc 1 97 27 is_stmt 0 view .LVU90
  438 000e C363     		str	r3, [r0, #60]	@ float
-ARM GAS  /tmp/ccNU7FZv.s 			page 11
+ARM GAS  /tmp/ccYcts9f.s 			page 11
 
 
   98:BSP/EncoderMotor/encodermotor.c ****     motor->pid_integral = 0.0f;
@@ -658,7 +658,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
  477 0002 0246     		mov	r2, r0
  116:BSP/EncoderMotor/encodermotor.c ****     // 1. 获取硬件原始值
  117:BSP/EncoderMotor/encodermotor.c ****     uint16_t now = (uint16_t)__HAL_TIM_GET_COUNTER(motor->encoder_tim);
-ARM GAS  /tmp/ccNU7FZv.s 			page 12
+ARM GAS  /tmp/ccYcts9f.s 			page 12
 
 
  478              		.loc 1 117 5 is_stmt 1 view .LVU100
@@ -718,7 +718,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
  517 002e 87EEA67A 		vdiv.f32	s14, s15, s13
  518              		.loc 1 132 55 view .LVU117
  519 0032 DFED067A 		vldr.32	s15, .L57+4
-ARM GAS  /tmp/ccNU7FZv.s 			page 13
+ARM GAS  /tmp/ccYcts9f.s 			page 13
 
 
  520 0036 67EE277A 		vmul.f32	s15, s14, s15
@@ -778,7 +778,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
  566 000e F5EE407A 		vcmp.f32	s15, #0
  567 0012 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
  568 0016 45D0     		beq	.L68
-ARM GAS  /tmp/ccNU7FZv.s 			page 14
+ARM GAS  /tmp/ccYcts9f.s 			page 14
 
 
  569              	.L60:
@@ -838,7 +838,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
  158:BSP/EncoderMotor/encodermotor.c ****                       
  159:BSP/EncoderMotor/encodermotor.c ****     motor->pid_out += increment;
  606              		.loc 1 159 5 is_stmt 1 view .LVU147
-ARM GAS  /tmp/ccNU7FZv.s 			page 15
+ARM GAS  /tmp/ccYcts9f.s 			page 15
 
 
  607              		.loc 1 159 10 is_stmt 0 view .LVU148
@@ -898,7 +898,7 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
  650              		.loc 1 170 1 view .LVU167
  651 00a2 7047     		bx	lr
  652              	.LVL36:
-ARM GAS  /tmp/ccNU7FZv.s 			page 16
+ARM GAS  /tmp/ccYcts9f.s 			page 16
 
 
  653              	.L68:
@@ -956,9 +956,9 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
  699 0008 08000000 		.word	8
  700 000c 0C000000 		.word	12
  701 0010 00000000 		.word	htim5
- 702 0014 01       		.byte	1
+ 702 0014 FF       		.byte	-1
  703 0015 00000000 		.space	23
-ARM GAS  /tmp/ccNU7FZv.s 			page 17
+ARM GAS  /tmp/ccYcts9f.s 			page 17
 
 
  703      00000000 
@@ -1000,10 +1000,10 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
  730              	Motor_B:
  731 0000 00000000 		.word	htim9
  732 0004 00000000 		.word	htim9
- 733 0008 00000000 		.word	0
- 734 000c 04000000 		.word	4
+ 733 0008 04000000 		.word	4
+ 734 000c 00000000 		.word	0
  735 0010 00000000 		.word	htim3
- 736 0014 01       		.byte	1
+ 736 0014 FF       		.byte	-1
  737 0015 00000000 		.space	23
  737      00000000 
  737      00000000 
@@ -1018,13 +1018,13 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
  741      00000000 
  742              		.global	Motor_A
  743              		.section	.data.Motor_A,"aw"
-ARM GAS  /tmp/ccNU7FZv.s 			page 18
+ARM GAS  /tmp/ccYcts9f.s 			page 18
 
 
  744              		.align	2
  747              	Motor_A:
- 748 0000 00000000 		.word	htim10
- 749 0004 00000000 		.word	htim11
+ 748 0000 00000000 		.word	htim11
+ 749 0004 00000000 		.word	htim10
  750 0008 00000000 		.word	0
  751 000c 00000000 		.word	0
  752 0010 00000000 		.word	htim2
@@ -1050,33 +1050,33 @@ ARM GAS  /tmp/ccNU7FZv.s 			page 1
  765              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
  766              		.file 7 "Core/Inc/tim.h"
  767              		.file 8 "BSP/EncoderMotor/encodermotor.h"
-ARM GAS  /tmp/ccNU7FZv.s 			page 19
+ARM GAS  /tmp/ccYcts9f.s 			page 19
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 encodermotor.c
-     /tmp/ccNU7FZv.s:21     .text.Motor_Init:00000000 $t
-     /tmp/ccNU7FZv.s:27     .text.Motor_Init:00000000 Motor_Init
-     /tmp/ccNU7FZv.s:139    .text.Motor_SetPWM:00000000 $t
-     /tmp/ccNU7FZv.s:145    .text.Motor_SetPWM:00000000 Motor_SetPWM
-     /tmp/ccNU7FZv.s:403    .text.Motor_Encoder_Init:00000000 $t
-     /tmp/ccNU7FZv.s:409    .text.Motor_Encoder_Init:00000000 Motor_Encoder_Init
-     /tmp/ccNU7FZv.s:458    .text.Motor_Encoder_Update:00000000 $t
-     /tmp/ccNU7FZv.s:464    .text.Motor_Encoder_Update:00000000 Motor_Encoder_Update
-     /tmp/ccNU7FZv.s:538    .text.Motor_Encoder_Update:00000048 $d
-     /tmp/ccNU7FZv.s:544    .text.Incremental_PID:00000000 $t
-     /tmp/ccNU7FZv.s:550    .text.Incremental_PID:00000000 Incremental_PID
-     /tmp/ccNU7FZv.s:676    .text.Incremental_PID:000000b4 $d
-     /tmp/ccNU7FZv.s:686    .data.Mecanum_Motors:00000000 Mecanum_Motors
-     /tmp/ccNU7FZv.s:683    .data.Mecanum_Motors:00000000 $d
-     /tmp/ccNU7FZv.s:747    .data.Motor_A:00000000 Motor_A
-     /tmp/ccNU7FZv.s:730    .data.Motor_B:00000000 Motor_B
-     /tmp/ccNU7FZv.s:713    .data.Motor_C:00000000 Motor_C
-     /tmp/ccNU7FZv.s:696    .data.Motor_D:00000000 Motor_D
-     /tmp/ccNU7FZv.s:693    .data.Motor_D:00000000 $d
-     /tmp/ccNU7FZv.s:710    .data.Motor_C:00000000 $d
-     /tmp/ccNU7FZv.s:727    .data.Motor_B:00000000 $d
-     /tmp/ccNU7FZv.s:744    .data.Motor_A:00000000 $d
+     /tmp/ccYcts9f.s:21     .text.Motor_Init:00000000 $t
+     /tmp/ccYcts9f.s:27     .text.Motor_Init:00000000 Motor_Init
+     /tmp/ccYcts9f.s:139    .text.Motor_SetPWM:00000000 $t
+     /tmp/ccYcts9f.s:145    .text.Motor_SetPWM:00000000 Motor_SetPWM
+     /tmp/ccYcts9f.s:403    .text.Motor_Encoder_Init:00000000 $t
+     /tmp/ccYcts9f.s:409    .text.Motor_Encoder_Init:00000000 Motor_Encoder_Init
+     /tmp/ccYcts9f.s:458    .text.Motor_Encoder_Update:00000000 $t
+     /tmp/ccYcts9f.s:464    .text.Motor_Encoder_Update:00000000 Motor_Encoder_Update
+     /tmp/ccYcts9f.s:538    .text.Motor_Encoder_Update:00000048 $d
+     /tmp/ccYcts9f.s:544    .text.Incremental_PID:00000000 $t
+     /tmp/ccYcts9f.s:550    .text.Incremental_PID:00000000 Incremental_PID
+     /tmp/ccYcts9f.s:676    .text.Incremental_PID:000000b4 $d
+     /tmp/ccYcts9f.s:686    .data.Mecanum_Motors:00000000 Mecanum_Motors
+     /tmp/ccYcts9f.s:683    .data.Mecanum_Motors:00000000 $d
+     /tmp/ccYcts9f.s:747    .data.Motor_A:00000000 Motor_A
+     /tmp/ccYcts9f.s:730    .data.Motor_B:00000000 Motor_B
+     /tmp/ccYcts9f.s:713    .data.Motor_C:00000000 Motor_C
+     /tmp/ccYcts9f.s:696    .data.Motor_D:00000000 Motor_D
+     /tmp/ccYcts9f.s:693    .data.Motor_D:00000000 $d
+     /tmp/ccYcts9f.s:710    .data.Motor_C:00000000 $d
+     /tmp/ccYcts9f.s:727    .data.Motor_B:00000000 $d
+     /tmp/ccYcts9f.s:744    .data.Motor_A:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_TIM_PWM_Start
@@ -1086,6 +1086,6 @@ htim5
 htim4
 htim9
 htim3
-htim10
 htim11
+htim10
 htim2

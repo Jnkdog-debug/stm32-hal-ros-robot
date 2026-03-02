@@ -224,42 +224,16 @@ void StartmotorTask(void *argument)
 //         // --- 5. 【纯硬件开环测试模式】剥离 PID，直接下发 PWM ---
 //         // ==========================================================
         
-//         // 🛠️ 修改这里的数字来选择你想测试的轮子：
-//         // 0 = Motor_A (左前 FL)
-//         // 1 = Motor_B (右前 FR)
-//         // 2 = Motor_C (左后 RL)
-//         // 3 = Motor_D (右后 RR)
-//         int test_target_id = 0;  // <--- 默认先测试 A 轮
         
 
-//         Motor_SetPWM(Mecanum_Motors[0], 1000);
-//         Motor_SetPWM(Mecanum_Motors[1], 1000);
-//         Motor_SetPWM(Mecanum_Motors[2], 1000);
-//         Motor_SetPWM(Mecanum_Motors[3], 1000);
+//         Motor_SetPWM(Mecanum_Motors[0], 700);
+//         Motor_SetPWM(Mecanum_Motors[1], 700);
+//         Motor_SetPWM(Mecanum_Motors[2], 700);
+//         Motor_SetPWM(Mecanum_Motors[3], 700);
 
 
 
 
-//         for (int i = 0; i < 4; i++) {
-//             int16_t test_pwm = 0;
-            
-//             // 只有被选中的轮子才允许通电
-//             if (i == test_target_id) {
-//                 // 将 vx 视为方向摇杆：大于0给正向PWM，小于0给反向PWM
-//                 if (vx > 0.01f) {
-//                     test_pwm = 500;   // 约 30% 动力，安全测试速度
-//                 } else if (vx < -0.01f) {
-//                     test_pwm = -500;  
-//                 } else {
-//                     test_pwm = 0;     // 刹车
-//                 }
-//             } else {
-//                 test_pwm = 0; // 其他 3 个轮子强制切断动力，物理隔离！
-//             }
-            
-//             // 直接将裸 PWM 写入寄存器，跳过所有 PID 计算
-//             //Motor_SetPWM(Mecanum_Motors[i], test_pwm);
-//         }
 //         // ==========================================================
 
 //         // --- 6. 发送调试数据到串口 ---
